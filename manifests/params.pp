@@ -7,10 +7,11 @@ class horizon::params {
       $http_service                = 'httpd'
       $http_modwsgi                = 'mod_wsgi'
       $package_name                = 'openstack-dashboard'
+      $config_file                 = '/etc/openstack-dashboard/local_settings'
     }
     'Debian': {
       $http_service                = 'apache2'
-      $http_modwsgi                = 'libapache2-mod-wsgi'
+      $config_file                 = '/etc/openstack-dashboard/local_settings.py'
       case $::operatingsystem {
         'Debian': {
             $package_name          = 'openstack-dashboard-apache'
