@@ -37,7 +37,9 @@ class horizon(
   include horizon::params
 
   # I am totally confused by this, I do not think it should be installed...
-  package { 'node-less': }
+  if($::osfamily == 'Debian') {
+    package { 'node-less': }
+  }
 
   if $cache_server_ip =~ /^127\.0\.0\.1/ {
     Class['memcached'] -> Class['horizon']
@@ -55,4 +57,10 @@ class horizon(
     require => Package[$::horizon::params::package_name],
   }
 
+  file_line { 'horizon root':
+    path => $::horizon::params::httpd_config_file,
+    line => "WSGIScriptAlias ${::horizon::params::root_url} /usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi",
+    match => 'WSGIScriptAlias ',
+    require => Package[$::horizon::params::package_name],
+  }
 }

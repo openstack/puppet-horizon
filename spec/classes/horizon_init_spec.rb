@@ -8,6 +8,10 @@ describe 'horizon' do
     }
   end
 
+  let :pre_condition do
+    'include apache'
+  end
+
   describe 'when running on redhat' do
     let :facts do
       {

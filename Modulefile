@@ -7,3 +7,5 @@ summary 'Horizon Dashboard Module for Puppet'
 project_page 'https://github.com/puppetlabs/puppetlabs-horizon'
 
 dependency 'saz/memcached', '>= 2.0.2'
+dependency 'puppetlabs/apache', '>= 0.4.0'
+dependency 'puppetlabs/stdlib', '>= 2.4.0'
