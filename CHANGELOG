@@ -1,3 +1,7 @@
+* 2012-11-02 1.0.0
+- Add travisci suppoert
+- Allow the root django app url to be configured
+- Expect user to configure apache externally
 * 2012-10-08 0.2.0
 - better rspec tests
 - adds more params for settings config file
