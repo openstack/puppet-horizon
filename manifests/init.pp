@@ -57,4 +57,10 @@ class horizon(
     require => Package[$::horizon::params::package_name],
   }
 
+  file_line { 'horizon root':
+    path => $::horizon::params::httpd_config_file,
+    line => "WSGIScriptAlias ${::horizon::params::root_url} /usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi",
+    match => 'WSGIScriptAlias ',
+    require => Package[$::horizon::params::package_name],
+  }
 }
