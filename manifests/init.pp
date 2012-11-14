@@ -35,6 +35,7 @@ class horizon(
 ) {
 
   include horizon::params
+  include apache::mod::wsgi
 
   # I am totally confused by this, I do not think it should be installed...
   if($::osfamily == 'Debian') {
