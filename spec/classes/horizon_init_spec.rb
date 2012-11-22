@@ -42,6 +42,7 @@ describe 'horizon' do
       it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^OPENSTACK_KEYSTONE_DEFAULT_ROLE = "Member"$/) }
       it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^DEBUG = False$/) }
       it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^API_RESULT_LIMIT = 1000$/) }
+      it { should contain_package('horizon').with_ensure('present') }
     end
 
     describe 'when overriding parameters' do
