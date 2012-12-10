@@ -59,6 +59,16 @@ class horizon(
     require => Package[$::horizon::params::package_name],
   }
 
+   if $::osfamily == 'RedHat'
+   {
+     file_line { 'horizon_redirect_rule':
+       path => $::horizon::params::httpd_config_file,
+       line => 'RedirectMatch permanent ^/$ /dashboard/',
+       require => Package["$::horizon::params::package_name"],
+       notify => Service["$::horizon::params::http_service"]
+     }
+   }
+ 
   file_line { 'horizon root':
     path => $::horizon::params::httpd_config_file,
     line => "WSGIScriptAlias ${::horizon::params::root_url} /usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi",
