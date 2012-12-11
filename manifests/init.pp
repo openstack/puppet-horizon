@@ -32,7 +32,8 @@ class horizon(
   $keystone_scheme       = 'http',
   $keystone_default_role = 'Member',
   $django_debug          = 'False',
-  $api_result_limit      = 1000
+  $api_result_limit      = 1000,
+  $log_level             = 'DEBUG'
 ) {
 
   include horizon::params
@@ -59,6 +60,15 @@ class horizon(
     mode    => '0644',
     notify  => Service[$::horizon::params::http_service],
     require => Package[$::horizon::params::package_name],
+  }
+ 
+  file { $::horizon::params::logdir:
+    ensure => directory,
+    mode => '0751',
+    owner => $::horizon::params::apache_user,
+    group => $::horizon::params::apache_group,
+    before => Service[$::horizon::params::http_service],
+    require => Package[$::horizon::params::package_name]
   }
 
    if $::osfamily == 'RedHat'
