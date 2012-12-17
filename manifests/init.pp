@@ -22,6 +22,7 @@
 class horizon(
   $secret_key,
   $package_ensure        = 'present',
+  $bind_address          = '0.0.0.0',
   $cache_server_ip       = '127.0.0.1',
   $cache_server_port     = '11211',
   $swift                 = false,
@@ -33,7 +34,8 @@ class horizon(
   $keystone_default_role = 'Member',
   $django_debug          = 'False',
   $api_result_limit      = 1000,
-  $log_level             = 'DEBUG'
+  $log_level             = 'DEBUG',
+  $listen_ssl            = false
 ) {
 
   include horizon::params
@@ -79,6 +81,23 @@ class horizon(
      }
    }
  
+  file_line { 'httpd_listen_on_bind_address_80':
+     path => $::horizon::params::httpd_listen_config_file,
+     match => '^Listen (.*):?80$',
+     line => "Listen ${bind_address}:80",
+     require => Package["$::horizon::params::package_name"],
+     notify => Service["$::horizon::params::http_service"],
+  }
+  if $listen_ssl {
+    file_line { 'httpd_listen_on_bind_address_443':
+       path => $::horizon::params::httpd_listen_config_file,
+       match => '^Listen (.*):?443$',
+       line => "Listen ${bind_address}:443",
+       require => Package["$::horizon::params::package_name"],
+       notify => Service["$::horizon::params::http_service"],
+    }
+  }
+
   file_line { 'horizon root':
     path => $::horizon::params::httpd_config_file,
     line => "WSGIScriptAlias ${::horizon::params::root_url} /usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi",
