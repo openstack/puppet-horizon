@@ -45,8 +45,11 @@ class horizon(
   # I am totally confused by this, I do not think it should be installed...
   if($::osfamily == 'Debian') {
     package { 'node-less': }
+  } elsif($::osfamily == 'Redhat') {
+    # add a file resource for the vhost to ensure if does not get purged
+    file { '/etc/httpd/conf.d/openstack-dashboard.conf':}
   }
-  
+
   Service <| title == 'memcached' |> -> Class['horizon']
 
   package { 'horizon':
@@ -61,7 +64,7 @@ class horizon(
     notify  => Service[$::horizon::params::http_service],
     require => Package[$::horizon::params::package_name],
   }
- 
+
   file { $::horizon::params::logdir:
     ensure => directory,
     mode => '0751',
@@ -80,7 +83,7 @@ class horizon(
        notify => Service["$::horizon::params::http_service"]
      }
    }
- 
+
   file_line { 'httpd_listen_on_bind_address_80':
      path => $::horizon::params::httpd_listen_config_file,
      match => '^Listen (.*):?80$',

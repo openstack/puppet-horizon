@@ -67,4 +67,18 @@ describe 'horizon' do
       it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^API_RESULT_LIMIT = 4682$/) }
     end
   end
+  describe 'vhost config' do
+    describe 'on debian' do
+      let :facts do
+        {:osfamily => 'Debian'}
+      end
+      it { should_not contain_file('/etc/httpd/conf.d/openstack-dashboard.conf') }
+    end
+    describe 'on redhat' do
+      let :facts do
+        {:osfamily => 'Redhat'}
+      end
+      it { should contain_file('/etc/httpd/conf.d/openstack-dashboard.conf') }
+    end
+  end
 end
