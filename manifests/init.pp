@@ -21,6 +21,8 @@
 #
 class horizon(
   $secret_key,
+  $package_ensure        = 'present',
+  $bind_address          = '0.0.0.0',
   $cache_server_ip       = '127.0.0.1',
   $cache_server_port     = '11211',
   $swift                 = false,
@@ -31,22 +33,28 @@ class horizon(
   $keystone_scheme       = 'http',
   $keystone_default_role = 'Member',
   $django_debug          = 'False',
-  $api_result_limit      = 1000
+  $api_result_limit      = 1000,
+  $log_level             = 'DEBUG',
+  $listen_ssl            = false
 ) {
 
   include horizon::params
+  include apache::mod::wsgi
+  include apache
 
   # I am totally confused by this, I do not think it should be installed...
   if($::osfamily == 'Debian') {
     package { 'node-less': }
+  } elsif($::osfamily == 'Redhat') {
+    # add a file resource for the vhost to ensure if does not get purged
+    file { '/etc/httpd/conf.d/openstack-dashboard.conf':}
   }
 
-  if $cache_server_ip =~ /^127\.0\.0\.1/ {
-    Class['memcached'] -> Class['horizon']
-  }
+  Service <| title == 'memcached' |> -> Class['horizon']
 
-  package { $::horizon::params::package_name:
-    ensure  => present,
+  package { 'horizon':
+    name    => $::horizon::params::package_name,
+    ensure  => $package_ensure,
     require => Package[$::horizon::params::http_service],
   }
 
@@ -55,6 +63,42 @@ class horizon(
     mode    => '0644',
     notify  => Service[$::horizon::params::http_service],
     require => Package[$::horizon::params::package_name],
+  }
+
+  file { $::horizon::params::logdir:
+    ensure => directory,
+    mode => '0751',
+    owner => $::horizon::params::apache_user,
+    group => $::horizon::params::apache_group,
+    before => Service[$::horizon::params::http_service],
+    require => Package[$::horizon::params::package_name]
+  }
+
+   if $::osfamily == 'RedHat'
+   {
+     file_line { 'horizon_redirect_rule':
+       path => $::horizon::params::httpd_config_file,
+       line => 'RedirectMatch permanent ^/$ /dashboard/',
+       require => Package["$::horizon::params::package_name"],
+       notify => Service["$::horizon::params::http_service"]
+     }
+   }
+
+  file_line { 'httpd_listen_on_bind_address_80':
+     path => $::horizon::params::httpd_listen_config_file,
+     match => '^Listen (.*):?80$',
+     line => "Listen ${bind_address}:80",
+     require => Package["$::horizon::params::package_name"],
+     notify => Service["$::horizon::params::http_service"],
+  }
+  if $listen_ssl {
+    file_line { 'httpd_listen_on_bind_address_443':
+       path => $::horizon::params::httpd_listen_config_file,
+       match => '^Listen (.*):?443$',
+       line => "Listen ${bind_address}:443",
+       require => Package["$::horizon::params::package_name"],
+       notify => Service["$::horizon::params::http_service"],
+    }
   }
 
   file_line { 'horizon root':

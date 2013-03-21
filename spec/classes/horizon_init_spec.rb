@@ -42,6 +42,7 @@ describe 'horizon' do
       it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^OPENSTACK_KEYSTONE_DEFAULT_ROLE = "Member"$/) }
       it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^DEBUG = False$/) }
       it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^API_RESULT_LIMIT = 1000$/) }
+      it { should contain_package('horizon').with_ensure('present') }
     end
 
     describe 'when overriding parameters' do
@@ -64,6 +65,20 @@ describe 'horizon' do
       it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^OPENSTACK_KEYSTONE_DEFAULT_ROLE = "SwiftOperator"$/) }
       it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^DEBUG = True$/) }
       it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^API_RESULT_LIMIT = 4682$/) }
+    end
+  end
+  describe 'vhost config' do
+    describe 'on debian' do
+      let :facts do
+        {:osfamily => 'Debian'}
+      end
+      it { should_not contain_file('/etc/httpd/conf.d/openstack-dashboard.conf') }
+    end
+    describe 'on redhat' do
+      let :facts do
+        {:osfamily => 'Redhat'}
+      end
+      it { should contain_file('/etc/httpd/conf.d/openstack-dashboard.conf') }
     end
   end
 end
