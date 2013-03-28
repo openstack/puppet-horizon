@@ -35,6 +35,7 @@ class horizon(
   $django_debug          = 'False',
   $api_result_limit      = 1000,
   $log_level             = 'DEBUG',
+  $can_set_mount_point   = 'True',
   $listen_ssl            = false
 ) {
 

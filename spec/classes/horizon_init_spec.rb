@@ -42,6 +42,7 @@ describe 'horizon' do
       it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^OPENSTACK_KEYSTONE_DEFAULT_ROLE = "Member"$/) }
       it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^DEBUG = False$/) }
       it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^API_RESULT_LIMIT = 1000$/) }
+      it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^\s*'can_set_mount_point': True$/) }
       it { should contain_package('horizon').with_ensure('present') }
     end
 
@@ -56,6 +57,7 @@ describe 'horizon' do
           :keystone_default_role => 'SwiftOperator',
           :django_debug          => 'True',
           :api_result_limit      => 4682,
+          :can_set_mount_point      => 'False',
         }
       end
 
@@ -65,6 +67,7 @@ describe 'horizon' do
       it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^OPENSTACK_KEYSTONE_DEFAULT_ROLE = "SwiftOperator"$/) }
       it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^DEBUG = True$/) }
       it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^API_RESULT_LIMIT = 4682$/) }
+      it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^\s*'can_set_mount_point': False$/) }
     end
   end
   describe 'vhost config' do
