@@ -1,6 +1,5 @@
-OpenStack Dashboard
-===================
+# OpenStack Dashboard
 
-Puppet module for [Horizon](http://horizon.openstack.org/), ([OpenStack Dashboard](http://wiki.openstack.org/OpenStackDashboard))
+Puppet module for [Horizon](http://horizon.openstack.org/), the OpenStack Dashboard Project.
 
-[![Unit Test Status](https://secure.travis-ci.org/puppetlabs/puppetlabs-horizon.png?branch=master)](http://travis-ci.org/puppetlabs/puppetlabs-horizon)
+This version of the module is targeted at Folsom and Grizzly.
