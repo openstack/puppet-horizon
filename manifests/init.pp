@@ -46,10 +46,8 @@ class horizon(
   # I am totally confused by this, I do not think it should be installed...
   if($::osfamily == 'Debian') {
     package { 'node-less': }
-  } elsif($::osfamily == 'Redhat') {
-    # add a file resource for the vhost to ensure if does not get purged
-    file { '/etc/httpd/conf.d/openstack-dashboard.conf':}
   }
+  file { $::horizon::params::httpd_config_file:}
 
   Service <| title == 'memcached' |> -> Class['horizon']
 
