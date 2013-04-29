@@ -12,28 +12,32 @@ describe 'horizon' do
     'include apache'
   end
 
-  describe 'when running on redhat' do
-    let :facts do
-      {
-        'osfamily' => 'RedHat'
-      }
-    end
-
-    it {
-      should contain_service('httpd').with_name('httpd')
-    }
+  let :facts do
+    { :concat_basedir => '/var/lib/puppet/concat' }
   end
 
-  describe 'when running on debian' do
-    let :facts do
-      {
-        'osfamily' => 'Debian'
-      }
+  describe 'on RedHat platforms' do
+    before do
+      facts.merge!({
+        :osfamily               => 'RedHat',
+        :operatingsystemrelease => '6.0'
+      })
     end
 
-    it {
-      should contain_service('httpd').with_name('apache2')
-    }
+    it { should contain_service('httpd').with_name('httpd') }
+    it { should contain_file('/etc/httpd/conf.d/openstack-dashboard.conf') }
+  end
+
+  describe 'on Debian platforms' do
+    before do
+      facts.merge!({
+        :osfamily               => 'Debian',
+        :operatingsystemrelease => '6.0'
+      })
+    end
+
+    it { should contain_service('httpd').with_name('apache2') }
+    it { should_not contain_file('/etc/httpd/conf.d/openstack-dashboard.conf') }
 
     describe 'with default parameters' do
       it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'$/) }
@@ -68,20 +72,6 @@ describe 'horizon' do
       it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^DEBUG = True$/) }
       it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^API_RESULT_LIMIT = 4682$/) }
       it { should contain_file('/etc/openstack-dashboard/local_settings.py').with_content(/^\s*'can_set_mount_point': False$/) }
-    end
-  end
-  describe 'vhost config' do
-    describe 'on debian' do
-      let :facts do
-        {:osfamily => 'Debian'}
-      end
-      it { should_not contain_file('/etc/httpd/conf.d/openstack-dashboard.conf') }
-    end
-    describe 'on redhat' do
-      let :facts do
-        {:osfamily => 'Redhat'}
-      end
-      it { should contain_file('/etc/httpd/conf.d/openstack-dashboard.conf') }
     end
   end
 end
