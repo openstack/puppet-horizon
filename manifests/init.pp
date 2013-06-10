@@ -59,6 +59,10 @@
 #  [*listen_ssl*]
 #    (optional) Defaults to false.
 #
+#  [*local_settings_template*]
+#    (optional) Location of template to use for local_settings.py generation.
+#    Defaults to 'horizon/local_settings.py.erb'.
+#
 class horizon(
   $secret_key,
   $package_ensure          = 'present',
@@ -76,7 +80,8 @@ class horizon(
   $api_result_limit        = 1000,
   $log_level               = 'DEBUG',
   $can_set_mount_point     = 'True',
-  $listen_ssl              = false
+  $listen_ssl              = false,
+  $local_settings_template = 'horizon/local_settings.py.erb'
 ) {
 
   include horizon::params
@@ -99,7 +104,7 @@ class horizon(
   }
 
   file { $::horizon::params::config_file:
-    content => template('horizon/local_settings.py.erb'),
+    content => template($local_settings_template),
     mode    => '0644',
     notify  => Service[$::horizon::params::http_service],
     require => Package['horizon'],
