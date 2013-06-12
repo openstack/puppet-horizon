@@ -76,7 +76,8 @@ class horizon(
   $api_result_limit        = 1000,
   $log_level               = 'DEBUG',
   $can_set_mount_point     = 'True',
-  $listen_ssl              = false
+  $listen_ssl              = false,
+  $django_wsgi            = '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi'
 ) {
 
   include horizon::params
@@ -141,12 +142,11 @@ class horizon(
     }
   }
 
-  $django_wsgi = '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi'
-
   file_line { 'horizon root':
     path    => $::horizon::params::httpd_config_file,
     line    => "WSGIScriptAlias ${::horizon::params::root_url} ${django_wsgi}",
     match   => 'WSGIScriptAlias ',
     require => Package['horizon'],
+    notify  => Service[$::horizon::params::http_service],
   }
 }
