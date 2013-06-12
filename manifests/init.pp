@@ -119,13 +119,11 @@ class horizon(
     require => Package['horizon']
   }
 
-  if $::osfamily == 'RedHat' {
-    file_line { 'horizon_redirect_rule':
-      path    => $::horizon::params::httpd_config_file,
-      line    => 'RedirectMatch permanent ^/$ /dashboard/',
-      require => Package['horizon'],
-      notify  => Service[$::horizon::params::http_service]
-    }
+  file_line { 'horizon_redirect_rule':
+    path    => $::horizon::params::httpd_config_file,
+    line    => "RedirectMatch permanent ^/$ $::horizon::params::root_url/",
+    require => Package['horizon'],
+    notify  => Service[$::horizon::params::http_service]
   }
 
   file_line { 'httpd_listen_on_bind_address_80':
