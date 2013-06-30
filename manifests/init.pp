@@ -88,6 +88,14 @@ class horizon(
   include apache::mod::wsgi
   include apache
 
+  if $swift {
+    warning('swift parameter is deprecated and has no effect.')
+  }
+
+  if $quantum {
+    warning('quantum parameter is deprecated and has no effect.')
+  }
+
   # I am totally confused by this, I do not think it should be installed...
   if ($::osfamily == 'Debian') {
     package { 'node-less': }
@@ -121,7 +129,7 @@ class horizon(
 
   file_line { 'horizon_redirect_rule':
     path    => $::horizon::params::httpd_config_file,
-    line    => "RedirectMatch permanent ^/$ $::horizon::params::root_url/",
+    line    => "RedirectMatch permanent ^/$ ${::horizon::params::root_url}/",
     require => Package['horizon'],
     notify  => Service[$::horizon::params::http_service]
   }

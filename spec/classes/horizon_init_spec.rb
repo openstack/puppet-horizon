@@ -49,7 +49,7 @@ describe 'horizon' do
           'OPENSTACK_HOST = "127.0.0.1"',
           'OPENSTACK_KEYSTONE_URL = "http://%s:5000/v2.0" % OPENSTACK_HOST',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "Member"',
-          "    'can_set_mount_point': True",
+          "    'can_set_mount_point': True,",
           'API_RESULT_LIMIT = 1000'
         ])
       end
@@ -76,7 +76,7 @@ describe 'horizon' do
           'OPENSTACK_HOST = "keystone.example.com"',
           'OPENSTACK_KEYSTONE_URL = "https://%s:4682/v2.0" % OPENSTACK_HOST',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "SwiftOperator"',
-          "    'can_set_mount_point': False",
+          "    'can_set_mount_point': False,",
           'API_RESULT_LIMIT = 4682'
         ])
       end
