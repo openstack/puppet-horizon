@@ -121,7 +121,7 @@ class horizon(
 
   file_line { 'horizon_redirect_rule':
     path    => $::horizon::params::httpd_config_file,
-    line    => "RedirectMatch permanent ^/$ $::horizon::params::root_url/",
+    line    => "RedirectMatch permanent ^/$ ${::horizon::params::root_url}/",
     require => Package['horizon'],
     notify  => Service[$::horizon::params::http_service]
   }
