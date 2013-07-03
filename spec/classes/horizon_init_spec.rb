@@ -63,9 +63,9 @@ describe 'horizon' do
           :keystone_port         => 4682,
           :keystone_scheme       => 'https',
           :keystone_default_role => 'SwiftOperator',
-          :django_debug          => 'True',
+          :django_debug          => true,
           :api_result_limit      => 4682,
-          :can_set_mount_point   => 'False',
+          :can_set_mount_point   => false,
         })
       end
 
