@@ -88,6 +88,14 @@ class horizon(
   include apache::mod::wsgi
   include apache
 
+  if $swift {
+    warning('swift parameter is deprecated and has no effect.')
+  }
+
+  if $quantum {
+    warning('quantum parameter is deprecated and has no effect.')
+  }
+
   # I am totally confused by this, I do not think it should be installed...
   if ($::osfamily == 'Debian') {
     package { 'node-less': }
