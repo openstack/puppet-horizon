@@ -86,6 +86,12 @@ Contributors
 Release Notes
 -------------
 
+**2.1.0**
+
+* Updated local_settings.py.
+* Pinned Apache module version.
+* Varioud lint fixes.
+
 **2.0.0**
 
 * Upstream is now part of stackfoge.
