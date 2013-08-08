@@ -20,9 +20,6 @@
 #  [*swift*]
 #    (optional) Enable Swift interface extension. Defaults to false.
 #
-#  [*quantum*]
-#    (optional) Enable Quantum interface extension. Defaults to false.
-#
 #  [*horizon_app_links*]
 #    (optional) Array of arrays that can be used to add call-out links
 #    to the dashboard for other apps. There is no specific requirement
@@ -70,7 +67,6 @@ class horizon(
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
   $swift                   = false,
-  $quantum                 = false,
   $horizon_app_links       = false,
   $keystone_host           = '127.0.0.1',
   $keystone_port           = 5000,
@@ -90,10 +86,6 @@ class horizon(
 
   if $swift {
     warning('swift parameter is deprecated and has no effect.')
-  }
-
-  if $quantum {
-    warning('quantum parameter is deprecated and has no effect.')
   }
 
   # I am totally confused by this, I do not think it should be installed...
