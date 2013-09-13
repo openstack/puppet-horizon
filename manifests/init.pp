@@ -8,6 +8,11 @@
 #    (required) Secret key. This is used by Django to provide cryptographic
 #    signing, and should be set to a unique, unpredictable value.
 #
+#  [*fqdn*]
+#    (optional) FQDN(s) used to access Horizon. This is used by Django for
+#    security reasons. Can be set to * in environments where security is
+#    deemed unimportant. Defaults to ::fqdn
+#
 #  [*package_ensure*]
 #     (optional) Package ensure state. Defaults to 'present'.
 #
@@ -62,6 +67,7 @@
 #
 class horizon(
   $secret_key,
+  $fqdn                    = $::fqdn,
   $package_ensure          = 'present',
   $bind_address            = '0.0.0.0',
   $cache_server_ip         = '127.0.0.1',

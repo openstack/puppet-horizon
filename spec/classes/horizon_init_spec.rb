@@ -2,7 +2,9 @@ require 'spec_helper'
 
 describe 'horizon' do
   let :params do
-    { 'secret_key' => 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0' }
+    { 'secret_key' => 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0',
+      'fqdn'       => '*'
+    }
   end
 
   let :pre_condition do
@@ -45,6 +47,7 @@ describe 'horizon' do
       it 'generates local_settings.py' do
         verify_contents(subject, '/etc/openstack-dashboard/local_settings.py', [
           'DEBUG = False',
+          "ALLOWED_HOSTS = ['*', ]",
           "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
           'OPENSTACK_HOST = "127.0.0.1"',
           'OPENSTACK_KEYSTONE_URL = "http://%s:5000/v2.0" % OPENSTACK_HOST',
@@ -72,6 +75,7 @@ describe 'horizon' do
       it 'generates local_settings.py' do
         verify_contents(subject, '/etc/openstack-dashboard/local_settings.py', [
           'DEBUG = True',
+          "ALLOWED_HOSTS = ['*', ]",
           "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
           'OPENSTACK_HOST = "keystone.example.com"',
           'OPENSTACK_KEYSTONE_URL = "https://%s:4682/v2.0" % OPENSTACK_HOST',
