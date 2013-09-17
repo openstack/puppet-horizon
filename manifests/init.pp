@@ -85,8 +85,8 @@ class horizon(
 ) {
 
   include horizon::params
-  include apache::mod::wsgi
   include apache
+  include apache::mod::wsgi
 
   if $swift {
     warning('swift parameter is deprecated and has no effect.')
