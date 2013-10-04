@@ -27,6 +27,31 @@ describe 'horizon' do
 
     it { should contain_service('httpd').with_name('httpd') }
     it { should contain_file('/etc/httpd/conf.d/openstack-dashboard.conf') }
+    describe 'with default parameters' do
+      it { should contain_package('horizon').with_ensure('present') }
+      it { should contain_file_line('horizon_redirect_rule').with(
+         :line => "RedirectMatch permanent ^/$ \/dashboard/"
+      )}
+    end
+
+    describe 'when ssl is enabled' do
+      before do
+        params.merge!({
+          :listen_ssl => true,
+          :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
+          :horizon_key => '/etc/pki/tls/private/httpd.key',
+          :horizon_ca => '/etc/pki/tls/certs/ca.crt',
+        })
+      end
+
+      it { should contain_file_line('httpd_sslcert_path').with(
+         :line => "SSLCertificateFile /etc/pki/tls/certs/httpd.crt"
+      )}
+      it { should contain_file_line('httpd_sslkey_path').with(
+         :line => "SSLCertificateKeyFile /etc/pki/tls/private/httpd.key"
+      )}
+    end
+
   end
 
   describe 'on Debian platforms' do
@@ -42,6 +67,9 @@ describe 'horizon' do
 
     describe 'with default parameters' do
       it { should contain_package('horizon').with_ensure('present') }
+      it { should contain_file_line('horizon_redirect_rule').with(
+         :line => "RedirectMatch permanent ^/$ /horizon/"
+      )}
       it 'generates local_settings.py' do
         verify_contents(subject, '/etc/openstack-dashboard/local_settings.py', [
           'DEBUG = False',
@@ -96,6 +124,24 @@ describe 'horizon' do
           'DEBUG = True'
         ])
       end
+    end
+
+    describe 'when ssl is enabled' do
+      before do
+        params.merge!({
+          :listen_ssl => true,
+          :horizon_cert => '/etc/ssl/localcerts/apache.crt',
+          :horizon_key => '/etc/ssl/localcerts/apache.key',
+          :horizon_ca => '/etc/ssl/localcerts/ca.crt',
+        })
+      end
+
+      it { should contain_file_line('httpd_sslcert_path').with(
+         :line => "SSLCertificateFile /etc/ssl/localcerts/apache.crt"
+      )}
+      it { should contain_file_line('httpd_sslkey_path').with(
+         :line => "SSLCertificateKeyFile /etc/ssl/localcerts/apache.key"
+      )}
     end
   end
 end

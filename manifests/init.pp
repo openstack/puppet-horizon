@@ -77,6 +77,9 @@ class horizon(
   $log_level               = 'DEBUG',
   $can_set_mount_point     = 'True',
   $listen_ssl              = false,
+  $horizon_cert            = undef,
+  $horizon_key             = undef,
+  $horizon_ca              = undef,
   $local_settings_template = 'horizon/local_settings.py.erb'
 ) {
 
@@ -135,12 +138,52 @@ class horizon(
   }
 
   if $listen_ssl {
+    include apache::mod::ssl
+
+    if $horizon_ca == undef or $horizon_cert == undef or $horizon_key == undef {
+      fail('The horizon CA, cert and key are all required.')
+    }
+
     file_line { 'httpd_listen_on_bind_address_443':
       path    => $::horizon::params::httpd_listen_config_file,
       match   => '^Listen (.*):?443$',
       line    => "Listen ${bind_address}:443",
       require => Package['horizon'],
       notify  => Service[$::horizon::params::http_service],
+    }
+
+    # Enable SSL Engine
+    file_line{'httpd_sslengine_on':
+      path    => $::horizon::params::httpd_listen_config_file,
+      match   => '^SSLEngine ',
+      line    => 'SSLEngine on',
+      notify  => Service[$::horizon::params::http_service],
+      require => Class['apache::mod::ssl'],
+    }
+
+    # set the name of the ssl cert and key file
+    file_line{'httpd_sslcert_path':
+      path    => $::horizon::params::httpd_listen_config_file,
+      match   => '^SSLCertificateFile ',
+      line    => "SSLCertificateFile ${horizon_cert}",
+      notify  => Service[$::horizon::params::http_service],
+      require => Class['apache::mod::ssl'],
+    }
+
+    file_line{'httpd_sslkey_path':
+      path    => $::horizon::params::httpd_listen_config_file,
+      match   => '^SSLCertificateKeyFile ',
+      line    => "SSLCertificateKeyFile ${horizon_key}",
+      notify  => Service[$::horizon::params::http_service],
+      require => Class['apache::mod::ssl'],
+    }
+
+    file_line{'httpd_sslca_path':
+      path    => $::horizon::params::httpd_listen_config_file,
+      match   => '^SSLCACertificateFile ',
+      line    => "SSLCACertificateFile ${horizon_ca}",
+      notify  => Service[$::horizon::params::http_service],
+      require => Class['apache::mod::ssl'],
     }
   }
 
