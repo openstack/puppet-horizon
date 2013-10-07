@@ -86,6 +86,11 @@ Contributors
 Release Notes
 -------------
 
+**2.2.0**
+
+* Fixed apache 0.9.0 incompatability.
+* Various lint fixes.
+
 **2.1.0**
 
 * Updated local_settings.py.
