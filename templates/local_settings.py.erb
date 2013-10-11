@@ -273,6 +273,12 @@ LOGGING = {
     # if nothing is specified here and disable_existing_loggers is True,
     # django.db.backends will still log unless it is disabled explicitly.
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s %(process)d %(levelname)s %(name)s '
+                      '%(message)s'
+        },
+    },
     'handlers': {
         'null': {
             'level': 'DEBUG',
@@ -287,6 +293,7 @@ LOGGING = {
             'level': '<%= @log_level %>',
             'class': 'logging.FileHandler',
             'filename': '<%= scope.lookupvar("horizon::params::logdir") %>/horizon.log',
+            'formatter': 'verbose',
         },
     },
     'loggers': {
@@ -301,45 +308,103 @@ LOGGING = {
             'propagate': False,
         },
         'horizon': {
-#            'handlers': ['console'],
+            # 'handlers': ['console'],
             'handlers': ['file'],
+            # 'level': 'DEBUG',
+            'level': '<%= @log_level %>',
             'propagate': False,
         },
         'openstack_dashboard': {
-#            'handlers': ['console'],
+            # 'handlers': ['console'],
             'handlers': ['file'],
+            # 'level': 'DEBUG',
+            'level': '<%= @log_level %>',
             'propagate': False,
         },
         'novaclient': {
-#            'handlers': ['console'],
+            # 'handlers': ['console'],
             'handlers': ['file'],
+            # 'level': 'DEBUG',
+            'level': '<%= @log_level %>',
             'propagate': False,
         },
         'cinderclient': {
-#            'handlers': ['console'],
+            # 'handlers': ['console'],
             'handlers': ['file'],
+            # 'level': 'DEBUG',
+            'level': '<%= @log_level %>',
             'propagate': False,
         },
         'keystoneclient': {
-#            'handlers': ['console'],
+            # 'handlers': ['console'],
             'handlers': ['file'],
+            # 'level': 'DEBUG',
+            'level': '<%= @log_level %>',
             'propagate': False,
         },
         'glanceclient': {
-#            'handlers': ['console'],
+            # 'handlers': ['console'],
             'handlers': ['file'],
+            # 'level': 'DEBUG',
+            'level': '<%= @log_level %>',
+            'propagate': False,
+        },
+        'neutronclient': {
+            # 'handlers': ['console'],
+            'handlers': ['file'],
+            # 'level': 'DEBUG',
+            'level': '<%= @log_level %>',
             'propagate': False,
         },
         'heatclient': {
-#            'handlers': ['console'],
+            # 'handlers': ['console'],
             'handlers': ['file'],
+            # 'level': 'DEBUG',
+            'level': '<%= @log_level %>',
+            'propagate': False,
+        },
+        'ceilometerclient': {
+            # 'handlers': ['console'],
+            'handlers': ['file'],
+            # 'level': 'DEBUG',
+            'level': '<%= @log_level %>',
+            'propagate': False,
+        },
+        'troveclient': {
+            # 'handlers': ['console'],
+            'handlers': ['file'],
+            # 'level': 'DEBUG',
+            'level': '<%= @log_level %>',
+            'propagate': False,
+        },
+        'swiftclient': {
+            # 'handlers': ['console'],
+            'handlers': ['file'],
+            # 'level': 'DEBUG',
+            'level': '<%= @log_level %>',
+            'propagate': False,
+        },
+        'openstack_auth': {
+            # 'handlers': ['console'],
+            'handlers': ['file'],
+            # 'level': 'DEBUG',
+            'level': '<%= @log_level %>',
             'propagate': False,
         },
         'nose.plugins.manager': {
-#            'handlers': ['console'],
+            # 'handlers': ['console'],
             'handlers': ['file'],
+            # 'level': 'DEBUG',
+            'level': '<%= @log_level %>',
             'propagate': False,
-        }
+        },
+        'django': {
+            # 'handlers': ['console'],
+            'handlers': ['file'],
+            # 'level': 'DEBUG',
+            'level': '<%= @log_level %>',
+            'propagate': False,
+        },
     }
 }
 
