@@ -449,6 +449,7 @@ SECURITY_GROUP_RULES = {
 }
 
 LOGIN_URL = '<%= scope.lookupvar("horizon::params::root_url") %>/auth/login/'
+LOGOUT_URL = '<%= scope.lookupvar("horizon::params::root_url") %>/auth/logout/'
 LOGIN_REDIRECT_URL = '<%= scope.lookupvar("horizon::params::root_url") %>'
 
 # The Ubuntu package includes pre-compressed JS and compiled CSS to allow
