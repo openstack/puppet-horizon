@@ -53,7 +53,10 @@ describe 'horizon' do
           'OPENSTACK_KEYSTONE_URL = "http://%s:5000/v2.0" % OPENSTACK_HOST',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "Member"',
           "    'can_set_mount_point': True,",
-          'API_RESULT_LIMIT = 1000'
+          'API_RESULT_LIMIT = 1000',
+          "LOGIN_URL = '/horizon/auth/login/'",
+          "LOGOUT_URL = '/horizon/auth/logout/'",
+          "LOGIN_REDIRECT_URL = '/horizon'"
         ])
       end
     end
