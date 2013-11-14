@@ -85,6 +85,15 @@ Contributors
 Release Notes
 -------------
 
+**3.0.0**
+
+* Major release for OpenStack Havana
+* Updated user and group for Debian family OSes.
+* Updated policy files for RedHat family OSes.
+* Enabled SSL support with cert/key.
+* Improved default logging configuration.
+* Fixed bug to set LOGOUT_URL properly.
+
 **2.2.0**
 
 * Fixed apache 0.9.0 incompatability.
