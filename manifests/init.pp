@@ -65,6 +65,10 @@
 #    (optional) Location of template to use for local_settings.py generation.
 #    Defaults to 'horizon/local_settings.py.erb'.
 #
+#  [*help_url*]
+#    (optional) Location where the documentation should point.
+#    Defaults to 'http://docs.openstack.org'.
+
 class horizon(
   $secret_key,
   $fqdn                    = $::fqdn,
@@ -86,6 +90,7 @@ class horizon(
   $horizon_cert            = undef,
   $horizon_key             = undef,
   $horizon_ca              = undef,
+  $help_url                = 'http://docs.openstack.org',
   $local_settings_template = 'horizon/local_settings.py.erb'
 ) {
 

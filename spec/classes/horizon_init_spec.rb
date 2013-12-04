@@ -121,6 +121,7 @@ describe 'horizon' do
       before do
         params.merge!({
           :django_debug            => 'True',
+          :help_url                => 'https://docs.openstack.org',
           :local_settings_template => fixtures_path + '/override_local_settings.py.erb'
         })
       end
@@ -128,7 +129,22 @@ describe 'horizon' do
       it 'uses the custom local_settings.py template' do
         verify_contents(subject, '/etc/openstack-dashboard/local_settings.py', [
           '# Custom local_settings.py',
-          'DEBUG = True'
+          'DEBUG = True',
+          "HORIZON_CONFIG = {",
+          "    'dashboards': ('project', 'admin', 'settings',),",
+          "    'default_dashboard': 'project',",
+          "    'user_home': 'openstack_dashboard.views.get_user_home',",
+          "    'ajax_queue_limit': 10,",
+          "    'auto_fade_alerts': {",
+          "        'delay': 3000,",
+          "        'fade_duration': 1500,",
+          "        'types': ['alert-success', 'alert-info']",
+          "    },",
+          "    'help_url': \"https://docs.openstack.org\",",
+          "    'exceptions': {'recoverable': exceptions.RECOVERABLE,",
+          "                   'not_found': exceptions.NOT_FOUND,",
+          "                   'unauthorized': exceptions.UNAUTHORIZED},",
+          "}",
         ])
       end
     end
