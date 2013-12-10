@@ -77,8 +77,7 @@ describe 'horizon' do
           'DEBUG = False',
           "ALLOWED_HOSTS = ['*', ]",
           "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
-          'OPENSTACK_HOST = "127.0.0.1"',
-          'OPENSTACK_KEYSTONE_URL = "http://%s:5000/v2.0" % OPENSTACK_HOST',
+          'OPENSTACK_KEYSTONE_URL = "http://127.0.0.1:5000/v2.0"',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "_member_"',
           "    'can_set_mount_point': True,",
           'API_RESULT_LIMIT = 1000',
@@ -97,6 +96,7 @@ describe 'horizon' do
           :keystone_port         => 4682,
           :keystone_scheme       => 'https',
           :keystone_default_role => 'SwiftOperator',
+          :keystone_url          => false,
           :django_debug          => true,
           :api_result_limit      => 4682,
           :can_set_mount_point   => false,
@@ -129,6 +129,29 @@ describe 'horizon' do
         verify_contents(subject, '/etc/openstack-dashboard/local_settings.py', [
           '# Custom local_settings.py',
           'DEBUG = True'
+        ])
+      end
+    end
+
+    describe 'when overriding keystone_url' do
+      before do
+        params.merge!({
+          :keystone_url => 'https://identity.example.com/public/endpoint/v2.0'
+        })
+      end
+
+      it 'generates local_settings.py' do
+        verify_contents(subject, '/etc/openstack-dashboard/local_settings.py', [
+          'DEBUG = False',
+          "ALLOWED_HOSTS = ['*', ]",
+          "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
+          'OPENSTACK_KEYSTONE_URL = "https://identity.example.com/public/endpoint/v2.0"',
+          'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "_member_"',
+          "    'can_set_mount_point': True,",
+          'API_RESULT_LIMIT = 1000',
+          "LOGIN_URL = '/horizon/auth/login/'",
+          "LOGOUT_URL = '/horizon/auth/logout/'",
+          "LOGIN_REDIRECT_URL = '/horizon'"
         ])
       end
     end
