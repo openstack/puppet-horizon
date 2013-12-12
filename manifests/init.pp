@@ -61,6 +61,9 @@
 #  [*listen_ssl*]
 #    (optional) Defaults to false.
 #
+#  [*listen_plain*]
+#    (optional) Defaults to true, false disabled plain http access.
+#
 #  [*local_settings_template*]
 #    (optional) Location of template to use for local_settings.py generation.
 #    Defaults to 'horizon/local_settings.py.erb'.
@@ -86,6 +89,7 @@ class horizon(
   $api_result_limit        = 1000,
   $log_level               = 'DEBUG',
   $can_set_mount_point     = 'True',
+  $listen_plain            = true,
   $listen_ssl              = false,
   $horizon_cert            = undef,
   $horizon_key             = undef,
@@ -95,19 +99,14 @@ class horizon(
 ) {
 
   include horizon::params
-  include apache
+  class {'apache': default_mods => false, default_vhost => false }
+  include apache::mod::alias
+  include apache::mod::mime
   include apache::mod::wsgi
 
   if $swift {
     warning('swift parameter is deprecated and has no effect.')
   }
-
-  # I am totally confused by this, I do not think it should be installed...
-  if ($::osfamily == 'Debian') {
-    package { 'node-less': }
-  }
-
-  file { $::horizon::params::httpd_config_file: }
 
   Service <| title == 'memcached' |> -> Class['horizon']
 
@@ -117,6 +116,19 @@ class horizon(
     require => Package[$::horizon::params::http_service],
   }
 
+  # common properties to both vhosts
+  $django_wsgi = '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi'
+  $aliases = [ 
+    { 
+      alias => '/static', 
+      path => '/usr/share/openstack-dashboard/openstack_dashboard/static/', 
+    } 
+  ]
+  $wsgi_daemon_process_options = { 
+    user => 'horizon', group => 'horizon', processes => '3', threads => '10',
+  }
+
+  # the horizon config file
   file { $::horizon::params::config_file:
     content => template($local_settings_template),
     mode    => '0644',
@@ -124,6 +136,7 @@ class horizon(
     require => Package['horizon'],
   }
 
+  # horizon logs go to their own dir
   file { $::horizon::params::logdir:
     ensure  => directory,
     mode    => '0751',
@@ -133,77 +146,61 @@ class horizon(
     require => Package['horizon']
   }
 
-  file_line { 'horizon_redirect_rule':
-    path    => $::horizon::params::httpd_config_file,
-    line    => "RedirectMatch permanent ^/$ ${::horizon::params::root_url}/",
-    require => Package['horizon'],
-    notify  => Service[$::horizon::params::http_service]
+  # FIXME: ensure old httpd config is gone (it keeps coming back on install?)
+  file { '/etc/apache2/conf.d/openstack-dashboard.conf':
+    ensure => absent,
   }
 
-  file_line { 'httpd_listen_on_bind_address_80':
-    path    => $::horizon::params::httpd_listen_config_file,
-    match   => '^Listen (.*):?80$',
-    line    => "Listen ${bind_address}:80",
-    require => Package['horizon'],
-    notify  => Service[$::horizon::params::http_service],
+  File[$::horizon::params::config_file] -> File[$::horizon::params::logdir]
+  -> File['/etc/apache2/conf.d/openstack-dashboard.conf'] -> Apache::Vhost[$bind_address]
+  -> Apache::Vhost["${bind_address} ssl"]
+
+  # non ssl vhost
+  if $listen_plain {
+
+    apache::vhost {$bind_address:
+      servername                         => $bind_address,
+      port                               => '80',
+      docroot                            => '/var/www',
+      aliases                            => $aliases,
+      custom_fragment                    => "RedirectMatch permanent ^/$ ${::horizon::params::root_url}/",
+      wsgi_daemon_process                => $::horizon::params::apache_user,
+      wsgi_daemon_process_options        => $wsgi_daemon_process_options, 
+      wsgi_process_group                 => $::horizon::params::apache_group,
+      wsgi_script_aliases                => {
+        "${::horizon::params::root_url}" => $django_wsgi,
+      },
+    }
+
   }
 
+  # ssl vhost
   if $listen_ssl {
+
     include apache::mod::ssl
 
     if $horizon_ca == undef or $horizon_cert == undef or $horizon_key == undef {
       fail('The horizon CA, cert and key are all required.')
     }
 
-    file_line { 'httpd_listen_on_bind_address_443':
-      path    => $::horizon::params::httpd_listen_config_file,
-      match   => '^Listen (.*):?443$',
-      line    => "Listen ${bind_address}:443",
-      require => Package['horizon'],
-      notify  => Service[$::horizon::params::http_service],
+    apache::vhost {"${bind_address} ssl":
+      servername                         => $bind_address,
+      port                               => '443',
+      docroot                            => '/var/www',
+      aliases                            => $aliases,
+      custom_fragment                    => "RedirectMatch permanent ^/$ ${::horizon::params::root_url}/",
+      ssl                                => true,
+      ssl_cert                           => "${horizon_cert}",
+      ssl_key                            => "${horizon_key}",
+      ssl_ca                             => "${horizon_ca}",
+      wsgi_daemon_process                => "${::horizon::params::apache_user}-ssl",
+      wsgi_daemon_process_options        => $wsgi_daemon_process_options,
+      wsgi_process_group                 => $::horizon::params::apache_group,
+      wsgi_script_aliases                => {
+        "${::horizon::params::root_url}" => $django_wsgi,
+      },
     }
 
-    # Enable SSL Engine
-    file_line{'httpd_sslengine_on':
-      path    => $::horizon::params::httpd_listen_config_file,
-      match   => '^SSLEngine ',
-      line    => 'SSLEngine on',
-      notify  => Service[$::horizon::params::http_service],
-      require => Class['apache::mod::ssl'],
-    }
-
-    # set the name of the ssl cert and key file
-    file_line{'httpd_sslcert_path':
-      path    => $::horizon::params::httpd_listen_config_file,
-      match   => '^SSLCertificateFile ',
-      line    => "SSLCertificateFile ${horizon_cert}",
-      notify  => Service[$::horizon::params::http_service],
-      require => Class['apache::mod::ssl'],
-    }
-
-    file_line{'httpd_sslkey_path':
-      path    => $::horizon::params::httpd_listen_config_file,
-      match   => '^SSLCertificateKeyFile ',
-      line    => "SSLCertificateKeyFile ${horizon_key}",
-      notify  => Service[$::horizon::params::http_service],
-      require => Class['apache::mod::ssl'],
-    }
-
-    file_line{'httpd_sslca_path':
-      path    => $::horizon::params::httpd_listen_config_file,
-      match   => '^SSLCACertificateFile ',
-      line    => "SSLCACertificateFile ${horizon_ca}",
-      notify  => Service[$::horizon::params::http_service],
-      require => Class['apache::mod::ssl'],
-    }
   }
 
-  $django_wsgi = '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi'
-
-  file_line { 'horizon root':
-    path    => $::horizon::params::httpd_config_file,
-    line    => "WSGIScriptAlias ${::horizon::params::root_url} ${django_wsgi}",
-    match   => 'WSGIScriptAlias ',
-    require => Package['horizon'],
-  }
 }
