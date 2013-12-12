@@ -47,6 +47,14 @@
 #  [*django_debug*]
 #    (optional) Enable or disable Django debugging. Defaults to 'False'.
 #
+#  [*openstack_endpoint_type*]
+#    (optional) endpoint type to use for the endpoints in the Keystone
+#    service catalog. Defaults to 'undef'.
+#
+#  [*secondary_endpoint_type*]
+#    (optional) secondary endpoint type to use for the endpoints in the
+#    Keystone service catalog. Defaults to 'undef'.
+#
 #  [*api_result_limit*]
 #    (optional) Maximum number of Swift containers/objects to display
 #    on a single page. Defaults to 1000.
@@ -83,6 +91,8 @@ class horizon(
   $keystone_scheme         = 'http',
   $keystone_default_role   = 'Member',
   $django_debug            = 'False',
+  $openstack_endpoint_type = undef,
+  $secondary_endpoint_type = undef,
   $api_result_limit        = 1000,
   $log_level               = 'DEBUG',
   $can_set_mount_point     = 'True',

@@ -166,5 +166,33 @@ describe 'horizon' do
          :line => "SSLCertificateKeyFile /etc/ssl/localcerts/apache.key"
       )}
     end
+
+    describe 'with openstack_endpoint_type' do
+      before do
+        params.merge!({
+          :openstack_endpoint_type => 'internalURL',
+        })
+      end
+
+      it 'generates local_settings.py' do
+        verify_contents(subject, '/etc/openstack-dashboard/local_settings.py', [
+          'OPENSTACK_ENDPOINT_TYPE = "internalURL"',
+        ])
+      end
+    end
+
+    describe 'with secondary_endpoint_type' do
+      before do
+        params.merge!({
+          :secondary_endpoint_type => 'ANY-VALUE',
+        })
+      end
+
+      it 'generates local_settings.py' do
+        verify_contents(subject, '/etc/openstack-dashboard/local_settings.py', [
+          'SECONDARY_ENDPOINT_TYPE = "ANY-VALUE"',
+        ])
+      end
+    end
   end
 end
