@@ -42,7 +42,7 @@
 #    (optional) Scheme of the Keystone service. Defaults to 'http'.
 #
 #  [*keystone_default_role*]
-#    (optional) Default Keystone role for new users. Defaults to 'Member'.
+#    (optional) Default Keystone role for new users. Defaults to '_member_'.
 #
 #  [*django_debug*]
 #    (optional) Enable or disable Django debugging. Defaults to 'False'.
@@ -77,7 +77,7 @@ class horizon(
   $keystone_host           = '127.0.0.1',
   $keystone_port           = 5000,
   $keystone_scheme         = 'http',
-  $keystone_default_role   = 'Member',
+  $keystone_default_role   = '_member_',
   $django_debug            = 'False',
   $api_result_limit        = 1000,
   $log_level               = 'DEBUG',
