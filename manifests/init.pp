@@ -112,11 +112,6 @@ class horizon(
     warning('swift parameter is deprecated and has no effect.')
   }
 
-  # I am totally confused by this, I do not think it should be installed...
-  if ($::osfamily == 'Debian') {
-    package { 'node-less': }
-  }
-
   file { $::horizon::params::httpd_config_file: }
 
   Service <| title == 'memcached' |> -> Class['horizon']
