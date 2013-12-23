@@ -22,14 +22,16 @@ class horizon::params {
       $httpd_config_file           = '/etc/apache2/conf.d/openstack-dashboard.conf'
       $httpd_listen_config_file    = '/etc/apache2/ports.conf'
       $root_url                    = '/horizon'
-      $apache_user                 = 'horizon'
-      $apache_group                = 'horizon'
       case $::operatingsystem {
         'Debian': {
             $package_name          = 'openstack-dashboard-apache'
+            $apache_user           = 'www-data'
+            $apache_group          = 'www-data'
         }
         default: {
             $package_name          = 'openstack-dashboard'
+            $apache_user           = 'horizon'
+            $apache_group          = 'horizon'
         }
       }
     }
