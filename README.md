@@ -93,6 +93,9 @@ Release Notes
 * Enabled SSL support with cert/key.
 * Improved default logging configuration.
 * Fixed bug to set LOGOUT_URL properly.
+* Introduced new parameters: keystone_url, help_url, endpoint type.
+* Fixed user/group regression for Debian.
+* Changed keystone_default_role to _member_
 
 **2.2.0**
 
