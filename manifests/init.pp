@@ -72,10 +72,6 @@
 #  [*log_level*]
 #    (optional) Log level. Defaults to 'DEBUG'.
 #
-#  [*can_set_mount_point*]
-#    (optional) Add the option to set the mount point from the UI.
-#    Defaults to 'True'.
-#
 #  [*local_settings_template*]
 #    (optional) Location of template to use for local_settings.py generation.
 #    Defaults to 'horizon/local_settings.py.erb'.
@@ -87,6 +83,15 @@
 #  [*compress_offline*]
 #    (optional) Boolean to enable offline compress of assets.
 #    Defaults to True
+#
+#  [*hypervisor_options*]
+#    (optional) A hash of parameters to enable features specific to
+#    Hypervisors. These include:
+#    'can_set_mount_point': Boolean to enable or disable mount point setting
+#      Defaults to 'True'.
+#    'can_set_password': Boolean to enable or disable VM password setting.
+#      Works only with Xen Hypervisor.
+#      Defaults to 'False'.
 #
 #  [*neutron_options*]
 #    (optional) A hash of parameters to enable features specific to
@@ -126,7 +131,7 @@
 # === Deprecation notes
 #
 # If any value is provided for keystone_scheme, keystone_host or keystone_port parameters,
-# keystone_url will be completely ignored.
+# keystone_url will be completely ignored. Also can_set_mount_point is deprecated.
 #
 # === Examples
 #
@@ -150,7 +155,6 @@ class horizon(
   $secondary_endpoint_type = undef,
   $api_result_limit        = 1000,
   $log_level               = 'DEBUG',
-  $can_set_mount_point     = 'True',
   $help_url                = 'http://docs.openstack.org',
   $local_settings_template = 'horizon/local_settings.py.erb',
   $configure_apache        = true,
@@ -160,8 +164,10 @@ class horizon(
   $horizon_key             = undef,
   $horizon_ca              = undef,
   $compress_offline        = 'True',
+  $hypervisor_options      = {},
   $neutron_options         = {},
   # DEPRECATED PARAMETERS
+  $can_set_mount_point     = undef,
   $keystone_host           = undef,
   $keystone_port           = undef,
   $keystone_scheme         = undef,
@@ -183,6 +189,22 @@ class horizon(
 
   if $keystone_port {
     warning('The keystone_port parameter is deprecated, use keystone_url instead.')
+  }
+
+  # Default options for the OPENSTACK_HYPERVISOR_FEATURES section. These will
+  # be merged with user-provided options when the local_settings.py.erb
+  # template is interpolated. Also deprecates can_set_mount_point.
+  if $can_set_mount_point {
+    warning('The can_set_mount_point parameter is deprecated, use hypervisor_options instead.')
+    $hypervisor_defaults = {
+      'can_set_mount_point' => $can_set_mount_point,
+      'can_set_password'    => false
+    }
+  } else {
+    $hypervisor_defaults = {
+      'can_set_mount_point' => true,
+      'can_set_password'    => false
+    }
   }
 
   # Default options for the OPENSTACK_NEUTRON_NETWORK section.  These will

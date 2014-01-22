@@ -168,8 +168,12 @@ OPENSTACK_KEYSTONE_BACKEND = {
     'can_edit_role': True
 }
 
+# The OPENSTACK_HYPERVISOR_FEATURES settings can be used to enable optional
+# services provided by hypervisors.
 OPENSTACK_HYPERVISOR_FEATURES = {
-    'can_set_mount_point': <%= @can_set_mount_point.to_s.capitalize %>,
+    <%- @hypervisor_options = @hypervisor_defaults.merge(@hypervisor_options) -%>
+    'can_set_mount_point': <%= @hypervisor_options['can_set_mount_point'].to_s.capitalize %>,
+    'can_set_password': <%= @hypervisor_options['can_set_password'].to_s.capitalize %>,
 }
 
 # The OPENSTACK_NEUTRON_NETWORK settings can be used to enable optional
