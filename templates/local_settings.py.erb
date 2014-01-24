@@ -526,3 +526,8 @@ SECURITY_GROUP_RULES = {
 LOGIN_URL = '<%= scope.lookupvar("horizon::params::root_url") %>/auth/login/'
 LOGOUT_URL = '<%= scope.lookupvar("horizon::params::root_url") %>/auth/logout/'
 LOGIN_REDIRECT_URL = '<%= scope.lookupvar("horizon::params::root_url") %>'
+
+# The Ubuntu package includes pre-compressed JS and compiled CSS to allow
+# offline compression by default.  To enable online compression, install
+# the python-lesscpy package and disable the following option.
+COMPRESS_OFFLINE = <%= @compress_offline.to_s.capitalize %>

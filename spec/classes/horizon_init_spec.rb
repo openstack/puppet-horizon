@@ -83,7 +83,8 @@ describe 'horizon' do
           'API_RESULT_LIMIT = 1000',
           "LOGIN_URL = '/horizon/auth/login/'",
           "LOGOUT_URL = '/horizon/auth/logout/'",
-          "LOGIN_REDIRECT_URL = '/horizon'"
+          "LOGIN_REDIRECT_URL = '/horizon'",
+          'COMPRESS_OFFLINE = True'
         ])
       end
     end
@@ -100,6 +101,7 @@ describe 'horizon' do
           :django_debug          => true,
           :api_result_limit      => 4682,
           :can_set_mount_point   => false,
+          :compress_offline      => 'False',
         })
       end
 
@@ -112,7 +114,8 @@ describe 'horizon' do
           'OPENSTACK_KEYSTONE_URL = "https://%s:4682/v2.0" % OPENSTACK_HOST',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "SwiftOperator"',
           "    'can_set_mount_point': False,",
-          'API_RESULT_LIMIT = 4682'
+          'API_RESULT_LIMIT = 4682',
+          'COMPRESS_OFFLINE = False'
         ])
       end
     end

@@ -82,6 +82,10 @@
 #  [*help_url*]
 #    (optional) Location where the documentation should point.
 #    Defaults to 'http://docs.openstack.org'.
+#
+#  [*compress_offline*]
+#    (optional) Boolean to enable offline compress of assets.
+#    Defaults to True
 
 class horizon(
   $secret_key,
@@ -108,7 +112,8 @@ class horizon(
   $horizon_key             = undef,
   $horizon_ca              = undef,
   $help_url                = 'http://docs.openstack.org',
-  $local_settings_template = 'horizon/local_settings.py.erb'
+  $local_settings_template = 'horizon/local_settings.py.erb',
+  $compress_offline        = 'True'
 ) {
 
   include horizon::params
