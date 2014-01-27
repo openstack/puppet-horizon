@@ -83,6 +83,22 @@ describe 'horizon' do
       end
     end
 
+    context 'with deprecated parameters' do
+      before do
+        params.merge!({
+          :keystone_host   => 'keystone.example.com',
+          :keystone_port   => 4682,
+          :keystone_scheme => 'https',
+        })
+      end
+
+      it 'generates local_settings.py' do
+        verify_contents(subject, platforms_params[:config_file], [
+          'OPENSTACK_KEYSTONE_URL = "https://keystone.example.com:4682/v2.0"'
+        ])
+      end
+    end
+
     context 'with ssl enabled' do
       before do
         params.merge!({

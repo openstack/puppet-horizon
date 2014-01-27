@@ -136,12 +136,15 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 #     ('http://cluster2.example.com:5000/v2.0', 'cluster2'),
 # ]
 
-<% if @keystone_url -%>
+<%
+if (!@keystone_scheme.nil?) || (!@keystone_host.nil?) || (!@keystone_port.nil?)
+    @keystone_scheme ||= "http"
+    @keystone_host ||= "127.0.0.1"
+    @keystone_port ||= "5000"
+    @keystone_url = "#{@keystone_scheme}://#{@keystone_host}:#{@keystone_port}/v2.0"
+end
+-%>
 OPENSTACK_KEYSTONE_URL = "<%= @keystone_url %>"
-<% else -%>
-OPENSTACK_HOST = "<%= @keystone_host %>"
-OPENSTACK_KEYSTONE_URL = "<%= @keystone_scheme %>://%s:<%= @keystone_port %>/v2.0" % OPENSTACK_HOST
-<% end -%>
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "<%= @keystone_default_role %>"
 
 # Disable SSL certificate checks (useful for self-signed certificates):
