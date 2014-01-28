@@ -1,5 +1,5 @@
 # Custom local_settings.py
-DEBUG = <%= django_debug %>
+DEBUG = <%= @django_debug %>
 
 HORIZON_CONFIG = {
     'dashboards': ('project', 'admin', 'settings',),
@@ -11,7 +11,7 @@ HORIZON_CONFIG = {
         'fade_duration': 1500,
         'types': ['alert-success', 'alert-info']
     },
-    'help_url': "<%= help_url %>",
+    'help_url': "<%= @help_url %>",
     'exceptions': {'recoverable': exceptions.RECOVERABLE,
                    'not_found': exceptions.NOT_FOUND,
                    'unauthorized': exceptions.UNAUTHORIZED},

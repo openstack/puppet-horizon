@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 describe 'horizon' do
+
   let :params do
     { 'secret_key' => 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0',
-      'fqdn'       => '*'
-    }
+      'fqdn'       => '*' }
   end
 
   let :pre_condition do
@@ -19,61 +19,24 @@ describe 'horizon' do
     { :concat_basedir => '/var/lib/puppet/concat' }
   end
 
-  describe 'on RedHat platforms' do
-    before do
-      facts.merge!({
-        :osfamily               => 'RedHat',
-        :operatingsystemrelease => '6.0'
-      })
-    end
+  shared_examples 'horizon' do
 
-    it { should contain_service('httpd').with_name('httpd') }
-    it { should contain_file('/etc/httpd/conf.d/openstack-dashboard.conf') }
-    describe 'with default parameters' do
-      it { should contain_package('horizon').with_ensure('present') }
-      it { should contain_file_line('horizon_redirect_rule').with(
-         :line => "RedirectMatch permanent ^/$ \/dashboard/"
-      )}
-    end
+    it { should contain_service('httpd').with_name(platforms_params[:http_service]) }
+    it { should contain_file(platforms_params[:httpd_config_file]) }
 
-    describe 'when ssl is enabled' do
-      before do
-        params.merge!({
-          :listen_ssl => true,
-          :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
-          :horizon_key => '/etc/pki/tls/private/httpd.key',
-          :horizon_ca => '/etc/pki/tls/certs/ca.crt',
-        })
+    it {
+      should contain_file_line('horizon_redirect_rule').with(
+        :line => "RedirectMatch permanent ^/$ #{platforms_params[:root_url]}/")
+    }
+
+    context 'with default parameters' do
+
+      it 'installs horizon package' do
+        should contain_package('horizon').with_ensure('present')
       end
 
-      it { should contain_file_line('httpd_sslcert_path').with(
-         :line => "SSLCertificateFile /etc/pki/tls/certs/httpd.crt"
-      )}
-      it { should contain_file_line('httpd_sslkey_path').with(
-         :line => "SSLCertificateKeyFile /etc/pki/tls/private/httpd.key"
-      )}
-    end
-
-  end
-
-  describe 'on Debian platforms' do
-    before do
-      facts.merge!({
-        :osfamily               => 'Debian',
-        :operatingsystemrelease => '6.0'
-      })
-    end
-
-    it { should contain_service('httpd').with_name('apache2') }
-    it { should_not contain_file('/etc/httpd/conf.d/openstack-dashboard.conf') }
-
-    describe 'with default parameters' do
-      it { should contain_package('horizon').with_ensure('present') }
-      it { should contain_file_line('horizon_redirect_rule').with(
-         :line => "RedirectMatch permanent ^/$ /horizon/"
-      )}
       it 'generates local_settings.py' do
-        verify_contents(subject, '/etc/openstack-dashboard/local_settings.py', [
+        verify_contents(subject, platforms_params[:config_file], [
           'DEBUG = False',
           "ALLOWED_HOSTS = ['*', ]",
           "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
@@ -81,46 +44,65 @@ describe 'horizon' do
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "_member_"',
           "    'can_set_mount_point': True,",
           'API_RESULT_LIMIT = 1000',
-          "LOGIN_URL = '/horizon/auth/login/'",
-          "LOGOUT_URL = '/horizon/auth/logout/'",
-          "LOGIN_REDIRECT_URL = '/horizon'",
+          "LOGIN_URL = '#{platforms_params[:root_url]}/auth/login/'",
+          "LOGOUT_URL = '#{platforms_params[:root_url]}/auth/logout/'",
+          "LOGIN_REDIRECT_URL = '#{platforms_params[:root_url]}'",
           'COMPRESS_OFFLINE = True'
         ])
       end
     end
 
-    describe 'when overriding parameters' do
+    context 'with overridden parameters' do
       before do
         params.merge!({
-          :cache_server_ip       => '10.0.0.1',
-          :keystone_host         => 'keystone.example.com',
-          :keystone_port         => 4682,
-          :keystone_scheme       => 'https',
-          :keystone_default_role => 'SwiftOperator',
-          :keystone_url          => false,
-          :django_debug          => true,
-          :api_result_limit      => 4682,
-          :can_set_mount_point   => false,
-          :compress_offline      => 'False',
+          :cache_server_ip         => '10.0.0.1',
+          :keystone_default_role   => 'SwiftOperator',
+          :keystone_url            => 'https://keystone.example.com:4682',
+          :openstack_endpoint_type => 'internalURL',
+          :secondary_endpoint_type => 'ANY-VALUE',
+          :django_debug            => true,
+          :api_result_limit        => 4682,
+          :can_set_mount_point     => false,
+          :compress_offline        => 'False',
         })
       end
 
       it 'generates local_settings.py' do
-        verify_contents(subject, '/etc/openstack-dashboard/local_settings.py', [
+        verify_contents(subject, platforms_params[:config_file], [
           'DEBUG = True',
           "ALLOWED_HOSTS = ['*', ]",
           "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
-          'OPENSTACK_HOST = "keystone.example.com"',
-          'OPENSTACK_KEYSTONE_URL = "https://%s:4682/v2.0" % OPENSTACK_HOST',
+          'OPENSTACK_KEYSTONE_URL = "https://keystone.example.com:4682"',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "SwiftOperator"',
           "    'can_set_mount_point': False,",
+          'OPENSTACK_ENDPOINT_TYPE = "internalURL"',
+          'SECONDARY_ENDPOINT_TYPE = "ANY-VALUE"',
           'API_RESULT_LIMIT = 4682',
           'COMPRESS_OFFLINE = False'
         ])
       end
     end
 
-    describe 'with overriding local_settings_template' do
+    context 'with ssl enabled' do
+      before do
+        params.merge!({
+          :listen_ssl   => true,
+          :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
+          :horizon_key  => '/etc/pki/tls/private/httpd.key',
+          :horizon_ca   => '/etc/pki/tls/certs/ca.crt',
+        })
+      end
+
+      it { should contain_file_line('httpd_sslcert_path').with(
+         :line => "SSLCertificateFile /etc/pki/tls/certs/httpd.crt"
+      )}
+
+      it { should contain_file_line('httpd_sslkey_path').with(
+         :line => "SSLCertificateKeyFile /etc/pki/tls/private/httpd.key"
+      )}
+    end
+
+    context 'with overriding local_settings_template' do
       before do
         params.merge!({
           :django_debug            => 'True',
@@ -130,7 +112,7 @@ describe 'horizon' do
       end
 
       it 'uses the custom local_settings.py template' do
-        verify_contents(subject, '/etc/openstack-dashboard/local_settings.py', [
+        verify_contents(subject, platforms_params[:config_file], [
           '# Custom local_settings.py',
           'DEBUG = True',
           "HORIZON_CONFIG = {",
@@ -151,74 +133,43 @@ describe 'horizon' do
         ])
       end
     end
+  end
 
-    describe 'when overriding keystone_url' do
-      before do
-        params.merge!({
-          :keystone_url => 'https://identity.example.com/public/endpoint/v2.0'
-        })
-      end
-
-      it 'generates local_settings.py' do
-        verify_contents(subject, '/etc/openstack-dashboard/local_settings.py', [
-          'DEBUG = False',
-          "ALLOWED_HOSTS = ['*', ]",
-          "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
-          'OPENSTACK_KEYSTONE_URL = "https://identity.example.com/public/endpoint/v2.0"',
-          'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "_member_"',
-          "    'can_set_mount_point': True,",
-          'API_RESULT_LIMIT = 1000',
-          "LOGIN_URL = '/horizon/auth/login/'",
-          "LOGOUT_URL = '/horizon/auth/logout/'",
-          "LOGIN_REDIRECT_URL = '/horizon'"
-        ])
-      end
+  context 'on RedHat platforms' do
+    before do
+      facts.merge!({
+        :osfamily               => 'RedHat',
+        :operatingsystemrelease => '6.0'
+      })
     end
 
-    describe 'when ssl is enabled' do
-      before do
-        params.merge!({
-          :listen_ssl => true,
-          :horizon_cert => '/etc/ssl/localcerts/apache.crt',
-          :horizon_key => '/etc/ssl/localcerts/apache.key',
-          :horizon_ca => '/etc/ssl/localcerts/ca.crt',
-        })
-      end
-
-      it { should contain_file_line('httpd_sslcert_path').with(
-         :line => "SSLCertificateFile /etc/ssl/localcerts/apache.crt"
-      )}
-      it { should contain_file_line('httpd_sslkey_path').with(
-         :line => "SSLCertificateKeyFile /etc/ssl/localcerts/apache.key"
-      )}
+    let :platforms_params do
+      { :config_file       => '/etc/openstack-dashboard/local_settings',
+        :http_service      => 'httpd',
+        :httpd_config_file => '/etc/httpd/conf.d/openstack-dashboard.conf',
+        :package_name      => 'openstack-dashboard',
+        :root_url          => '/dashboard' }
     end
 
-    describe 'with openstack_endpoint_type' do
-      before do
-        params.merge!({
-          :openstack_endpoint_type => 'internalURL',
-        })
-      end
+    it_behaves_like 'horizon'
+  end
 
-      it 'generates local_settings.py' do
-        verify_contents(subject, '/etc/openstack-dashboard/local_settings.py', [
-          'OPENSTACK_ENDPOINT_TYPE = "internalURL"',
-        ])
-      end
+  context 'on Debian platforms' do
+    before do
+      facts.merge!({
+        :osfamily               => 'Debian',
+        :operatingsystemrelease => '6.0'
+      })
     end
 
-    describe 'with secondary_endpoint_type' do
-      before do
-        params.merge!({
-          :secondary_endpoint_type => 'ANY-VALUE',
-        })
-      end
-
-      it 'generates local_settings.py' do
-        verify_contents(subject, '/etc/openstack-dashboard/local_settings.py', [
-          'SECONDARY_ENDPOINT_TYPE = "ANY-VALUE"',
-        ])
-      end
+    let :platforms_params do
+      { :config_file       => '/etc/openstack-dashboard/local_settings.py',
+        :http_service      => 'apache2',
+        :httpd_config_file => '/etc/apache2/conf.d/openstack-dashboard.conf',
+        :package_name      => 'openstack-dashboard-apache',
+        :root_url          => '/horizon' }
     end
+
+    it_behaves_like 'horizon'
   end
 end
