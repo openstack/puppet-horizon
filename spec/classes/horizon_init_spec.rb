@@ -21,18 +21,14 @@ describe 'horizon' do
 
   shared_examples 'horizon' do
 
-    it { should contain_service('httpd').with_name(platforms_params[:http_service]) }
-    it { should contain_file(platforms_params[:httpd_config_file]) }
-
-    it {
-      should contain_file_line('horizon_redirect_rule').with(
-        :line => "RedirectMatch permanent ^/$ #{platforms_params[:root_url]}/")
-    }
-
     context 'with default parameters' do
+      it { should contain_package('horizon').with_ensure('present') }
 
-      it 'installs horizon package' do
-        should contain_package('horizon').with_ensure('present')
+      it 'configures apache' do
+        should contain_class('horizon::wsgi::apache').with({
+          :bind_address => '0.0.0.0',
+          :listen_ssl   => false,
+        })
       end
 
       it 'generates local_settings.py' do
@@ -109,13 +105,25 @@ describe 'horizon' do
         })
       end
 
-      it { should contain_file_line('httpd_sslcert_path').with(
-         :line => "SSLCertificateFile /etc/pki/tls/certs/httpd.crt"
-      )}
+      it 'configures apache' do
+        should contain_class('horizon::wsgi::apache').with({
+          :bind_address => '0.0.0.0',
+          :listen_ssl   => true,
+          :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
+          :horizon_key  => '/etc/pki/tls/private/httpd.key',
+          :horizon_ca   => '/etc/pki/tls/certs/ca.crt',
+        })
+      end
+    end
 
-      it { should contain_file_line('httpd_sslkey_path').with(
-         :line => "SSLCertificateKeyFile /etc/pki/tls/private/httpd.key"
-      )}
+    context 'without apache' do
+      before do
+        params.merge!({ :configure_apache => false })
+      end
+
+      it 'does not configure apache' do
+        should_not contain_class('horizon::wsgi::apache')
+      end
     end
 
     context 'with overriding local_settings_template' do
@@ -161,8 +169,6 @@ describe 'horizon' do
 
     let :platforms_params do
       { :config_file       => '/etc/openstack-dashboard/local_settings',
-        :http_service      => 'httpd',
-        :httpd_config_file => '/etc/httpd/conf.d/openstack-dashboard.conf',
         :package_name      => 'openstack-dashboard',
         :root_url          => '/dashboard' }
     end
@@ -180,8 +186,6 @@ describe 'horizon' do
 
     let :platforms_params do
       { :config_file       => '/etc/openstack-dashboard/local_settings.py',
-        :http_service      => 'apache2',
-        :httpd_config_file => '/etc/apache2/conf.d/openstack-dashboard.conf',
         :package_name      => 'openstack-dashboard-apache',
         :root_url          => '/horizon' }
     end

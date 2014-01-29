@@ -76,9 +76,6 @@
 #    (optional) Add the option to set the mount point from the UI.
 #    Defaults to 'True'.
 #
-#  [*listen_ssl*]
-#    (optional) Defaults to false.
-#
 #  [*local_settings_template*]
 #    (optional) Location of template to use for local_settings.py generation.
 #    Defaults to 'horizon/local_settings.py.erb'.
@@ -90,7 +87,25 @@
 #  [*compress_offline*]
 #    (optional) Boolean to enable offline compress of assets.
 #    Defaults to True
-
+#
+#  [*configure_apache*]
+#    (optional) Configure Apache for Horizon. (Defaults to true)
+#
+#  [*bind_address*]
+#    (optional) Bind address in Apache for Horizon. (Defaults to '0.0.0.0')
+#
+#  [*listen_ssl*]
+#    (optional) Enable SSL support in Apache. (Defaults to false)
+#
+#  [*horizon_cert*]
+#    (required with listen_ssl) Certificate to use for SSL support.
+#
+#  [*horizon_key*]
+#    (required with listen_ssl) Private key to use for SSL support.
+#
+#  [*horizon_ca*]
+#    (required with listen_ssl) CA certificate to use for SSL support.
+#
 # === Deprecation notes
 #
 # If any value is provided for keystone_scheme, keystone_host or keystone_port parameters,
@@ -107,7 +122,6 @@ class horizon(
   $secret_key,
   $fqdn                    = $::fqdn,
   $package_ensure          = 'present',
-  $bind_address            = '0.0.0.0',
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
   $swift                   = false,
@@ -120,12 +134,14 @@ class horizon(
   $api_result_limit        = 1000,
   $log_level               = 'DEBUG',
   $can_set_mount_point     = 'True',
+  $help_url                = 'http://docs.openstack.org',
+  $local_settings_template = 'horizon/local_settings.py.erb',
+  $configure_apache        = true,
+  $bind_address            = '0.0.0.0',
   $listen_ssl              = false,
   $horizon_cert            = undef,
   $horizon_key             = undef,
   $horizon_ca              = undef,
-  $help_url                = 'http://docs.openstack.org',
-  $local_settings_template = 'horizon/local_settings.py.erb',
   $compress_offline        = 'True',
   # DEPRECATED PARAMETERS
   $keystone_host           = undef,
@@ -133,9 +149,7 @@ class horizon(
   $keystone_scheme         = undef,
 ) {
 
-  include horizon::params
-  include apache
-  include apache::mod::wsgi
+  include ::horizon::params
 
   if $swift {
     warning('swift parameter is deprecated and has no effect.')
@@ -153,103 +167,26 @@ class horizon(
     warning('The keystone_port parameter is deprecated, use keystone_url instead.')
   }
 
-  file { $::horizon::params::httpd_config_file: }
-
   Service <| title == 'memcached' |> -> Class['horizon']
 
   package { 'horizon':
     ensure  => $package_ensure,
     name    => $::horizon::params::package_name,
-    require => Package[$::horizon::params::http_service],
   }
 
   file { $::horizon::params::config_file:
     content => template($local_settings_template),
     mode    => '0644',
-    notify  => Service[$::horizon::params::http_service],
     require => Package['horizon'],
   }
 
-  file { $::horizon::params::logdir:
-    ensure  => directory,
-    mode    => '0751',
-    owner   => $::horizon::params::apache_user,
-    group   => $::horizon::params::apache_group,
-    before  => Service[$::horizon::params::http_service],
-    require => Package['horizon']
-  }
-
-  file_line { 'horizon_redirect_rule':
-    path    => $::horizon::params::httpd_config_file,
-    line    => "RedirectMatch permanent ^/$ ${::horizon::params::root_url}/",
-    require => Package['horizon'],
-    notify  => Service[$::horizon::params::http_service]
-  }
-
-  file_line { 'httpd_listen_on_bind_address_80':
-    path    => $::horizon::params::httpd_listen_config_file,
-    match   => '^Listen (.*):?80$',
-    line    => "Listen ${bind_address}:80",
-    require => Package['horizon'],
-    notify  => Service[$::horizon::params::http_service],
-  }
-
-  if $listen_ssl {
-    include apache::mod::ssl
-
-    if $horizon_ca == undef or $horizon_cert == undef or $horizon_key == undef {
-      fail('The horizon CA, cert and key are all required.')
+  if $configure_apache {
+    class { 'horizon::wsgi::apache':
+      bind_address => $bind_address,
+      listen_ssl   => $listen_ssl,
+      horizon_cert => $horizon_cert,
+      horizon_key  => $horizon_key,
+      horizon_ca   => $horizon_ca,
     }
-
-    file_line { 'httpd_listen_on_bind_address_443':
-      path    => $::horizon::params::httpd_listen_config_file,
-      match   => '^Listen (.*):?443$',
-      line    => "Listen ${bind_address}:443",
-      require => Package['horizon'],
-      notify  => Service[$::horizon::params::http_service],
-    }
-
-    # Enable SSL Engine
-    file_line{'httpd_sslengine_on':
-      path    => $::horizon::params::httpd_listen_config_file,
-      match   => '^SSLEngine ',
-      line    => 'SSLEngine on',
-      notify  => Service[$::horizon::params::http_service],
-      require => Class['apache::mod::ssl'],
-    }
-
-    # set the name of the ssl cert and key file
-    file_line{'httpd_sslcert_path':
-      path    => $::horizon::params::httpd_listen_config_file,
-      match   => '^SSLCertificateFile ',
-      line    => "SSLCertificateFile ${horizon_cert}",
-      notify  => Service[$::horizon::params::http_service],
-      require => Class['apache::mod::ssl'],
-    }
-
-    file_line{'httpd_sslkey_path':
-      path    => $::horizon::params::httpd_listen_config_file,
-      match   => '^SSLCertificateKeyFile ',
-      line    => "SSLCertificateKeyFile ${horizon_key}",
-      notify  => Service[$::horizon::params::http_service],
-      require => Class['apache::mod::ssl'],
-    }
-
-    file_line{'httpd_sslca_path':
-      path    => $::horizon::params::httpd_listen_config_file,
-      match   => '^SSLCACertificateFile ',
-      line    => "SSLCACertificateFile ${horizon_ca}",
-      notify  => Service[$::horizon::params::http_service],
-      require => Class['apache::mod::ssl'],
-    }
-  }
-
-  $django_wsgi = '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi'
-
-  file_line { 'horizon root':
-    path    => $::horizon::params::httpd_config_file,
-    line    => "WSGIScriptAlias ${::horizon::params::root_url} ${django_wsgi}",
-    match   => 'WSGIScriptAlias ',
-    require => Package['horizon'],
   }
 }
