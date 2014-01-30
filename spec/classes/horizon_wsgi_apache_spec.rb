@@ -3,7 +3,9 @@ require 'spec_helper'
 describe 'horizon::wsgi::apache' do
 
   let :params do
-    {}
+    { 'fqdn'         => '*',
+      'servername'   => 'some.host.tld',
+    }
   end
 
   let :pre_condition do
@@ -16,7 +18,9 @@ describe 'horizon::wsgi::apache' do
   end
 
   let :facts do
-    { :concat_basedir => '/var/lib/puppet/concat' }
+    { :concat_basedir => '/var/lib/puppet/concat',
+      :fqdn           => 'some.host.tld'
+    }
   end
 
   shared_examples 'apache for horizon' do
@@ -28,8 +32,20 @@ describe 'horizon::wsgi::apache' do
         should contain_class('apache::mod::wsgi')
         should contain_service('httpd').with_name(platforms_params[:http_service])
         should contain_file(platforms_params[:httpd_config_file])
-        should contain_file_line('horizon_redirect_rule').with(
-          :line => "RedirectMatch permanent ^/$ #{platforms_params[:root_url]}/")
+        should contain_package('horizon').with_ensure('present')
+        should contain_apache__vhost('horizon_vhost').with(
+          'servername'           => 'some.host.tld',
+          'port'                 => 80,
+          'access_log_file'      => 'horizon_access.log',
+          'error_log_file'       => 'horizon_error.log',
+          'priority'             => '15',
+          'serveraliases'        => '*',
+          'docroot'              => '/var/www/',
+          'ssl'                  => 'false',
+          'redirectmatch_status' => 'permanent',
+          'redirectmatch_regexp' => "^/$ #{platforms_params[:root_url]}",
+          'wsgi_script_aliases'  => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' }
+         )
       end
     end
 
@@ -37,6 +53,7 @@ describe 'horizon::wsgi::apache' do
       before do
         params.merge!({
           :listen_ssl   => true,
+          :ssl_redirect => true,
           :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
           :horizon_key  => '/etc/pki/tls/private/httpd.key',
           :horizon_ca   => '/etc/pki/tls/certs/ca.crt',
@@ -46,13 +63,37 @@ describe 'horizon::wsgi::apache' do
       context 'with required parameters' do
         it 'configures apache for SSL' do
           should contain_class('apache::mod::ssl')
-          should contain_file_line('httpd_sslcert_path').with(
-            :line => "SSLCertificateFile /etc/pki/tls/certs/httpd.crt")
-          should contain_file_line('httpd_sslkey_path').with(
-            :line => "SSLCertificateKeyFile /etc/pki/tls/private/httpd.key")
-          should contain_file_line('httpd_sslca_path').with(
-            :line => "SSLCACertificateFile /etc/pki/tls/certs/ca.crt")
         end
+        it { should contain_apache__vhost('horizon_ssl_vhost').with(
+          'servername'             => 'some.host.tld',
+          'access_log_file'        => 'horizon_ssl_access.log',
+          'error_log_file'         => 'horizon_ssl_error.log',
+          'priority'               => '15',
+          'serveraliases'          => '*',
+          'port'                   => 443,
+          'docroot'                => '/var/www/',
+          'ssl'                    => 'true',
+          'ssl_cert'               => '/etc/pki/tls/certs/httpd.crt',
+          'ssl_key'                => '/etc/pki/tls/private/httpd.key',
+          'ssl_ca'                 => '/etc/pki/tls/certs/ca.crt',
+          'redirectmatch_status'   => 'permanent',
+          'redirectmatch_regexp'   => "^/$ #{platforms_params[:root_url]}",
+          'wsgi_script_aliases'    => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' }
+        )}
+
+        it { should contain_apache__vhost('horizon_vhost').with(
+          'servername'           => 'some.host.tld',
+          'access_log_file'      => 'horizon_access.log',
+          'error_log_file'       => 'horizon_error.log',
+          'priority'             => '15',
+          'serveraliases'        => '*',
+          'port'                 => 80,
+          'docroot'              => '/var/www/',
+          'ssl'                  => 'false',
+          'redirectmatch_status' => 'permanent',
+          'redirectmatch_regexp' => '(.*) https://some.host.tld',
+          'wsgi_script_aliases'  => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' }
+        )}
       end
 
       context 'without required parameters' do
