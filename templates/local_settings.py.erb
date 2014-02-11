@@ -14,9 +14,9 @@ TEMPLATE_DEBUG = DEBUG
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 #ALLOWED_HOSTS = ['horizon.example.com', ]
 <% if @fqdn.kind_of?(Array) %>
-ALLOWED_HOSTS = ['<%= @fqdn.join("', '") %>', ]
+ALLOWED_HOSTS = ['<%= @fqdn.join("', '") %>', 'localhost', ]
 <% else %>
-ALLOWED_HOSTS = ['<%= @fqdn %>', ]
+ALLOWED_HOSTS = ['<%= @fqdn %>', 'localhost', ]
 <% end %>
 
 # Set SSL proxy settings:
