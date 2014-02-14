@@ -131,10 +131,13 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_HOST_PASSWORD = 'top-secret!'
 
 # For multiple regions uncomment this configuration, and add (endpoint, title).
-# AVAILABLE_REGIONS = [
-#     ('http://cluster1.example.com:5000/v2.0', 'cluster1'),
-#     ('http://cluster2.example.com:5000/v2.0', 'cluster2'),
-# ]
+<% if @available_regions.kind_of?(Array) %>
+AVAILABLE_REGIONS = [
+<% @available_regions.each do |r| -%>
+    ('<%= r[0] -%>', '<%= r[1] -%>'),
+<% end -%>
+]
+<% end -%>
 
 <%
 if (!@keystone_scheme.nil?) || (!@keystone_host.nil?) || (!@keystone_port.nil?)

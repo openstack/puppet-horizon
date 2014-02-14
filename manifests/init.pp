@@ -65,6 +65,11 @@
 #    (optional) secondary endpoint type to use for the endpoints in the
 #    Keystone service catalog. Defaults to 'undef'.
 #
+#  [*available_regions*]
+#    (optional) List of available regions. Value should be a list of tuple:
+#    [ ['urlOne', 'RegionOne'], ['urlTwo', 'RegionTwo'] ]
+#    Defaults to undef.
+#
 #  [*api_result_limit*]
 #    (optional) Maximum number of Swift containers/objects to display
 #    on a single page. Defaults to 1000.
@@ -116,6 +121,10 @@
 #  class { 'horizon':
 #    secret       => 's3cr3t',
 #    keystone_url => 'https://10.0.0.10:5000/v2.0',
+#    available_regions => [
+#      ['http://region-1.example.com:5000/v2.0', 'Region-1'],
+#      ['http://region-2.example.com:5000/v2.0', 'Region-2']
+#    ]
 #  }
 #
 class horizon(
@@ -131,6 +140,7 @@ class horizon(
   $django_debug            = 'False',
   $openstack_endpoint_type = undef,
   $secondary_endpoint_type = undef,
+  $available_regions       = undef,
   $api_result_limit        = 1000,
   $log_level               = 'DEBUG',
   $can_set_mount_point     = 'True',
