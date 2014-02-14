@@ -80,6 +80,11 @@ describe 'horizon' do
           'OPENSTACK_KEYSTONE_URL = "http://127.0.0.1:5000/v2.0"',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "_member_"',
           "    'can_set_mount_point': True,",
+          "    'enable_lb': False,",
+          "    'enable_firewall': False,",
+          "    'enable_quotas': True,",
+          "    'enable_security_group': True,",
+          "    'enable_vpn': False,",
           'API_RESULT_LIMIT = 1000',
           "LOGIN_URL = '/horizon/auth/login/'",
           "LOGOUT_URL = '/horizon/auth/logout/'",
@@ -102,6 +107,7 @@ describe 'horizon' do
           :api_result_limit      => 4682,
           :can_set_mount_point   => false,
           :compress_offline      => 'False',
+          :neutron_options         => {'enable_lb' => true, 'enable_firewall' => true, 'enable_quotas' => false, 'enable_security_group' => false, 'enable_vpn' => true, 'profile_support' => 'cisco' }
         })
       end
 
@@ -114,8 +120,14 @@ describe 'horizon' do
           'OPENSTACK_KEYSTONE_URL = "https://%s:4682/v2.0" % OPENSTACK_HOST',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "SwiftOperator"',
           "    'can_set_mount_point': False,",
+          "    'enable_lb': True,",
+          "    'enable_firewall': True,",
+          "    'enable_quotas': False,",
+          "    'enable_security_group': False,",
+          "    'enable_vpn': True,",
+          "    'profile_support': 'cisco',",
           'API_RESULT_LIMIT = 4682',
-          'COMPRESS_OFFLINE = False'
+          'COMPRESS_OFFLINE = False',
         ])
       end
     end

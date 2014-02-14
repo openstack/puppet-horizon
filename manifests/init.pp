@@ -86,6 +86,23 @@
 #  [*compress_offline*]
 #    (optional) Boolean to enable offline compress of assets.
 #    Defaults to True
+#
+#  [*neutron_options*]
+#    (optional) A hash of parameters to enable features specific to
+#    Neutron.  These include:
+#    'enable_lb': Boolean to enable or disable Neutron's LBaaS feature.
+#      Defaults to False.
+#    'enable_firewall': Boolean to enable or disable Neutron's FWaaS feature.
+#      Defaults to False.
+#    'enable_quotas': Boolean to enable or disable Neutron quotas.
+#      Defaults to True.
+#    'enable_security_group': Boolean to enable or disable Neutron
+#      security groups.  Defaults to True.
+#    'enable_vpn': Boolean to enable or disable Neutron's VPNaaS feature.
+#      Defaults to False.
+#    'profile_support':  A string indiciating which plugin-specific
+#      profiles to enable.  Defaults to 'None', other options include
+#      'cisco'.
 
 class horizon(
   $secret_key,
@@ -113,7 +130,8 @@ class horizon(
   $horizon_ca              = undef,
   $help_url                = 'http://docs.openstack.org',
   $local_settings_template = 'horizon/local_settings.py.erb',
-  $compress_offline        = 'True'
+  $compress_offline        = 'True',
+  $neutron_options         = {},
 ) {
 
   include horizon::params
@@ -132,6 +150,18 @@ class horizon(
   }
 
   file { $::horizon::params::httpd_config_file: }
+
+  # Default options for the OPENSTACK_NEUTRON_NETWORK section.  These will
+  # be merged with user-provided options when the local_settings.py.erb
+  # template is interpolated.
+  $neutron_defaults = {
+    'enable_lb'             => false,
+    'enable_firewall'       => false,
+    'enable_quotas'         => true,
+    'enable_security_group' => true,
+    'enable_vpn'            => false,
+    'profile_support'       => 'None'
+  }
 
   Service <| title == 'memcached' |> -> Class['horizon']
 

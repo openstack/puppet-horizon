@@ -173,15 +173,18 @@ OPENSTACK_HYPERVISOR_FEATURES = {
 # services provided by neutron. Options currenly available are load
 # balancer service, security groups, quotas, VPN service.
 OPENSTACK_NEUTRON_NETWORK = {
-    'enable_lb': False,
-    'enable_firewall': False,
-    'enable_quotas': True,
-    'enable_security_group': True,
-    'enable_vpn': False,
+    <%- @neutron_options = @neutron_defaults.merge(@neutron_options) -%>
+    'enable_lb': <%= @neutron_options['enable_lb'].to_s.capitalize %>,
+    'enable_firewall': <%= @neutron_options['enable_firewall'].to_s.capitalize %>,
+    'enable_quotas': <%= @neutron_options['enable_quotas'].to_s.capitalize %>,
+    'enable_security_group': <%= @neutron_options['enable_security_group'].to_s.capitalize %>,
+    'enable_vpn': <%= @neutron_options['enable_vpn'].to_s.capitalize %>,
     # The profile_support option is used to detect if an externa lrouter can be
     # configured via the dashboard. When using specific plugins the
     # profile_support can be turned on if needed.
-    'profile_support': None,
+    <%- if @neutron_options['profile_support'] != 'None' -%>
+    'profile_support': '<%= @neutron_options['profile_support'] %>',
+    <%- end -%>
     #'profile_support': 'cisco',
 }
 
