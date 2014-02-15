@@ -1,5 +1,5 @@
 name    'puppetlabs-horizon'
-version '3.0.0'
+version '3.0.1'
 source  'https://github.com/stackforge/puppet-horizon'
 author  'Puppet Labs'
 license 'Apache License 2.0'

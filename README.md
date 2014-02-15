@@ -85,9 +85,13 @@ Contributors
 Release Notes
 -------------
 
+**3.0.1**
+
+* Adds COMPRESS_OFFLINE option to local_settings to fix broken Ubuntu installation.
+
 **3.0.0**
 
-* Major release for OpenStack Havana
+* Major release for OpenStack Havana.
 * Updated user and group for Debian family OSes.
 * Updated policy files for RedHat family OSes.
 * Enabled SSL support with cert/key.
@@ -95,7 +99,7 @@ Release Notes
 * Fixed bug to set LOGOUT_URL properly.
 * Introduced new parameters: keystone_url, help_url, endpoint type.
 * Fixed user/group regression for Debian.
-* Changed keystone_default_role to _member_
+* Changed keystone_default_role to _member_.
 
 **2.2.0**
 
@@ -106,7 +110,7 @@ Release Notes
 
 * Updated local_settings.py.
 * Pinned Apache module version.
-* Varioud lint fixes.
+* Various lint fixes.
 
 **2.0.0**
 
