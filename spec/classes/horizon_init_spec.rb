@@ -138,6 +138,26 @@ describe 'horizon' do
       end
     end
 
+    context 'with available_regions parameter' do
+      before do
+        params.merge!({
+          :available_regions => [
+            ['http://region-1.example.com:5000/v2.0', 'Region-1'],
+            ['http://region-2.example.com:5000/v2.0', 'Region-2']
+          ]
+        })
+      end
+
+      it 'AVAILABLE_REGIONS is configured' do
+        verify_contents(subject, platforms_params[:config_file], [
+          "AVAILABLE_REGIONS = [",
+          "    ('http://region-1.example.com:5000/v2.0', 'Region-1'),",
+          "    ('http://region-2.example.com:5000/v2.0', 'Region-2'),",
+          "]"
+        ])
+      end
+    end
+
     context 'with overriding local_settings_template' do
       before do
         params.merge!({
