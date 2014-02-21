@@ -24,7 +24,14 @@ describe 'horizon' do
   shared_examples 'horizon' do
 
     context 'with default parameters' do
-      it { should contain_package('horizon').with_ensure('present') }
+      it {
+          should contain_package('python-lesscpy').with_ensure('present')
+          should contain_package('horizon').with_ensure('present')
+      }
+      it { should contain_exec('refresh_horizon_django_cache').with({
+          :command     => '/usr/share/openstack-dashboard/manage.py compress',
+          :refreshonly => true,
+      })}
 
       it 'configures apache' do
         should contain_class('horizon::wsgi::apache').with({
@@ -92,6 +99,8 @@ describe 'horizon' do
           'COMPRESS_OFFLINE = False',
         ])
       end
+
+      it { should contain_exec('refresh_horizon_django_cache') }
     end
 
     context 'with deprecated parameters' do
