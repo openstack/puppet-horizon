@@ -2,7 +2,8 @@
 # should be considered to be constant
 class horizon::params {
 
-  $logdir = '/var/log/horizon'
+  $logdir      = '/var/log/horizon'
+  $django_wsgi = '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi'
 
   case $::osfamily {
     'RedHat': {

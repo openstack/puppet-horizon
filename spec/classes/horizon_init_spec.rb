@@ -16,7 +16,9 @@ describe 'horizon' do
   end
 
   let :facts do
-    { :concat_basedir => '/var/lib/puppet/concat' }
+    { :concat_basedir => '/var/lib/puppet/concat',
+      :fqdn           => 'some.host.tld'
+    }
   end
 
   shared_examples 'horizon' do
@@ -26,8 +28,9 @@ describe 'horizon' do
 
       it 'configures apache' do
         should contain_class('horizon::wsgi::apache').with({
-          :bind_address => '0.0.0.0',
+          :servername   => 'some.host.tld',
           :listen_ssl   => false,
+          :servername   => 'some.host.tld'
         })
       end
 
@@ -111,6 +114,7 @@ describe 'horizon' do
       before do
         params.merge!({
           :listen_ssl   => true,
+          :servername   => 'some.host.tld',
           :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
           :horizon_key  => '/etc/pki/tls/private/httpd.key',
           :horizon_ca   => '/etc/pki/tls/certs/ca.crt',
@@ -119,7 +123,7 @@ describe 'horizon' do
 
       it 'configures apache' do
         should contain_class('horizon::wsgi::apache').with({
-          :bind_address => '0.0.0.0',
+          :bind_address => nil,
           :listen_ssl   => true,
           :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
           :horizon_key  => '/etc/pki/tls/private/httpd.key',

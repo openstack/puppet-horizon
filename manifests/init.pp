@@ -11,7 +11,12 @@
 #  [*fqdn*]
 #    (optional) FQDN(s) used to access Horizon. This is used by Django for
 #    security reasons. Can be set to * in environments where security is
-#    deemed unimportant. Defaults to ::fqdn
+#    deemed unimportant. Also used for Server Aliases in web configs.
+#    Defaults to ::fqdn
+#
+#  [*servername*]
+#    (optional) FQDN used for the Server Name directives
+#    Defaults to ::fqdn
 #
 #  [*package_ensure*]
 #    (optional) Package ensure state. Defaults to 'present'.
@@ -114,10 +119,14 @@
 #    (optional) Configure Apache for Horizon. (Defaults to true)
 #
 #  [*bind_address*]
-#    (optional) Bind address in Apache for Horizon. (Defaults to '0.0.0.0')
+#    (optional) Bind address in Apache for Horizon. (Defaults to undef)
 #
 #  [*listen_ssl*]
 #    (optional) Enable SSL support in Apache. (Defaults to false)
+#
+#  [*ssl_redirect*]
+#    (optional) Whether to redirect http to https
+#    Defaults to True
 #
 #  [*horizon_cert*]
 #    (required with listen_ssl) Certificate to use for SSL support.
@@ -164,8 +173,10 @@ class horizon(
   $help_url                = 'http://docs.openstack.org',
   $local_settings_template = 'horizon/local_settings.py.erb',
   $configure_apache        = true,
-  $bind_address            = '0.0.0.0',
+  $bind_address            = undef,
+  $servername              = $::fqdn,
   $listen_ssl              = false,
+  $ssl_redirect            = true,
   $horizon_cert            = undef,
   $horizon_key             = undef,
   $horizon_ca              = undef,
@@ -223,7 +234,10 @@ class horizon(
   if $configure_apache {
     class { 'horizon::wsgi::apache':
       bind_address => $bind_address,
+      fqdn         => $fqdn,
+      servername   => $servername,
       listen_ssl   => $listen_ssl,
+      ssl_redirect => $ssl_redirect,
       horizon_cert => $horizon_cert,
       horizon_key  => $horizon_key,
       horizon_ca   => $horizon_ca,
