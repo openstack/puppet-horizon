@@ -35,7 +35,6 @@ describe 'horizon::wsgi::apache' do
         should contain_package('horizon').with_ensure('present')
         should contain_apache__vhost('horizon_vhost').with(
           'servername'           => 'some.host.tld',
-          'port'                 => 80,
           'access_log_file'      => 'horizon_access.log',
           'error_log_file'       => 'horizon_error.log',
           'priority'             => '15',
@@ -70,7 +69,6 @@ describe 'horizon::wsgi::apache' do
           'error_log_file'         => 'horizon_ssl_error.log',
           'priority'               => '15',
           'serveraliases'          => '*',
-          'port'                   => 443,
           'docroot'                => '/var/www/',
           'ssl'                    => 'true',
           'ssl_cert'               => '/etc/pki/tls/certs/httpd.crt',
@@ -87,7 +85,6 @@ describe 'horizon::wsgi::apache' do
           'error_log_file'       => 'horizon_error.log',
           'priority'             => '15',
           'serveraliases'        => '*',
-          'port'                 => 80,
           'docroot'              => '/var/www/',
           'ssl'                  => 'false',
           'redirectmatch_status' => 'permanent',
