@@ -42,6 +42,7 @@ describe 'horizon' do
           'OPENSTACK_KEYSTONE_URL = "http://127.0.0.1:5000/v2.0"',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "_member_"',
           "    'can_set_mount_point': True,",
+          "    'can_set_password': False,",
           "    'enable_lb': False,",
           "    'enable_firewall': False,",
           "    'enable_quotas': True,",
@@ -66,8 +67,8 @@ describe 'horizon' do
           :secondary_endpoint_type => 'ANY-VALUE',
           :django_debug            => true,
           :api_result_limit        => 4682,
-          :can_set_mount_point     => false,
           :compress_offline        => 'False',
+          :hypervisor_options      => {'can_set_mount_point' => false, 'can_set_password' => true },
           :neutron_options         => {'enable_lb' => true, 'enable_firewall' => true, 'enable_quotas' => false, 'enable_security_group' => false, 'enable_vpn' => true, 'profile_support' => 'cisco' }
         })
       end
@@ -80,6 +81,7 @@ describe 'horizon' do
           'OPENSTACK_KEYSTONE_URL = "https://keystone.example.com:4682"',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "SwiftOperator"',
           "    'can_set_mount_point': False,",
+          "    'can_set_password': True,",
           "    'enable_lb': True,",
           "    'enable_firewall': True,",
           "    'enable_quotas': False,",
@@ -97,15 +99,17 @@ describe 'horizon' do
     context 'with deprecated parameters' do
       before do
         params.merge!({
-          :keystone_host   => 'keystone.example.com',
-          :keystone_port   => 4682,
-          :keystone_scheme => 'https',
+          :keystone_host       => 'keystone.example.com',
+          :keystone_port       => 4682,
+          :keystone_scheme     => 'https',
+          :can_set_mount_point => true,
         })
       end
 
       it 'generates local_settings.py' do
         verify_contents(subject, platforms_params[:config_file], [
-          'OPENSTACK_KEYSTONE_URL = "https://keystone.example.com:4682/v2.0"'
+          'OPENSTACK_KEYSTONE_URL = "https://keystone.example.com:4682/v2.0"',
+          "    'can_set_mount_point': True,"
         ])
       end
     end
