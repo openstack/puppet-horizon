@@ -135,7 +135,7 @@ class horizon(
 ) {
 
   include horizon::params
-  include apache
+  class { 'apache': ip => $bind_address }
   include apache::mod::wsgi
 
   if $swift {
@@ -192,14 +192,6 @@ class horizon(
     line    => "RedirectMatch permanent ^/$ ${::horizon::params::root_url}/",
     require => Package['horizon'],
     notify  => Service[$::horizon::params::http_service]
-  }
-
-  file_line { 'httpd_listen_on_bind_address_80':
-    path    => $::horizon::params::httpd_listen_config_file,
-    match   => '^Listen (.*):?80$',
-    line    => "Listen ${bind_address}:80",
-    require => Package['horizon'],
-    notify  => Service[$::horizon::params::http_service],
   }
 
   if $listen_ssl {
