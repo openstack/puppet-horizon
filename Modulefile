@@ -9,4 +9,4 @@ project_page 'https://launchpad.net/puppet-openstack'
 
 dependency 'saz/memcached', '>= 2.0.2 <3.0.0'
 dependency 'puppetlabs/apache', '>= 1.0.0'
-dependency 'puppetlabs/stdlib', '>= 2.5.0'
+dependency 'puppetlabs/stdlib', '>= 4.0.0'
