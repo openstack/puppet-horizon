@@ -37,7 +37,8 @@ describe 'horizon' do
         should contain_class('horizon::wsgi::apache').with({
           :servername   => 'some.host.tld',
           :listen_ssl   => false,
-          :servername   => 'some.host.tld'
+          :servername   => 'some.host.tld',
+          :extra_params => {},
         })
       end
 
@@ -122,6 +123,21 @@ describe 'horizon' do
         ])
       end
     end
+
+    context 'with vhost_extra_params' do
+      before do
+        params.merge!({
+          :vhost_extra_params   => { 'add_listen' => false },
+        })
+      end
+
+      it 'configures apache' do
+        should contain_class('horizon::wsgi::apache').with({
+          :extra_params => { 'add_listen' => false },
+        })
+      end
+    end
+
 
     context 'with ssl enabled' do
       before do
