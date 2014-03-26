@@ -110,6 +110,27 @@ describe 'horizon::wsgi::apache' do
           it_raises 'a Puppet::Error', /The horizon_key parameter is required when listen_ssl is true/
         end
       end
+
+      context 'with extra parameters' do
+        before do
+          params.merge!({
+            :extra_params  => {
+              'add_listen' => false,
+              'docroot' => '/tmp'
+            },
+          })
+        end
+
+        it 'configures apache' do
+          should contain_apache__vhost('horizon_vhost').with(
+            'add_listen' => false,
+            'docroot'    => '/tmp'
+          )
+        end
+
+      end
+
+
     end
   end
 

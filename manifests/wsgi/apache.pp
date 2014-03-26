@@ -26,7 +26,10 @@
 #  [*wsgi_threads*]
 #    (optional) Number of thread to run in a Horizon process
 #    Defaults to '10'
-
+#
+#  [*extra_params*]
+#    (optional) A hash of extra paramaters for apache::wsgi class.
+#    Defaults to {}
 class horizon::wsgi::apache (
   $bind_address    = undef,
   $fqdn            = $::fqdn,
@@ -38,6 +41,7 @@ class horizon::wsgi::apache (
   $horizon_ca      = undef,
   $wsgi_processes  = '3',
   $wsgi_threads    = '10',
+  $extra_params    = {},
 ) {
 
   include ::horizon::params
@@ -128,10 +132,10 @@ class horizon::wsgi::apache (
     redirectmatch_status => 'permanent',
   }
 
-  ensure_resource('apache::vhost', 'horizon_vhost', merge ($default_vhost_conf, {
+  ensure_resource('apache::vhost', 'horizon_vhost', merge ($default_vhost_conf, $extra_params, {
     redirectmatch_regexp => "${redirect_match} ${redirect_url}",
   }))
-  ensure_resource('apache::vhost', 'horizon_ssl_vhost', merge ($default_vhost_conf, {
+  ensure_resource('apache::vhost', 'horizon_ssl_vhost',merge ($default_vhost_conf, $extra_params, {
     access_log_file      => 'horizon_ssl_access.log',
     error_log_file       => 'horizon_ssl_error.log',
     priority             => '15',

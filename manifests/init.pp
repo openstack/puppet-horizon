@@ -142,6 +142,10 @@
 #  [*horizon_ca*]
 #    (required with listen_ssl) CA certificate to use for SSL support.
 #
+#  [*vhost_extra_params*]
+#    (optionnal) extra parameter to pass to the apache::vhost class
+#    Defaults to undef
+#
 # === Deprecation notes
 #
 # If any value is provided for keystone_scheme, keystone_host or keystone_port parameters,
@@ -192,6 +196,7 @@ class horizon(
   $keystone_host           = undef,
   $keystone_port           = undef,
   $keystone_scheme         = undef,
+  $vhost_extra_params      = undef,
 ) {
 
   include ::horizon::params
@@ -276,6 +281,7 @@ class horizon(
       horizon_cert => $horizon_cert,
       horizon_key  => $horizon_key,
       horizon_ca   => $horizon_ca,
+      extra_params => $vhost_extra_params,
     }
   }
 }
