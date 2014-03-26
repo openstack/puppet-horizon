@@ -85,6 +85,10 @@ Contributors
 Release Notes
 -------------
 
+**3.1.0**
+
+* Added option parameterize OPENSTACK_NEUTRON_NETWORK settings.
+
 **3.0.1**
 
 * Adds COMPRESS_OFFLINE option to local_settings to fix broken Ubuntu installation.
