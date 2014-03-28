@@ -270,17 +270,10 @@ EXTERNAL_MONITORING = <%= @horizon_app_links %>
 POLICY_FILES_PATH = '/etc/openstack-dashboard'
 <% end %>
 # Map of local copy of service policy files
-<% if @osfamily == 'RedHat' %>
-POLICY_FILES = {
-    'identity': 'keystone_policy.json',
-    'compute': 'nova_policy.json'
-}
-<% else %>
 #POLICY_FILES = {
 #    'identity': 'keystone_policy.json',
 #    'compute': 'nova_policy.json'
 #}
-<% end %>
 
 # Trove user and database extension support. By default support for
 # creating users and databases on database instances is turned on.
