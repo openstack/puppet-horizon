@@ -17,8 +17,8 @@ class horizon::params {
       $root_url                    = '/dashboard'
       $apache_user                 = 'apache'
       $apache_group                = 'apache'
-      $wsgi_user                   = 'dashboard'
-      $wsgi_group                  = 'dashboard'
+      $wsgi_user                   = 'apache'
+      $wsgi_group                  = 'apache'
     }
     'Debian': {
       $http_service                = 'apache2'
