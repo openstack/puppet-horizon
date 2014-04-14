@@ -3,8 +3,10 @@ require 'spec_helper'
 describe 'horizon::wsgi::apache' do
 
   let :params do
-    { 'fqdn'         => '*',
-      'servername'   => 'some.host.tld',
+    { :fqdn           => '*',
+      :servername     => 'some.host.tld',
+      :wsgi_processes => '3',
+      :wsgi_threads   => '10',
     }
   end
 
@@ -43,7 +45,10 @@ describe 'horizon::wsgi::apache' do
           'ssl'                  => 'false',
           'redirectmatch_status' => 'permanent',
           'redirectmatch_regexp' => "^/$ #{platforms_params[:root_url]}",
-          'wsgi_script_aliases'  => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' }
+          'wsgi_script_aliases'  => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' },
+          'wsgi_process_group'   => platforms_params[:wsgi_group],
+          'wsgi_daemon_process'  => platforms_params[:wsgi_group],
+          'wsgi_daemon_process_options' => { 'processes' => params[:wsgi_processes], 'threads' => params[:wsgi_threads], 'user' => platforms_params[:unix_user], 'group' => platforms_params[:unix_group] }
          )
       end
     end
@@ -145,7 +150,13 @@ describe 'horizon::wsgi::apache' do
     let :platforms_params do
       { :http_service      => 'httpd',
         :httpd_config_file => '/etc/httpd/conf.d/openstack-dashboard.conf',
-        :root_url          => '/dashboard' }
+        :root_url          => '/dashboard',
+        :apache_user       => 'apache',
+        :apache_group      => 'apache',
+        :wsgi_user         => 'dashboard',
+        :wsgi_group        => 'dashboard',
+        :unix_user         => 'apache',
+        :unix_group        => 'apache' }
     end
 
     it_behaves_like 'apache for horizon'
@@ -162,7 +173,13 @@ describe 'horizon::wsgi::apache' do
     let :platforms_params do
       { :http_service      => 'apache2',
         :httpd_config_file => '/etc/apache2/conf.d/openstack-dashboard.conf',
-        :root_url          => '/horizon' }
+        :root_url          => '/horizon',
+        :apache_user       => 'www-data',
+        :apache_group      => 'www-data',
+        :wsgi_user         => 'horizon',
+        :wsgi_group        => 'horizon',
+        :unix_user         => 'horizon',
+        :unix_group        => 'horizon' }
     end
 
     it_behaves_like 'apache for horizon'

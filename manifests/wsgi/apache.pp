@@ -46,7 +46,14 @@ class horizon::wsgi::apache (
 
   include ::horizon::params
   include ::apache
-  include ::apache::mod::wsgi
+
+  if $::osfamily == 'RedHat' {
+    class { 'apache::mod::wsgi':
+      wsgi_socket_prefix => '/var/run/wsgi'
+    }
+  } else {
+    include ::apache::mod::wsgi
+  }
 
   # We already use apache::vhost to generate our own
   # configuration file, let's remove the configuration
@@ -86,10 +93,19 @@ class horizon::wsgi::apache (
   Package['horizon'] -> Package[$::horizon::params::http_service]
   File[$::horizon::params::config_file] ~> Service[$::horizon::params::http_service]
 
+  $unix_user = $::osfamily ? {
+    'RedHat' => $::horizon::params::apache_user,
+    default  => $::horizon::params::wsgi_user
+  }
+  $unix_group = $::osfamily ? {
+    'RedHat' => $::horizon::params::apache_group,
+    default  => $::horizon::params::wsgi_group,
+  }
+
   file { $::horizon::params::logdir:
     ensure       => directory,
-    owner        => $::horizon::params::wsgi_user,
-    group        => $::horizon::params::wsgi_group,
+    owner        => $unix_user,
+    group        => $unix_group,
     before       => Service[$::horizon::params::http_service],
     mode         => '0751',
     require      => Package['horizon']
@@ -97,8 +113,8 @@ class horizon::wsgi::apache (
 
   file { "${::horizon::params::logdir}/horizon.log":
     ensure       => file,
-    owner        => $::horizon::params::wsgi_user,
-    group        => $::horizon::params::wsgi_group,
+    owner        => $unix_user,
+    group        => $unix_group,
     before       => Service[$::horizon::params::http_service],
     mode         => '0640',
     require      => [ File[$::horizon::params::logdir], Package['horizon'] ],
@@ -120,12 +136,12 @@ class horizon::wsgi::apache (
     ssl_key              => $horizon_key,
     ssl_ca               => $horizon_ca,
     wsgi_script_aliases  => hash([$::horizon::params::root_url, $::horizon::params::django_wsgi]),
-    wsgi_daemon_process  => 'horizon',
+    wsgi_daemon_process  => $::horizon::params::wsgi_group,
     wsgi_daemon_process_options => {
       processes    => $wsgi_processes,
       threads      => $wsgi_threads,
-      user         => $::horizon::params::wsgi_user,
-      group        => $::horizon::params::wsgi_group,
+      user         => $unix_user,
+      group        => $unix_group,
     },
     wsgi_import_script   => $::horizon::params::django_wsgi,
     wsgi_process_group   => $::horizon::params::wsgi_group,
