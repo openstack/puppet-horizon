@@ -27,6 +27,10 @@
 #    (optional) Number of thread to run in a Horizon process
 #    Defaults to '10'
 #
+#  [*priority*]
+#    (optional) The apache vhost priority.
+#    Defaults to '15'. To set Horizon as the primary vhost, change to '10'.
+#
 #  [*extra_params*]
 #    (optional) A hash of extra paramaters for apache::wsgi class.
 #    Defaults to {}
@@ -41,6 +45,7 @@ class horizon::wsgi::apache (
   $horizon_ca      = undef,
   $wsgi_processes  = '3',
   $wsgi_threads    = '10',
+  $priority        = '15',
   $extra_params    = {},
 ) {
 
@@ -127,7 +132,7 @@ class horizon::wsgi::apache (
     docroot              => '/var/www/',
     access_log_file      => 'horizon_access.log',
     error_log_file       => 'horizon_error.log',
-    priority             => '15',
+    priority             => $priority,
     aliases              => [
       { alias => '/static', path => '/usr/share/openstack-dashboard/static' }
     ],

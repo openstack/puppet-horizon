@@ -53,6 +53,38 @@ describe 'horizon::wsgi::apache' do
       end
     end
 
+    context 'with overriden parameters' do
+      before do
+        params.merge!({
+          :priority => '10',
+        })
+      end
+
+      it 'configures apache' do
+        should contain_class('horizon::params')
+        should contain_class('apache')
+        should contain_class('apache::mod::wsgi')
+        should contain_service('httpd').with_name(platforms_params[:http_service])
+        should contain_file(platforms_params[:httpd_config_file])
+        should contain_package('horizon').with_ensure('present')
+        should contain_apache__vhost('horizon_vhost').with(
+          'servername'           => 'some.host.tld',
+          'access_log_file'      => 'horizon_access.log',
+          'error_log_file'       => 'horizon_error.log',
+          'priority'             => params[:priority],
+          'serveraliases'        => '*',
+          'docroot'              => '/var/www/',
+          'ssl'                  => 'false',
+          'redirectmatch_status' => 'permanent',
+          'redirectmatch_regexp' => "^/$ #{platforms_params[:root_url]}",
+          'wsgi_script_aliases'  => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' },
+          'wsgi_process_group'   => platforms_params[:wsgi_group],
+          'wsgi_daemon_process'  => platforms_params[:wsgi_group],
+          'wsgi_daemon_process_options' => { 'processes' => params[:wsgi_processes], 'threads' => params[:wsgi_threads], 'user' => platforms_params[:unix_user], 'group' => platforms_params[:unix_group] }
+         )
+      end
+    end
+
     context 'with ssl enabled' do
       before do
         params.merge!({
