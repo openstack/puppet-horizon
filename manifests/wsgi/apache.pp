@@ -123,7 +123,7 @@ class horizon::wsgi::apache (
   $default_vhost_conf = {
     ip                   => $bind_address,
     servername           => $servername,
-    serveraliases        => any2array($fqdn),
+    serveraliases        => os_any2array($fqdn),
     docroot              => '/var/www/',
     access_log_file      => 'horizon_access.log',
     error_log_file       => 'horizon_error.log',
