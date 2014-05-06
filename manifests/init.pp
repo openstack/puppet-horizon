@@ -146,6 +146,13 @@
 #    (optionnal) extra parameter to pass to the apache::vhost class
 #    Defaults to undef
 #
+#  [*file_upload_temp_dir*]
+#    (optional) Location to use for temporary storage of images uploaded
+#    You must ensure that the path leading to the directory is created
+#    already, only the last level directory is created by this manifest.
+#    Specify an absolute pathname.
+#    Defaults to /tmp
+#
 # === Deprecation notes
 #
 # If any value is provided for keystone_scheme, keystone_host or keystone_port parameters,
@@ -191,6 +198,7 @@ class horizon(
   $compress_offline        = 'True',
   $hypervisor_options      = {},
   $neutron_options         = {},
+  $file_upload_temp_dir    = '/tmp',
   # DEPRECATED PARAMETERS
   $can_set_mount_point     = undef,
   $keystone_host           = undef,
@@ -284,4 +292,14 @@ class horizon(
       extra_params => $vhost_extra_params,
     }
   }
+
+  if $file_upload_temp_dir != '/tmp' {
+    file { $file_upload_temp_dir :
+      ensure => directory,
+      owner  => $::horizon::params::wsgi_user,
+      group  => $::horizon::params::wsgi_group,
+      mode   => '0755'
+    }
+  }
+
 }

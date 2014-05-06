@@ -537,3 +537,9 @@ LOGIN_REDIRECT_URL = '<%= scope.lookupvar("horizon::params::root_url") %>'
 # offline compression by default.  To enable online compression, install
 # the python-lesscpy package and disable the following option.
 COMPRESS_OFFLINE = <%= @compress_offline.to_s.capitalize %>
+
+# For Glance image upload, Horizon uses the file upload support from Django
+# so we add this option to change the directory where uploaded files are temporarily
+# stored until they are loaded into Glance.
+FILE_UPLOAD_TEMP_DIR = '<%= @file_upload_temp_dir %>'
+

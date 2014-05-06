@@ -60,7 +60,8 @@ describe 'horizon' do
           "LOGIN_URL = '#{platforms_params[:root_url]}/auth/login/'",
           "LOGOUT_URL = '#{platforms_params[:root_url]}/auth/logout/'",
           "LOGIN_REDIRECT_URL = '#{platforms_params[:root_url]}'",
-          'COMPRESS_OFFLINE = True'
+          'COMPRESS_OFFLINE = True',
+          "FILE_UPLOAD_TEMP_DIR = '/tmp'"
         ])
       end
     end
@@ -77,7 +78,8 @@ describe 'horizon' do
           :api_result_limit        => 4682,
           :compress_offline        => 'False',
           :hypervisor_options      => {'can_set_mount_point' => false, 'can_set_password' => true },
-          :neutron_options         => {'enable_lb' => true, 'enable_firewall' => true, 'enable_quotas' => false, 'enable_security_group' => false, 'enable_vpn' => true, 'profile_support' => 'cisco' }
+          :neutron_options         => {'enable_lb' => true, 'enable_firewall' => true, 'enable_quotas' => false, 'enable_security_group' => false, 'enable_vpn' => true, 'profile_support' => 'cisco' },
+          :file_upload_temp_dir    => '/var/spool/horizon'
         })
       end
 
@@ -100,6 +102,7 @@ describe 'horizon' do
           'SECONDARY_ENDPOINT_TYPE = "ANY-VALUE"',
           'API_RESULT_LIMIT = 4682',
           'COMPRESS_OFFLINE = False',
+          "FILE_UPLOAD_TEMP_DIR = '/var/spool/horizon'"
         ])
       end
 
