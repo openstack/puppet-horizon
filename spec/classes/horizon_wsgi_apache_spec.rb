@@ -113,6 +113,8 @@ describe 'horizon::wsgi::apache' do
           'ssl_ca'                 => '/etc/pki/tls/certs/ca.crt',
           'redirectmatch_status'   => 'permanent',
           'redirectmatch_regexp'   => "^/$ #{platforms_params[:root_url]}",
+          'wsgi_process_group'     => 'horizon-ssl',
+          'wsgi_daemon_process'    => 'horizon-ssl',
           'wsgi_script_aliases'    => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' }
         )}
 
@@ -126,6 +128,8 @@ describe 'horizon::wsgi::apache' do
           'ssl'                  => 'false',
           'redirectmatch_status' => 'permanent',
           'redirectmatch_regexp' => '(.*) https://some.host.tld',
+          'wsgi_process_group'   => platforms_params[:wsgi_group],
+          'wsgi_daemon_process'  => platforms_params[:wsgi_group],
           'wsgi_script_aliases'  => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' }
         )}
       end
