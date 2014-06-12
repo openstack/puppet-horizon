@@ -164,6 +164,7 @@ class horizon::wsgi::apache (
     port                 => 443,
     ensure               => $ensure_ssl_vhost,
     wsgi_daemon_process  => 'horizon-ssl',
+    wsgi_process_group   => 'horizon-ssl',
     redirectmatch_regexp => "^/$ ${::horizon::params::root_url}"
   }))
 
