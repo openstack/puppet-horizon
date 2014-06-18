@@ -153,10 +153,16 @@
 #    Specify an absolute pathname.
 #    Defaults to /tmp
 #
+#  [*secure_cookies*]
+#    (optional) Enables security settings for cookies. Useful when using
+#    https on public sites. See: http://docs.openstack.org/developer/horizon/topics/deployment.html#secure-site-recommendations
+#    Defaults to false
+#
 # === Deprecation notes
 #
-# If any value is provided for keystone_scheme, keystone_host or keystone_port parameters,
-# keystone_url will be completely ignored. Also can_set_mount_point is deprecated.
+# If any value is provided for keystone_scheme, keystone_host, or
+# keystone_port parameters; keystone_url will be completely ignored. Also
+# can_set_mount_point is deprecated.
 #
 # === Examples
 #
@@ -205,6 +211,7 @@ class horizon(
   $keystone_port           = undef,
   $keystone_scheme         = undef,
   $vhost_extra_params      = undef,
+  $secure_cookies          = false,
 ) {
 
   include ::horizon::params
