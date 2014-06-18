@@ -79,7 +79,8 @@ describe 'horizon' do
           :compress_offline        => 'False',
           :hypervisor_options      => {'can_set_mount_point' => false, 'can_set_password' => true },
           :neutron_options         => {'enable_lb' => true, 'enable_firewall' => true, 'enable_quotas' => false, 'enable_security_group' => false, 'enable_vpn' => true, 'profile_support' => 'cisco' },
-          :file_upload_temp_dir    => '/var/spool/horizon'
+          :file_upload_temp_dir    => '/var/spool/horizon',
+          :secure_cookies          => true
         })
       end
 
@@ -87,6 +88,9 @@ describe 'horizon' do
         verify_contents(subject, platforms_params[:config_file], [
           'DEBUG = True',
           "ALLOWED_HOSTS = ['*', ]",
+          'CSRF_COOKIE_SECURE = True',
+          'SESSION_COOKIE_SECURE = True',
+          'SESSION_COOKIE_HTTPONLY = True',
           "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
           'OPENSTACK_KEYSTONE_URL = "https://keystone.example.com:4682"',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "SwiftOperator"',
