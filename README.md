@@ -87,6 +87,12 @@ Contributors
 Release Notes
 -------------
 
+**4.1.0**
+
+* Added option to set temporary upload directory for images.
+* Ensure ssl wsgi_process_group is the same as wsgi_daemon_process.
+* Pined major gems.
+
 **4.0.0**
 
 * Stable Icehouse release.
