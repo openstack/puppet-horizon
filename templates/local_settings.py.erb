@@ -31,11 +31,9 @@ ALLOWED_HOSTS = ['<%= @fqdn %>', ]
 <% if @secure_cookies %>
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_HTTPONLY = True
 <% else %>
 #CSRF_COOKIE_SECURE = True
 #SESSION_COOKIE_SECURE = True
-#SESSION_COOKIE_HTTPONLY = True
 <% end %>
 
 # Overrides for OpenStack API versions. Use this setting to force the
