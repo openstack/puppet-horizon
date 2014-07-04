@@ -90,7 +90,6 @@ describe 'horizon' do
           "ALLOWED_HOSTS = ['*', ]",
           'CSRF_COOKIE_SECURE = True',
           'SESSION_COOKIE_SECURE = True',
-          'SESSION_COOKIE_HTTPONLY = True',
           "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
           'OPENSTACK_KEYSTONE_URL = "https://keystone.example.com:4682"',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "SwiftOperator"',
