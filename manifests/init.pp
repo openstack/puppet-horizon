@@ -80,7 +80,8 @@
 #    on a single page. Defaults to 1000.
 #
 #  [*log_level*]
-#    (optional) Log level. Defaults to 'DEBUG'.
+#    (optional) Log level. Defaults to 'INFO'. WARNING: Setting this to
+#    DEBUG will let plaintext passwords be logged in the Horizon log file.
 #
 #  [*local_settings_template*]
 #    (optional) Location of template to use for local_settings.py generation.
@@ -190,7 +191,7 @@ class horizon(
   $secondary_endpoint_type = undef,
   $available_regions       = undef,
   $api_result_limit        = 1000,
-  $log_level               = 'DEBUG',
+  $log_level               = 'INFO',
   $help_url                = 'http://docs.openstack.org',
   $local_settings_template = 'horizon/local_settings.py.erb',
   $configure_apache        = true,
