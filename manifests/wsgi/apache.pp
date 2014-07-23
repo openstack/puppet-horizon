@@ -35,18 +35,20 @@
 #    (optional) A hash of extra paramaters for apache::wsgi class.
 #    Defaults to {}
 class horizon::wsgi::apache (
-  $bind_address    = undef,
-  $fqdn            = $::fqdn,
-  $servername      = $::fqdn,
-  $listen_ssl      = false,
-  $ssl_redirect    = true,
-  $horizon_cert    = undef,
-  $horizon_key     = undef,
-  $horizon_ca      = undef,
-  $wsgi_processes  = '3',
-  $wsgi_threads    = '10',
-  $priority        = '15',
-  $extra_params    = {},
+  $bind_address        = undef,
+  $fqdn                = $::fqdn,
+  $servername          = $::fqdn,
+  $listen_ssl          = false,
+  $ssl_redirect        = true,
+  $horizon_cert        = undef,
+  $horizon_key         = undef,
+  $horizon_ca          = undef,
+  $wsgi_processes      = '3',
+  $wsgi_threads        = '10',
+  $priority            = '15',
+  $vhost_conf_name     = 'horizon_vhost',
+  $vhost_ssl_conf_name = 'horizon_ssl_vhost',
+  $extra_params        = {},
 ) {
 
   include ::horizon::params
@@ -61,10 +63,18 @@ class horizon::wsgi::apache (
   }
 
   # We already use apache::vhost to generate our own
-  # configuration file, let's remove the configuration
+  # configuration file, let's clean the configuration
   # embedded within the package
   file { $::horizon::params::httpd_config_file:
-    ensure => absent
+    ensure  => present,
+    content => "#
+# This file has been cleaned by Puppet.
+#
+# OpenStack Horizon configuration has been moved to:
+# - ${priority}-${vhost_conf_name}.conf
+# - ${priority}-${vhost_ssl_conf_name}.conf
+#",
+    require => Package[$::horizon::params::package_name]
   }
 
 
@@ -153,13 +163,13 @@ class horizon::wsgi::apache (
     redirectmatch_status => 'permanent',
   }
 
-  ensure_resource('apache::vhost', 'horizon_vhost', merge ($default_vhost_conf, $extra_params, {
+  ensure_resource('apache::vhost', $vhost_conf_name, merge ($default_vhost_conf, $extra_params, {
     redirectmatch_regexp => "${redirect_match} ${redirect_url}",
   }))
-  ensure_resource('apache::vhost', 'horizon_ssl_vhost',merge ($default_vhost_conf, $extra_params, {
+  ensure_resource('apache::vhost', $vhost_ssl_conf_name, merge ($default_vhost_conf, $extra_params, {
     access_log_file      => 'horizon_ssl_access.log',
     error_log_file       => 'horizon_ssl_error.log',
-    priority             => '15',
+    priority             => $priority,
     ssl                  => true,
     port                 => 443,
     ensure               => $ensure_ssl_vhost,
