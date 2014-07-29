@@ -22,7 +22,8 @@
 #    (optional) Package ensure state. Defaults to 'present'.
 #
 #  [*cache_server_ip*]
-#    (optional) Memcached IP address. Defaults to '127.0.0.1'.
+#    (optional) Memcached IP address. Can be a string, or an array.
+#    Defaults to '127.0.0.1'.
 #
 #  [*cache_server_port*]
 #    (optional) Memcached port. Defaults to '11211'.

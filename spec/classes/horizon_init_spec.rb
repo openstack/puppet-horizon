@@ -91,6 +91,7 @@ describe 'horizon' do
           'CSRF_COOKIE_SECURE = True',
           'SESSION_COOKIE_SECURE = True',
           "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
+          "        'LOCATION': '10.0.0.1:11211',",
           'OPENSTACK_KEYSTONE_URL = "https://keystone.example.com:4682"',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "SwiftOperator"',
           "    'can_set_mount_point': False,",
@@ -105,7 +106,23 @@ describe 'horizon' do
           'SECONDARY_ENDPOINT_TYPE = "ANY-VALUE"',
           'API_RESULT_LIMIT = 4682',
           'COMPRESS_OFFLINE = False',
-          "FILE_UPLOAD_TEMP_DIR = '/var/spool/horizon'"
+          "FILE_UPLOAD_TEMP_DIR = '/var/spool/horizon'",
+        ])
+      end
+
+      it { should contain_exec('refresh_horizon_django_cache') }
+    end
+
+    context 'with overridden parameters and cache_server_ip array' do
+      before do
+        params.merge!({
+          :cache_server_ip => ['10.0.0.1','10.0.0.2'],
+        })
+      end
+
+      it 'generates local_settings.py' do
+        verify_contents(subject, platforms_params[:config_file], [
+          "        'LOCATION': [ '10.0.0.1:11211','10.0.0.2:11211', ],",
         ])
       end
 
