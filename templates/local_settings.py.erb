@@ -538,6 +538,9 @@ LOGIN_REDIRECT_URL = '<%= scope.lookupvar("horizon::params::root_url") %>'
 # the python-lesscpy package and disable the following option.
 COMPRESS_OFFLINE = <%= @compress_offline.to_s.capitalize %>
 
+# Session timeout
+SESSION_TIMEOUT = <%= @session_timeout %>
+
 # Enable the datacentred theme if installed
 try:
     from datacentred_theme import *

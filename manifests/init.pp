@@ -191,6 +191,7 @@ class horizon(
   $compress_offline        = 'True',
   $hypervisor_options      = {},
   $neutron_options         = {},
+  $session_timeout         = '86400',
   # DEPRECATED PARAMETERS
   $can_set_mount_point     = undef,
   $keystone_host           = undef,
