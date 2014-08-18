@@ -7,6 +7,11 @@
 #  [*bind_address*]
 #    (optional) Bind address in Apache for Horizon. (Defaults to '0.0.0.0')
 #
+#  [*server_aliases*]
+#    (optional) List of names which should be defined as ServerAlias directives
+#    in vhost.conf.
+#    Defaults to ::fqdn.
+#
 #  [*listen_ssl*]
 #    (optional) Enable SSL support in Apache. (Defaults to false)
 #
@@ -36,8 +41,9 @@
 #    Defaults to {}
 class horizon::wsgi::apache (
   $bind_address        = undef,
-  $fqdn                = $::fqdn,
+  $fqdn                = undef,
   $servername          = $::fqdn,
+  $server_aliases      = $::fqdn,
   $listen_ssl          = false,
   $ssl_redirect        = true,
   $horizon_cert        = undef,
@@ -53,6 +59,13 @@ class horizon::wsgi::apache (
 
   include ::horizon::params
   include ::apache
+
+  if $fqdn {
+    warning('Parameter fqdn is deprecated. Please use parameter server_aliases for setting ServerAlias directives in vhost.conf.')
+    $final_server_aliases = $fqdn
+  } else {
+    $final_server_aliases = $server_aliases
+  }
 
   if $::osfamily == 'RedHat' {
     class { 'apache::mod::wsgi':
@@ -138,7 +151,7 @@ class horizon::wsgi::apache (
   $default_vhost_conf = {
     ip                   => $bind_address,
     servername           => $servername,
-    serveraliases        => os_any2array($fqdn),
+    serveraliases        => os_any2array($final_server_aliases),
     docroot              => '/var/www/',
     access_log_file      => 'horizon_access.log',
     error_log_file       => 'horizon_error.log',
