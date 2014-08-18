@@ -9,14 +9,27 @@
 #    signing, and should be set to a unique, unpredictable value.
 #
 #  [*fqdn*]
-#    (optional) FQDN(s) used to access Horizon. This is used by Django for
+#    (optional) DEPRECATED, use allowed_hosts and server_aliases instead.
+#    FQDN(s) used to access Horizon. This is used by Django for
 #    security reasons. Can be set to * in environments where security is
 #    deemed unimportant. Also used for Server Aliases in web configs.
 #    Defaults to ::fqdn
 #
 #  [*servername*]
 #    (optional) FQDN used for the Server Name directives
-#    Defaults to ::fqdn
+#    Defaults to ::fqdn.
+#
+#  [*allowed_hosts*]
+#    (optional) List of hosts which will be set as value of ALLOWED_HOSTS
+#    parameter in settings_local.py. This is used by Django for
+#    security reasons. Can be set to * in environments where security is
+#    deemed unimportant.
+#    Defaults to ::fqdn.
+#
+#  [*server_aliases*]
+#    (optional) List of names which should be defined as ServerAlias directives
+#    in vhost.conf.
+#    Defaults to ::fqdn.
 #
 #  [*package_ensure*]
 #    (optional) Package ensure state. Defaults to 'present'.
@@ -179,7 +192,7 @@
 #
 class horizon(
   $secret_key,
-  $fqdn                    = $::fqdn,
+  $fqdn                    = undef,
   $package_ensure          = 'present',
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
@@ -198,6 +211,8 @@ class horizon(
   $configure_apache        = true,
   $bind_address            = undef,
   $servername              = $::fqdn,
+  $server_aliases          = $::fqdn,
+  $allowed_hosts           = $::fqdn,
   $listen_ssl              = false,
   $ssl_redirect            = true,
   $horizon_cert            = undef,
@@ -250,6 +265,16 @@ class horizon(
     }
   }
 
+  if $fqdn {
+    warning('Parameter fqdn is deprecated. Please use parameter allowed_hosts for setting ALLOWED_HOSTS in settings_local.py and parameter server_aliases for setting ServerAlias directives in vhost.conf.')
+    $final_allowed_hosts = $fqdn
+    $final_server_aliases = $fqdn
+  } else {
+    $final_allowed_hosts = $allowed_hosts
+    $final_server_aliases = $server_aliases
+  }
+
+
   # Default options for the OPENSTACK_NEUTRON_NETWORK section.  These will
   # be merged with user-provided options when the local_settings.py.erb
   # template is interpolated.
@@ -290,15 +315,15 @@ class horizon(
 
   if $configure_apache {
     class { 'horizon::wsgi::apache':
-      bind_address => $bind_address,
-      fqdn         => $fqdn,
-      servername   => $servername,
-      listen_ssl   => $listen_ssl,
-      ssl_redirect => $ssl_redirect,
-      horizon_cert => $horizon_cert,
-      horizon_key  => $horizon_key,
-      horizon_ca   => $horizon_ca,
-      extra_params => $vhost_extra_params,
+      bind_address   => $bind_address,
+      servername     => $servername,
+      server_aliases => $final_server_aliases,
+      listen_ssl     => $listen_ssl,
+      ssl_redirect   => $ssl_redirect,
+      horizon_cert   => $horizon_cert,
+      horizon_key    => $horizon_key,
+      horizon_ca     => $horizon_ca,
+      extra_params   => $vhost_extra_params,
     }
   }
 

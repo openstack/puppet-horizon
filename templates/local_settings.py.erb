@@ -13,10 +13,10 @@ TEMPLATE_DEBUG = DEBUG
 # For more information see:
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 #ALLOWED_HOSTS = ['horizon.example.com', ]
-<% if @fqdn.kind_of?(Array) %>
-ALLOWED_HOSTS = ['<%= @fqdn.join("', '") %>', ]
+<% if @final_allowed_hosts.kind_of?(Array) %>
+ALLOWED_HOSTS = ['<%= @final_allowed_hosts.join("', '") %>', ]
 <% else %>
-ALLOWED_HOSTS = ['<%= @fqdn %>', ]
+ALLOWED_HOSTS = ['<%= @final_allowed_hosts %>', ]
 <% end %>
 
 # Set SSL proxy settings:
@@ -553,4 +553,3 @@ COMPRESS_OFFLINE = <%= @compress_offline.to_s.capitalize %>
 # so we add this option to change the directory where uploaded files are temporarily
 # stored until they are loaded into Glance.
 FILE_UPLOAD_TEMP_DIR = '<%= @file_upload_temp_dir %>'
-
