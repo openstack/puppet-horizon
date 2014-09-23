@@ -196,6 +196,9 @@ describe 'horizon::wsgi::apache' do
     end
 
     it_behaves_like 'apache for horizon'
+    it {
+      should contain_class('apache::mod::wsgi').with(:wsgi_socket_prefix => '/var/run/wsgi')
+    }
   end
 
   context 'on Debian platforms' do

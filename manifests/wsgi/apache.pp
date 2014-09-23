@@ -67,13 +67,7 @@ class horizon::wsgi::apache (
     $final_server_aliases = $server_aliases
   }
 
-  if $::osfamily == 'RedHat' {
-    class { 'apache::mod::wsgi':
-      wsgi_socket_prefix => '/var/run/wsgi'
-    }
-  } else {
-    include ::apache::mod::wsgi
-  }
+  include ::apache::mod::wsgi
 
   # We already use apache::vhost to generate our own
   # configuration file, let's clean the configuration
