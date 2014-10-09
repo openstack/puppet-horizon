@@ -171,6 +171,10 @@
 #    https on public sites. See: http://docs.openstack.org/developer/horizon/topics/deployment.html#secure-site-recommendations
 #    Defaults to false
 #
+#  [*django_session_engine*]
+#    (optional) Selects the session engine for Django to use.
+#    Defaults to undefined - will not add entry to local settings.
+#
 # === Deprecation notes
 #
 # If any value is provided for keystone_scheme, keystone_host, or
@@ -227,6 +231,7 @@ class horizon(
   $keystone_scheme         = undef,
   $vhost_extra_params      = undef,
   $secure_cookies          = false,
+  $django_session_engine   = undef,
 ) {
 
   include ::horizon::params

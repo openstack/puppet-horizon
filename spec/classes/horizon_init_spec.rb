@@ -63,6 +63,12 @@ describe 'horizon' do
           'COMPRESS_OFFLINE = True',
           "FILE_UPLOAD_TEMP_DIR = '/tmp'"
         ])
+
+        # From internals of verify_contents, get the contents to check for absence of a line
+        content = subject.resource('file', platforms_params[:config_file]).send(:parameters)[:content]
+
+        # With default options, should _not_ have a line to configure SESSION_ENGINE
+        content.should_not match(/^SESSION_ENGINE/)
       end
     end
 
@@ -70,6 +76,7 @@ describe 'horizon' do
       before do
         params.merge!({
           :cache_server_ip         => '10.0.0.1',
+          :django_session_engine   => 'django.contrib.sessions.backends.cache',
           :keystone_default_role   => 'SwiftOperator',
           :keystone_url            => 'https://keystone.example.com:4682',
           :openstack_endpoint_type => 'internalURL',
@@ -91,6 +98,7 @@ describe 'horizon' do
           'CSRF_COOKIE_SECURE = True',
           'SESSION_COOKIE_SECURE = True',
           "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
+          'SESSION_ENGINE = "django.contrib.sessions.backends.cache"',
           'OPENSTACK_KEYSTONE_URL = "https://keystone.example.com:4682"',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "SwiftOperator"',
           "    'can_set_mount_point': False,",
