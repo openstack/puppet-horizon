@@ -129,6 +129,12 @@ CACHES = {
     }
 }
 
+# Configure session backend if set.
+# This allows us to switch to a different session backend to fit infrastructure
+# and/or security preferences.
+<% if @django_session_engine %>
+SESSION_ENGINE = "<%= @django_session_engine %>"
+<% end %>
 
 # Send email to the console by default
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
