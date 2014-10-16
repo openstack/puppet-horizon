@@ -1,7 +1,7 @@
 horizon
 =======
 
-4.0.0 - 2014.1.0 - Icehouse
+4.2.0 - 2014.1.0 - Icehouse
 
 #### Table of Contents
 
@@ -86,6 +86,13 @@ Contributors
 
 Release Notes
 -------------
+
+**4.2.0**
+
+* Added parameters to configure ALLOWED_HOSTS in settings_local.y and
+  ServerAlias in apache, no longer requiring these values to be the fqdn
+* Fixed removal of vhost conf file
+* Added support for secure cookies
 
 **4.1.0**
 
