@@ -211,7 +211,7 @@ describe 'horizon::wsgi::apache' do
 
     let :platforms_params do
       { :http_service      => 'apache2',
-        :httpd_config_file => '/etc/apache2/conf.d/openstack-dashboard.conf',
+        :httpd_config_file => '/etc/apache2/conf-available/openstack-dashboard.conf',
         :root_url          => '/horizon',
         :apache_user       => 'www-data',
         :apache_group      => 'www-data',

@@ -23,7 +23,7 @@ class horizon::params {
     'Debian': {
       $http_service                = 'apache2'
       $config_file                 = '/etc/openstack-dashboard/local_settings.py'
-      $httpd_config_file           = '/etc/apache2/conf.d/openstack-dashboard.conf'
+      $httpd_config_file           = '/etc/apache2/conf-available/openstack-dashboard.conf'
       $httpd_listen_config_file    = '/etc/apache2/ports.conf'
       $root_url                    = '/horizon'
       $apache_user                 = 'www-data'
