@@ -220,6 +220,8 @@ class horizon(
   $hypervisor_options      = {},
   $neutron_options         = {},
   $file_upload_temp_dir    = '/tmp',
+  $policy_files_path       = undef,
+  $policy_files            = undef,
   # DEPRECATED PARAMETERS
   $can_set_mount_point     = undef,
   $keystone_host           = undef,

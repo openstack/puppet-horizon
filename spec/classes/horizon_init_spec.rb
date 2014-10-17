@@ -197,6 +197,30 @@ describe 'horizon' do
       end
     end
 
+    context 'with policy parameters' do
+      before do
+        params.merge!({
+          :policy_files_path => '/opt/openstack-dashboard',
+          :policy_files      => {
+            'identity' => 'keystone_policy.json',
+            'compute'  => 'nova_policy.json',
+            'network'  => 'neutron_policy.json',
+          }
+        })
+      end
+
+      it 'POLICY_FILES_PATH and POLICY_FILES are configured' do
+        verify_contents(subject, platforms_params[:config_file], [
+          "POLICY_FILES_PATH = '/opt/openstack-dashboard'",
+          "POLICY_FILES = {",
+          "    'identity': 'keystone_policy.json',",
+          "    'compute': 'nova_policy.json',",
+          "    'network': 'neutron_policy.json',",
+          "} # POLICY_FILES"
+        ])
+      end
+    end
+
     context 'with overriding local_settings_template' do
       before do
         params.merge!({
