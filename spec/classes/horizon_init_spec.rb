@@ -32,7 +32,7 @@ describe 'horizon' do
           :command     => '/usr/share/openstack-dashboard/manage.py compress',
           :refreshonly => true,
       })}
-      it { should contain_file(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]') }
+      it { should contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]') }
 
       it 'configures apache' do
         should contain_class('horizon::wsgi::apache').with({
@@ -44,7 +44,7 @@ describe 'horizon' do
       end
 
       it 'generates local_settings.py' do
-        verify_contents(subject, platforms_params[:config_file], [
+        verify_concat_fragment_contents(subject, 'local_settings.py', [
           'DEBUG = False',
           "ALLOWED_HOSTS = ['*', ]",
           "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
@@ -66,7 +66,7 @@ describe 'horizon' do
         ])
 
         # From internals of verify_contents, get the contents to check for absence of a line
-        content = subject.resource('file', platforms_params[:config_file]).send(:parameters)[:content]
+        content = subject.resource('concat::fragment', 'local_settings.py').send(:parameters)[:content]
 
         # With default options, should _not_ have a line to configure SESSION_ENGINE
         content.should_not match(/^SESSION_ENGINE/)
@@ -96,7 +96,7 @@ describe 'horizon' do
       end
 
       it 'generates local_settings.py' do
-        verify_contents(subject, platforms_params[:config_file], [
+        verify_concat_fragment_contents(subject, 'local_settings.py', [
           'DEBUG = True',
           "ALLOWED_HOSTS = ['*', ]",
           'CSRF_COOKIE_SECURE = True',
@@ -136,7 +136,7 @@ describe 'horizon' do
       end
 
       it 'generates local_settings.py' do
-        verify_contents(subject, platforms_params[:config_file], [
+        verify_concat_fragment_contents(subject, 'local_settings.py', [
           "        'LOCATION': [ '10.0.0.1:11211','10.0.0.2:11211', ],",
         ])
       end
@@ -202,7 +202,7 @@ describe 'horizon' do
       end
 
       it 'AVAILABLE_REGIONS is configured' do
-        verify_contents(subject, platforms_params[:config_file], [
+        verify_concat_fragment_contents(subject, 'local_settings.py', [
           "AVAILABLE_REGIONS = [",
           "    ('http://region-1.example.com:5000/v2.0', 'Region-1'),",
           "    ('http://region-2.example.com:5000/v2.0', 'Region-2'),",
@@ -224,7 +224,7 @@ describe 'horizon' do
       end
 
       it 'POLICY_FILES_PATH and POLICY_FILES are configured' do
-        verify_contents(subject, platforms_params[:config_file], [
+        verify_concat_fragment_contents(subject, 'local_settings.py', [
           "POLICY_FILES_PATH = '/opt/openstack-dashboard'",
           "POLICY_FILES = {",
           "    'identity': 'keystone_policy.json',",
@@ -245,7 +245,7 @@ describe 'horizon' do
       end
 
       it 'uses the custom local_settings.py template' do
-        verify_contents(subject, platforms_params[:config_file], [
+        verify_concat_fragment_contents(subject, 'local_settings.py', [
           '# Custom local_settings.py',
           'DEBUG = True',
           "HORIZON_CONFIG = {",

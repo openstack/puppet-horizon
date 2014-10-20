@@ -258,10 +258,15 @@ class horizon(
     name    => $::horizon::params::package_name,
   }
 
-  file { $::horizon::params::config_file:
-    content => template($local_settings_template),
+  concat { $::horizon::params::config_file:
     mode    => '0644',
     require => Package['horizon'],
+  }
+
+  concat::fragment { 'local_settings.py':
+    target  => $::horizon::params::config_file,
+    content => template($local_settings_template),
+    order   => '50'
   }
 
   package { 'python-lesscpy':
@@ -275,7 +280,7 @@ class horizon(
   }
 
   if $compress_offline {
-    File[$::horizon::params::config_file] ~> Exec['refresh_horizon_django_cache']
+    Concat[$::horizon::params::config_file] ~> Exec['refresh_horizon_django_cache']
   }
 
   if $configure_apache {
