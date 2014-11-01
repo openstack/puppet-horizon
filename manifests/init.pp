@@ -300,6 +300,13 @@ class horizon(
     ensure  => $package_ensure,
     name    => $::horizon::params::package_name,
   }
+
+  file { $::horizon::params::config_file:
+    content => template($local_settings_template),
+    mode    => '0644',
+    require => Package['horizon'],
+  }
+
   package { 'python-lesscpy':
     ensure  => $package_ensure,
   }
@@ -307,17 +314,11 @@ class horizon(
   exec { 'refresh_horizon_django_cache':
     command     => "${::horizon::params::manage_py} compress",
     refreshonly => true,
-    subscribe   => File[$::horizon::params::config_file],
     require     => [Package['python-lesscpy'], Package['horizon']],
   }
 
   if $compress_offline {
-    file { $::horizon::params::config_file:
-      content => template($local_settings_template),
-      mode    => '0644',
-      notify  => Exec['refresh_horizon_django_cache'],
-      require => Package['horizon'],
-    }
+    File[$::horizon::params::config_file] ~> Exec['refresh_horizon_django_cache']
   }
 
   if $configure_apache {
