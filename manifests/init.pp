@@ -222,7 +222,7 @@ class horizon(
   $horizon_cert            = undef,
   $horizon_key             = undef,
   $horizon_ca              = undef,
-  $compress_offline        = 'True',
+  $compress_offline        = true,
   $hypervisor_options      = {},
   $neutron_options         = {},
   $file_upload_temp_dir    = '/tmp',
@@ -335,7 +335,7 @@ class horizon(
     }
   }
 
-  if $file_upload_temp_dir != '/tmp' {
+  if ! ($file_upload_temp_dir in ['/tmp','/var/tmp']) {
     file { $file_upload_temp_dir :
       ensure => directory,
       owner  => $::horizon::params::wsgi_user,

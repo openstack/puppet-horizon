@@ -32,6 +32,7 @@ describe 'horizon' do
           :command     => '/usr/share/openstack-dashboard/manage.py compress',
           :refreshonly => true,
       })}
+      it { should contain_file(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]') }
 
       it 'configures apache' do
         should contain_class('horizon::wsgi::apache').with({
@@ -70,6 +71,8 @@ describe 'horizon' do
         # With default options, should _not_ have a line to configure SESSION_ENGINE
         content.should_not match(/^SESSION_ENGINE/)
       end
+
+      it { should_not contain_file(params[:file_upload_temp_dir]) }
     end
 
     context 'with overridden parameters' do
@@ -83,7 +86,7 @@ describe 'horizon' do
           :secondary_endpoint_type => 'ANY-VALUE',
           :django_debug            => true,
           :api_result_limit        => 4682,
-          :compress_offline        => 'False',
+          :compress_offline        => false,
           :hypervisor_options      => {'can_set_mount_point' => false, 'can_set_password' => true },
           :neutron_options         => {'enable_lb' => true, 'enable_firewall' => true, 'enable_quotas' => false, 'enable_security_group' => false, 'enable_vpn' => true, 'profile_support' => 'cisco' },
           :file_upload_temp_dir    => '/var/spool/horizon',
@@ -118,7 +121,9 @@ describe 'horizon' do
         ])
       end
 
-      it { should contain_exec('refresh_horizon_django_cache') }
+      it { should_not contain_file(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]') }
+
+      it { should contain_file(params[:file_upload_temp_dir]) }
     end
 
     context 'with overridden parameters and cache_server_ip array' do
@@ -276,6 +281,16 @@ describe 'horizon' do
           "}",
         ])
       end
+    end
+
+    context 'with /var/tmp as upload temp dir' do
+      before do
+        params.merge!({
+          :file_upload_temp_dir => '/var/tmp'
+        })
+      end
+
+      it { should_not contain_file(params[:file_upload_temp_dir]) }
     end
   end
 
