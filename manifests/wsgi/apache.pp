@@ -142,8 +142,7 @@ class horizon::wsgi::apache (
     require      => [ File[$::horizon::params::logdir], Package['horizon'] ],
   }
 
-  $default_vhost_conf = {
-    ip                   => $bind_address,
+  $default_vhost_conf_no_ip = {
     servername           => $servername,
     serveraliases        => os_any2array($final_server_aliases),
     docroot              => '/var/www/',
@@ -168,6 +167,16 @@ class horizon::wsgi::apache (
     wsgi_import_script   => $::horizon::params::django_wsgi,
     wsgi_process_group   => $::horizon::params::wsgi_group,
     redirectmatch_status => 'permanent',
+  }
+
+  # Only add the 'ip' element to the $default_vhost_conf hash if it was explicitly
+  # specified in the instantiation of the class.  This is because ip => undef gets
+  # changed to ip => '' via the Puppet function API when ensure_resource is called.
+  # See https://bugs.launchpad.net/puppet-horizon/+bug/1371345
+  if $bind_address {
+    $default_vhost_conf = merge($default_vhost_conf_no_ip, { ip => $bind_address })
+  } else {
+    $default_vhost_conf = $default_vhost_conf_no_ip
   }
 
   ensure_resource('apache::vhost', $vhost_conf_name, merge ($default_vhost_conf, $extra_params, {
