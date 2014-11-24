@@ -31,7 +31,7 @@
   ],
   "description": "Installs and configures OpenStack Horizon (Dashboard).",
   "dependencies": [
-    { "name": "puppetlabs/apache", "version_requirement": ">=1.1.2 <2.0.0" },
+    { "name": "puppetlabs/apache", "version_requirement": ">=1.2.0 <2.0.0" },
     { "name": "puppetlabs/stdlib", "version_requirement": ">=4.0.0 <5.0.0" },
     { "name": "saz/memcached", "version_requirement": ">=2.0.2 <3.0.0" }
   ]
