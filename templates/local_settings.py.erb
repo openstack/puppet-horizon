@@ -153,14 +153,6 @@ AVAILABLE_REGIONS = [
 ]
 <% end -%>
 
-<%
-if (!@keystone_scheme.nil?) || (!@keystone_host.nil?) || (!@keystone_port.nil?)
-    @keystone_scheme ||= "http"
-    @keystone_host ||= "127.0.0.1"
-    @keystone_port ||= "5000"
-    @keystone_url = "#{@keystone_scheme}://#{@keystone_host}:#{@keystone_port}/v2.0"
-end
--%>
 OPENSTACK_KEYSTONE_URL = "<%= @keystone_url %>"
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "<%= @keystone_default_role %>"
 

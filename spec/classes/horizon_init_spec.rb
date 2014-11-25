@@ -142,24 +142,6 @@ describe 'horizon' do
       it { should contain_exec('refresh_horizon_django_cache') }
     end
 
-    context 'with deprecated parameters' do
-      before do
-        params.merge!({
-          :keystone_host       => 'keystone.example.com',
-          :keystone_port       => 4682,
-          :keystone_scheme     => 'https',
-          :can_set_mount_point => true,
-        })
-      end
-
-      it 'generates local_settings.py' do
-        verify_contents(subject, platforms_params[:config_file], [
-          'OPENSTACK_KEYSTONE_URL = "https://keystone.example.com:4682/v2.0"',
-          "    'can_set_mount_point': True,"
-        ])
-      end
-    end
-
     context 'with vhost_extra_params' do
       before do
         params.merge!({
