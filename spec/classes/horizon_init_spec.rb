@@ -88,6 +88,7 @@ describe 'horizon' do
           :api_result_limit        => 4682,
           :compress_offline        => false,
           :hypervisor_options      => {'can_set_mount_point' => false, 'can_set_password' => true },
+          :cinder_options          => {'enable_backup' => true },
           :neutron_options         => {'enable_lb' => true, 'enable_firewall' => true, 'enable_quotas' => false, 'enable_security_group' => false, 'enable_vpn' => true, 'profile_support' => 'cisco' },
           :file_upload_temp_dir    => '/var/spool/horizon',
           :secure_cookies          => true
@@ -107,6 +108,7 @@ describe 'horizon' do
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "SwiftOperator"',
           "    'can_set_mount_point': False,",
           "    'can_set_password': True,",
+          "    'enable_backup': True,",
           "    'enable_lb': True,",
           "    'enable_firewall': True,",
           "    'enable_quotas': False,",
