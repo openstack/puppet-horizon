@@ -186,7 +186,7 @@
 # === Examples
 #
 #  class { 'horizon':
-#    secret       => 's3cr3t',
+#    secret_key       => 's3cr3t',
 #    keystone_url => 'https://10.0.0.10:5000/v2.0',
 #    available_regions => [
 #      ['http://region-1.example.com:5000/v2.0', 'Region-1'],
