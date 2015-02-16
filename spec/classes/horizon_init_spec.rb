@@ -232,8 +232,8 @@ describe 'horizon' do
         params.merge!({
           :policy_files_path => '/opt/openstack-dashboard',
           :policy_files      => {
-            'identity' => 'keystone_policy.json',
             'compute'  => 'nova_policy.json',
+            'identity' => 'keystone_policy.json',
             'network'  => 'neutron_policy.json',
           }
         })
@@ -243,8 +243,8 @@ describe 'horizon' do
         verify_contents(subject, platforms_params[:config_file], [
           "POLICY_FILES_PATH = '/opt/openstack-dashboard'",
           "POLICY_FILES = {",
-          "    'identity': 'keystone_policy.json',",
           "    'compute': 'nova_policy.json',",
+          "    'identity': 'keystone_policy.json',",
           "    'network': 'neutron_policy.json',",
           "} # POLICY_FILES"
         ])
