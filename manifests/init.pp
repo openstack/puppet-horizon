@@ -155,6 +155,18 @@
 #    Specify an absolute pathname.
 #    Defaults to /tmp
 #
+# [*policy_files_path*]
+#   (Optional) The path to the policy files
+#   Defaults to undef.
+#
+# [*policy_files*]
+#   (Optional) Policy files
+#   Defaults to undef.
+#
+# [*can_set_mount_point*]
+#   (Optional) DEPRECATED
+#   Defaults to 'undef'.
+#
 #  [*secure_cookies*]
 #    (optional) Enables security settings for cookies. Useful when using
 #    https on public sites. See: http://docs.openstack.org/developer/horizon/topics/deployment.html#secure-site-recommendations
@@ -220,7 +232,7 @@ class horizon(
 
   $hypervisor_defaults = {
     'can_set_mount_point' => true,
-    'can_set_password'    => false
+    'can_set_password'    => false,
   }
 
   if $fqdn {
@@ -248,14 +260,14 @@ class horizon(
     'enable_quotas'         => true,
     'enable_security_group' => true,
     'enable_vpn'            => false,
-    'profile_support'       => 'None'
+    'profile_support'       => 'None',
   }
 
   Service <| title == 'memcached' |> -> Class['horizon']
 
   package { 'horizon':
-    ensure  => $package_ensure,
-    name    => $::horizon::params::package_name,
+    ensure => $package_ensure,
+    name   => $::horizon::params::package_name,
   }
 
   concat { $::horizon::params::config_file:
@@ -266,7 +278,7 @@ class horizon(
   concat::fragment { 'local_settings.py':
     target  => $::horizon::params::config_file,
     content => template($local_settings_template),
-    order   => '50'
+    order   => '50',
   }
 
   package { 'python-lesscpy':
@@ -284,7 +296,7 @@ class horizon(
   }
 
   if $configure_apache {
-    class { 'horizon::wsgi::apache':
+    class { '::horizon::wsgi::apache':
       bind_address   => $bind_address,
       servername     => $servername,
       server_aliases => $final_server_aliases,
@@ -302,7 +314,7 @@ class horizon(
       ensure => directory,
       owner  => $::horizon::params::wsgi_user,
       group  => $::horizon::params::wsgi_group,
-      mode   => '0755'
+      mode   => '0755',
     }
   }
 
