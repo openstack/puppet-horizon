@@ -87,21 +87,21 @@ class horizon::wsgi::apache (
   File[$::horizon::params::config_file] ~> Service[$::horizon::params::http_service]
 
   file { $::horizon::params::logdir:
-    ensure       => directory,
-    owner        => $::horizon::params::wsgi_user,
-    group        => $::horizon::params::wsgi_group,
-    before       => Service[$::horizon::params::http_service],
-    mode         => '0751',
-    require      => Package['horizon']
+    ensure  => directory,
+    owner   => $::horizon::params::wsgi_user,
+    group   => $::horizon::params::wsgi_group,
+    before  => Service[$::horizon::params::http_service],
+    mode    => '0751',
+    require => Package['horizon']
   }
 
   file { "${::horizon::params::logdir}/horizon.log":
-    ensure       => file,
-    owner        => $::horizon::params::wsgi_user,
-    group        => $::horizon::params::wsgi_group,
-    before       => Service[$::horizon::params::http_service],
-    mode         => '0640',
-    require      => [ File[$::horizon::params::logdir], Package['horizon'] ],
+    ensure  => file,
+    owner   => $::horizon::params::wsgi_user,
+    group   => $::horizon::params::wsgi_group,
+    before  => Service[$::horizon::params::http_service],
+    mode    => '0640',
+    require => [ File[$::horizon::params::logdir], Package['horizon'] ],
   }
 
   $default_vhost_conf = {
@@ -133,7 +133,8 @@ class horizon::wsgi::apache (
   }
 
   ensure_resource('apache::vhost', 'horizon_vhost', merge ($default_vhost_conf, $extra_params, {
-    redirectmatch_regexp => "${redirect_match} ${redirect_url}",
+    redirectmatch_regexp => $redirect_match,
+    redirectmatch_dest   => $redirect_url,
   }))
   ensure_resource('apache::vhost', 'horizon_ssl_vhost',merge ($default_vhost_conf, $extra_params, {
     access_log_file      => 'horizon_ssl_access.log',
@@ -143,7 +144,8 @@ class horizon::wsgi::apache (
     port                 => 443,
     ensure               => $ensure_ssl_vhost,
     wsgi_daemon_process  => 'horizon-ssl',
-    redirectmatch_regexp => "^/$ ${::horizon::params::root_url}"
+    redirectmatch_regexp => '^/$',
+    redirectmatch_dest   => $::horizon::params::root_url,
   }))
 
 }
