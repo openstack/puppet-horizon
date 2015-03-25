@@ -101,7 +101,7 @@ class horizon::wsgi::apache (
 # - ${priority}-${vhost_conf_name}.conf
 # - ${priority}-${vhost_ssl_conf_name}.conf
 #",
-    require => Package[$::horizon::params::package_name],
+    require => Package['horizon'],
   }
 
 
