@@ -26,7 +26,10 @@ describe 'horizon' do
     context 'with default parameters' do
       it {
           should contain_package('python-lesscpy').with_ensure('present')
-          should contain_package('horizon').with_ensure('present')
+          should contain_package('horizon').with(
+            :ensure => 'present',
+            :tag    => 'openstack'
+          )
       }
       it { should contain_exec('refresh_horizon_django_cache').with({
           :command     => '/usr/share/openstack-dashboard/manage.py compress',

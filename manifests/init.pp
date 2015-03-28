@@ -268,6 +268,7 @@ class horizon(
   package { 'horizon':
     ensure => $package_ensure,
     name   => $::horizon::params::package_name,
+    tag    => 'openstack',
   }
 
   concat { $::horizon::params::config_file:
