@@ -118,6 +118,11 @@
 #      security groups.  Defaults to True.
 #    'enable_vpn': Boolean to enable or disable Neutron's VPNaaS feature.
 #      Defaults to False.
+#    'enable_distributed_router': Boolean to enable or disable Neutron
+#      distributed virtual router (DVR) feature in the Router panel.
+#      Defaults to False.
+#    'enable_ha_router': Enable or disable HA (High Availability) mode in
+#      Neutron virtual router in the Router panel.  Defaults to False.
 #    'profile_support':  A string indiciating which plugin-specific
 #      profiles to enable.  Defaults to 'None', other options include
 #      'cisco'.
@@ -255,12 +260,14 @@ class horizon(
   # be merged with user-provided options when the local_settings.py.erb
   # template is interpolated.
   $neutron_defaults = {
-    'enable_lb'             => false,
-    'enable_firewall'       => false,
-    'enable_quotas'         => true,
-    'enable_security_group' => true,
-    'enable_vpn'            => false,
-    'profile_support'       => 'None',
+    'enable_lb'                 => false,
+    'enable_firewall'           => false,
+    'enable_quotas'             => true,
+    'enable_security_group'     => true,
+    'enable_vpn'                => false,
+    'enable_distributed_router' => false,
+    'enable_ha_router'          => false,
+    'profile_support'           => 'None',
   }
 
   Service <| title == 'memcached' |> -> Class['horizon']

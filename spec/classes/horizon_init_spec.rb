@@ -60,6 +60,8 @@ describe 'horizon' do
           "    'enable_quotas': True,",
           "    'enable_security_group': True,",
           "    'enable_vpn': False,",
+          "    'enable_distributed_router': False,",
+          "    'enable_ha_router': False,",
           'API_RESULT_LIMIT = 1000',
           "LOGIN_URL = '#{platforms_params[:root_url]}/auth/login/'",
           "LOGOUT_URL = '#{platforms_params[:root_url]}/auth/logout/'",
@@ -92,7 +94,8 @@ describe 'horizon' do
           :compress_offline        => false,
           :hypervisor_options      => {'can_set_mount_point' => false, 'can_set_password' => true },
           :cinder_options          => {'enable_backup' => true },
-          :neutron_options         => {'enable_lb' => true, 'enable_firewall' => true, 'enable_quotas' => false, 'enable_security_group' => false, 'enable_vpn' => true, 'profile_support' => 'cisco' },
+          :neutron_options         => {'enable_lb' => true, 'enable_firewall' => true, 'enable_quotas' => false, 'enable_security_group' => false, 'enable_vpn' => true,
+                                       'enable_distributed_router' => false, 'enable_ha_router' => false, 'profile_support' => 'cisco', },
           :file_upload_temp_dir    => '/var/spool/horizon',
           :secure_cookies          => true
         })
