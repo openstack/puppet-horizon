@@ -9,20 +9,34 @@
 #    signing, and should be set to a unique, unpredictable value.
 #
 #  [*fqdn*]
-#    (optional) FQDN(s) used to access Horizon. This is used by Django for
+#    (optional) DEPRECATED, use allowed_hosts and server_aliases instead.
+#    FQDN(s) used to access Horizon. This is used by Django for
 #    security reasons. Can be set to * in environments where security is
 #    deemed unimportant. Also used for Server Aliases in web configs.
 #    Defaults to ::fqdn
 #
 #  [*servername*]
 #    (optional) FQDN used for the Server Name directives
-#    Defaults to ::fqdn
+#    Defaults to ::fqdn.
+#
+#  [*allowed_hosts*]
+#    (optional) List of hosts which will be set as value of ALLOWED_HOSTS
+#    parameter in settings_local.py. This is used by Django for
+#    security reasons. Can be set to * in environments where security is
+#    deemed unimportant.
+#    Defaults to ::fqdn.
+#
+#  [*server_aliases*]
+#    (optional) List of names which should be defined as ServerAlias directives
+#    in vhost.conf.
+#    Defaults to ::fqdn.
 #
 #  [*package_ensure*]
 #    (optional) Package ensure state. Defaults to 'present'.
 #
 #  [*cache_server_ip*]
-#    (optional) Memcached IP address. Defaults to '127.0.0.1'.
+#    (optional) Memcached IP address. Can be a string, or an array.
+#    Defaults to '127.0.0.1'.
 #
 #  [*cache_server_port*]
 #    (optional) Memcached port. Defaults to '11211'.
@@ -80,7 +94,8 @@
 #    on a single page. Defaults to 1000.
 #
 #  [*log_level*]
-#    (optional) Log level. Defaults to 'DEBUG'.
+#    (optional) Log level. Defaults to 'INFO'. WARNING: Setting this to
+#    DEBUG will let plaintext passwords be logged in the Horizon log file.
 #
 #  [*local_settings_template*]
 #    (optional) Location of template to use for local_settings.py generation.
@@ -146,10 +161,27 @@
 #    (optionnal) extra parameter to pass to the apache::vhost class
 #    Defaults to undef
 #
+#  [*file_upload_temp_dir*]
+#    (optional) Location to use for temporary storage of images uploaded
+#    You must ensure that the path leading to the directory is created
+#    already, only the last level directory is created by this manifest.
+#    Specify an absolute pathname.
+#    Defaults to /tmp
+#
+#  [*secure_cookies*]
+#    (optional) Enables security settings for cookies. Useful when using
+#    https on public sites. See: http://docs.openstack.org/developer/horizon/topics/deployment.html#secure-site-recommendations
+#    Defaults to false
+#
+#  [*django_session_engine*]
+#    (optional) Selects the session engine for Django to use.
+#    Defaults to undefined - will not add entry to local settings.
+#
 # === Deprecation notes
 #
-# If any value is provided for keystone_scheme, keystone_host or keystone_port parameters,
-# keystone_url will be completely ignored. Also can_set_mount_point is deprecated.
+# If any value is provided for keystone_scheme, keystone_host, or
+# keystone_port parameters; keystone_url will be completely ignored. Also
+# can_set_mount_point is deprecated.
 #
 # === Examples
 #
@@ -164,7 +196,7 @@
 #
 class horizon(
   $secret_key,
-  $fqdn                    = $::fqdn,
+  $fqdn                    = undef,
   $package_ensure          = 'present',
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
@@ -177,27 +209,34 @@ class horizon(
   $secondary_endpoint_type = undef,
   $available_regions       = undef,
   $api_result_limit        = 1000,
-  $log_level               = 'DEBUG',
+  $log_level               = 'INFO',
   $help_url                = 'http://docs.openstack.org',
   $local_settings_template = 'horizon/local_settings.py.erb',
   $configure_apache        = true,
   $bind_address            = undef,
   $servername              = $::fqdn,
+  $server_aliases          = $::fqdn,
+  $allowed_hosts           = $::fqdn,
   $listen_ssl              = false,
   $ssl_redirect            = true,
   $horizon_cert            = undef,
   $horizon_key             = undef,
   $horizon_ca              = undef,
-  $compress_offline        = 'True',
+  $compress_offline        = true,
   $hypervisor_options      = {},
   $neutron_options         = {},
   $session_timeout         = '86400',
+  $file_upload_temp_dir    = '/tmp',
+  $policy_files_path       = undef,
+  $policy_files            = undef,
   # DEPRECATED PARAMETERS
   $can_set_mount_point     = undef,
   $keystone_host           = undef,
   $keystone_port           = undef,
   $keystone_scheme         = undef,
   $vhost_extra_params      = undef,
+  $secure_cookies          = false,
+  $django_session_engine   = undef,
 ) {
 
   include ::horizon::params
@@ -234,6 +273,16 @@ class horizon(
     }
   }
 
+  if $fqdn {
+    warning('Parameter fqdn is deprecated. Please use parameter allowed_hosts for setting ALLOWED_HOSTS in settings_local.py and parameter server_aliases for setting ServerAlias directives in vhost.conf.')
+    $final_allowed_hosts = $fqdn
+    $final_server_aliases = $fqdn
+  } else {
+    $final_allowed_hosts = $allowed_hosts
+    $final_server_aliases = $server_aliases
+  }
+
+
   # Default options for the OPENSTACK_NEUTRON_NETWORK section.  These will
   # be merged with user-provided options when the local_settings.py.erb
   # template is interpolated.
@@ -252,6 +301,13 @@ class horizon(
     ensure  => $package_ensure,
     name    => $::horizon::params::package_name,
   }
+
+  file { $::horizon::params::config_file:
+    content => template($local_settings_template),
+    mode    => '0644',
+    require => Package['horizon'],
+  }
+
   package { 'python-lesscpy':
     ensure  => $package_ensure,
   }
@@ -259,30 +315,34 @@ class horizon(
   exec { 'refresh_horizon_django_cache':
     command     => "${::horizon::params::manage_py} compress",
     refreshonly => true,
-    subscribe   => File[$::horizon::params::config_file],
     require     => [Package['python-lesscpy'], Package['horizon']],
   }
 
   if $compress_offline {
-    file { $::horizon::params::config_file:
-      content => template($local_settings_template),
-      mode    => '0644',
-      notify  => Exec['refresh_horizon_django_cache'],
-      require => Package['horizon'],
-    }
+    File[$::horizon::params::config_file] ~> Exec['refresh_horizon_django_cache']
   }
 
   if $configure_apache {
     class { 'horizon::wsgi::apache':
-      bind_address => $bind_address,
-      fqdn         => $fqdn,
-      servername   => $servername,
-      listen_ssl   => $listen_ssl,
-      ssl_redirect => $ssl_redirect,
-      horizon_cert => $horizon_cert,
-      horizon_key  => $horizon_key,
-      horizon_ca   => $horizon_ca,
-      extra_params => $vhost_extra_params,
+      bind_address   => $bind_address,
+      servername     => $servername,
+      server_aliases => $final_server_aliases,
+      listen_ssl     => $listen_ssl,
+      ssl_redirect   => $ssl_redirect,
+      horizon_cert   => $horizon_cert,
+      horizon_key    => $horizon_key,
+      horizon_ca     => $horizon_ca,
+      extra_params   => $vhost_extra_params,
     }
   }
+
+  if ! ($file_upload_temp_dir in ['/tmp','/var/tmp']) {
+    file { $file_upload_temp_dir :
+      ensure => directory,
+      owner  => $::horizon::params::wsgi_user,
+      group  => $::horizon::params::wsgi_group,
+      mode   => '0755'
+    }
+  }
+
 }

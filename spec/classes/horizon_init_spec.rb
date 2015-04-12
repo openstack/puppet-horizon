@@ -32,6 +32,7 @@ describe 'horizon' do
           :command     => '/usr/share/openstack-dashboard/manage.py compress',
           :refreshonly => true,
       })}
+      it { should contain_file(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]') }
 
       it 'configures apache' do
         should contain_class('horizon::wsgi::apache').with({
@@ -60,24 +61,36 @@ describe 'horizon' do
           "LOGIN_URL = '#{platforms_params[:root_url]}/auth/login/'",
           "LOGOUT_URL = '#{platforms_params[:root_url]}/auth/logout/'",
           "LOGIN_REDIRECT_URL = '#{platforms_params[:root_url]}'",
-          'COMPRESS_OFFLINE = True'
+          'COMPRESS_OFFLINE = True',
+          "FILE_UPLOAD_TEMP_DIR = '/tmp'"
         ])
+
+        # From internals of verify_contents, get the contents to check for absence of a line
+        content = subject.resource('file', platforms_params[:config_file]).send(:parameters)[:content]
+
+        # With default options, should _not_ have a line to configure SESSION_ENGINE
+        content.should_not match(/^SESSION_ENGINE/)
       end
+
+      it { should_not contain_file(params[:file_upload_temp_dir]) }
     end
 
     context 'with overridden parameters' do
       before do
         params.merge!({
           :cache_server_ip         => '10.0.0.1',
+          :django_session_engine   => 'django.contrib.sessions.backends.cache',
           :keystone_default_role   => 'SwiftOperator',
           :keystone_url            => 'https://keystone.example.com:4682',
           :openstack_endpoint_type => 'internalURL',
           :secondary_endpoint_type => 'ANY-VALUE',
           :django_debug            => true,
           :api_result_limit        => 4682,
-          :compress_offline        => 'False',
+          :compress_offline        => false,
           :hypervisor_options      => {'can_set_mount_point' => false, 'can_set_password' => true },
-          :neutron_options         => {'enable_lb' => true, 'enable_firewall' => true, 'enable_quotas' => false, 'enable_security_group' => false, 'enable_vpn' => true, 'profile_support' => 'cisco' }
+          :neutron_options         => {'enable_lb' => true, 'enable_firewall' => true, 'enable_quotas' => false, 'enable_security_group' => false, 'enable_vpn' => true, 'profile_support' => 'cisco' },
+          :file_upload_temp_dir    => '/var/spool/horizon',
+          :secure_cookies          => true
         })
       end
 
@@ -85,7 +98,11 @@ describe 'horizon' do
         verify_contents(subject, platforms_params[:config_file], [
           'DEBUG = True',
           "ALLOWED_HOSTS = ['*', ]",
+          'CSRF_COOKIE_SECURE = True',
+          'SESSION_COOKIE_SECURE = True',
           "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
+          "        'LOCATION': '10.0.0.1:11211',",
+          'SESSION_ENGINE = "django.contrib.sessions.backends.cache"',
           'OPENSTACK_KEYSTONE_URL = "https://keystone.example.com:4682"',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "SwiftOperator"',
           "    'can_set_mount_point': False,",
@@ -100,6 +117,25 @@ describe 'horizon' do
           'SECONDARY_ENDPOINT_TYPE = "ANY-VALUE"',
           'API_RESULT_LIMIT = 4682',
           'COMPRESS_OFFLINE = False',
+          "FILE_UPLOAD_TEMP_DIR = '/var/spool/horizon'"
+        ])
+      end
+
+      it { should_not contain_file(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]') }
+
+      it { should contain_file(params[:file_upload_temp_dir]) }
+    end
+
+    context 'with overridden parameters and cache_server_ip array' do
+      before do
+        params.merge!({
+          :cache_server_ip => ['10.0.0.1','10.0.0.2'],
+        })
+      end
+
+      it 'generates local_settings.py' do
+        verify_contents(subject, platforms_params[:config_file], [
+          "        'LOCATION': [ '10.0.0.1:11211','10.0.0.2:11211', ],",
         ])
       end
 
@@ -191,6 +227,30 @@ describe 'horizon' do
       end
     end
 
+    context 'with policy parameters' do
+      before do
+        params.merge!({
+          :policy_files_path => '/opt/openstack-dashboard',
+          :policy_files      => {
+            'compute'  => 'nova_policy.json',
+            'identity' => 'keystone_policy.json',
+            'network'  => 'neutron_policy.json',
+          }
+        })
+      end
+
+      it 'POLICY_FILES_PATH and POLICY_FILES are configured' do
+        verify_contents(subject, platforms_params[:config_file], [
+          "POLICY_FILES_PATH = '/opt/openstack-dashboard'",
+          "POLICY_FILES = {",
+          "    'compute': 'nova_policy.json',",
+          "    'identity': 'keystone_policy.json',",
+          "    'network': 'neutron_policy.json',",
+          "} # POLICY_FILES"
+        ])
+      end
+    end
+
     context 'with overriding local_settings_template' do
       before do
         params.merge!({
@@ -221,6 +281,16 @@ describe 'horizon' do
           "}",
         ])
       end
+    end
+
+    context 'with /var/tmp as upload temp dir' do
+      before do
+        params.merge!({
+          :file_upload_temp_dir => '/var/tmp'
+        })
+      end
+
+      it { should_not contain_file(params[:file_upload_temp_dir]) }
     end
   end
 

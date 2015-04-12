@@ -3,8 +3,10 @@ require 'spec_helper'
 describe 'horizon::wsgi::apache' do
 
   let :params do
-    { 'fqdn'         => '*',
-      'servername'   => 'some.host.tld',
+    { :fqdn           => '*',
+      :servername     => 'some.host.tld',
+      :wsgi_processes => '3',
+      :wsgi_threads   => '10',
     }
   end
 
@@ -42,8 +44,45 @@ describe 'horizon::wsgi::apache' do
           'docroot'              => '/var/www/',
           'ssl'                  => 'false',
           'redirectmatch_status' => 'permanent',
-          'redirectmatch_regexp' => "^/$ #{platforms_params[:root_url]}",
-          'wsgi_script_aliases'  => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' }
+          'redirectmatch_regexp' => '^/$',
+          'redirectmatch_dest'   => platforms_params[:root_url],
+          'wsgi_script_aliases'  => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' },
+          'wsgi_process_group'   => platforms_params[:wsgi_group],
+          'wsgi_daemon_process'  => platforms_params[:wsgi_group],
+          'wsgi_daemon_process_options' => { 'processes' => params[:wsgi_processes], 'threads' => params[:wsgi_threads], 'user' => platforms_params[:unix_user], 'group' => platforms_params[:unix_group] }
+         )
+      end
+    end
+
+    context 'with overriden parameters' do
+      before do
+        params.merge!({
+          :priority => '10',
+        })
+      end
+
+      it 'configures apache' do
+        should contain_class('horizon::params')
+        should contain_class('apache')
+        should contain_class('apache::mod::wsgi')
+        should contain_service('httpd').with_name(platforms_params[:http_service])
+        should contain_file(platforms_params[:httpd_config_file])
+        should contain_package('horizon').with_ensure('present')
+        should contain_apache__vhost('horizon_vhost').with(
+          'servername'           => 'some.host.tld',
+          'access_log_file'      => 'horizon_access.log',
+          'error_log_file'       => 'horizon_error.log',
+          'priority'             => params[:priority],
+          'serveraliases'        => '*',
+          'docroot'              => '/var/www/',
+          'ssl'                  => 'false',
+          'redirectmatch_status' => 'permanent',
+          'redirectmatch_regexp' => '^/$',
+          'redirectmatch_dest'   => platforms_params[:root_url],
+          'wsgi_script_aliases'  => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' },
+          'wsgi_process_group'   => platforms_params[:wsgi_group],
+          'wsgi_daemon_process'  => platforms_params[:wsgi_group],
+          'wsgi_daemon_process_options' => { 'processes' => params[:wsgi_processes], 'threads' => params[:wsgi_threads], 'user' => platforms_params[:unix_user], 'group' => platforms_params[:unix_group] }
          )
       end
     end
@@ -75,7 +114,10 @@ describe 'horizon::wsgi::apache' do
           'ssl_key'                => '/etc/pki/tls/private/httpd.key',
           'ssl_ca'                 => '/etc/pki/tls/certs/ca.crt',
           'redirectmatch_status'   => 'permanent',
-          'redirectmatch_regexp'   => "^/$ #{platforms_params[:root_url]}",
+          'redirectmatch_regexp'   => '^/$',
+          'redirectmatch_dest'     => platforms_params[:root_url],
+          'wsgi_process_group'     => 'horizon-ssl',
+          'wsgi_daemon_process'    => 'horizon-ssl',
           'wsgi_script_aliases'    => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' }
         )}
 
@@ -88,7 +130,10 @@ describe 'horizon::wsgi::apache' do
           'docroot'              => '/var/www/',
           'ssl'                  => 'false',
           'redirectmatch_status' => 'permanent',
-          'redirectmatch_regexp' => '(.*) https://some.host.tld',
+          'redirectmatch_regexp' => '(.*)',
+          'redirectmatch_dest'   => 'https://some.host.tld',
+          'wsgi_process_group'   => platforms_params[:wsgi_group],
+          'wsgi_daemon_process'  => platforms_params[:wsgi_group],
           'wsgi_script_aliases'  => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' }
         )}
       end
@@ -145,10 +190,19 @@ describe 'horizon::wsgi::apache' do
     let :platforms_params do
       { :http_service      => 'httpd',
         :httpd_config_file => '/etc/httpd/conf.d/openstack-dashboard.conf',
-        :root_url          => '/dashboard' }
+        :root_url          => '/dashboard',
+        :apache_user       => 'apache',
+        :apache_group      => 'apache',
+        :wsgi_user         => 'dashboard',
+        :wsgi_group        => 'dashboard',
+        :unix_user         => 'apache',
+        :unix_group        => 'apache' }
     end
 
     it_behaves_like 'apache for horizon'
+    it {
+      should contain_class('apache::mod::wsgi').with(:wsgi_socket_prefix => '/var/run/wsgi')
+    }
   end
 
   context 'on Debian platforms' do
@@ -161,8 +215,14 @@ describe 'horizon::wsgi::apache' do
 
     let :platforms_params do
       { :http_service      => 'apache2',
-        :httpd_config_file => '/etc/apache2/conf.d/openstack-dashboard.conf',
-        :root_url          => '/horizon' }
+        :httpd_config_file => '/etc/apache2/conf-available/openstack-dashboard.conf',
+        :root_url          => '/horizon',
+        :apache_user       => 'www-data',
+        :apache_group      => 'www-data',
+        :wsgi_user         => 'horizon',
+        :wsgi_group        => 'horizon',
+        :unix_user         => 'horizon',
+        :unix_group        => 'horizon' }
     end
 
     it_behaves_like 'apache for horizon'
