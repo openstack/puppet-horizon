@@ -169,9 +169,6 @@ class horizon::wsgi::apache (
     redirectmatch_status => 'permanent',
   }
 
-<<<<<<< HEAD
-  ensure_resource('apache::vhost', 'horizon_vhost', merge ($default_vhost_conf, $extra_params, {
-=======
   # Only add the 'ip' element to the $default_vhost_conf hash if it was explicitly
   # specified in the instantiation of the class.  This is because ip => undef gets
   # changed to ip => '' via the Puppet function API when ensure_resource is called.
@@ -183,7 +180,6 @@ class horizon::wsgi::apache (
   }
 
   ensure_resource('apache::vhost', $vhost_conf_name, merge ($default_vhost_conf, $extra_params, {
->>>>>>> remotes/upstream/stable/juno
     redirectmatch_regexp => $redirect_match,
     redirectmatch_dest   => $redirect_url,
   }))
@@ -195,10 +191,7 @@ class horizon::wsgi::apache (
     port                 => 443,
     ensure               => $ensure_ssl_vhost,
     wsgi_daemon_process  => 'horizon-ssl',
-<<<<<<< HEAD
-=======
     wsgi_process_group   => 'horizon-ssl',
->>>>>>> remotes/upstream/stable/juno
     redirectmatch_regexp => '^/$',
     redirectmatch_dest   => $::horizon::params::root_url,
   }))
