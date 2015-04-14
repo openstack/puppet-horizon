@@ -299,6 +299,12 @@ describe 'horizon' do
     end
 
     it_behaves_like 'horizon'
+
+    it 'sets WEBROOT in local_settings.py' do
+      verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+        "WEBROOT = '/dashboard/'",
+      ])
+    end
   end
 
   context 'on Debian platforms' do
@@ -316,5 +322,11 @@ describe 'horizon' do
     end
 
     it_behaves_like 'horizon'
+
+    it 'sets WEBROOT in local_settings.py' do
+      verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+        "WEBROOT = '/horizon/'",
+      ])
+    end
   end
 end

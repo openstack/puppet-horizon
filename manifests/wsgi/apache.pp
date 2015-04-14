@@ -170,8 +170,8 @@ class horizon::wsgi::apache (
     error_log_file              => 'horizon_error.log',
     priority                    => $priority,
     aliases                     => [{
-      alias => '/static',
-      path => '/usr/share/openstack-dashboard/static',
+      alias => "${$::horizon::params::root_url}/static",
+      path  => '/usr/share/openstack-dashboard/static',
     }],
     port                        => 80,
     ssl_cert                    => $horizon_cert,
