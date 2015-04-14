@@ -8,5 +8,5 @@ end
 
 def verify_concat_fragment_contents(subject, title, expected_lines)
   content = subject.resource('concat::fragment', title).send(:parameters)[:content]
-  (content.split("\n") & expected_lines).should == expected_lines
+  expect(content.split("\n") & expected_lines).to eq(expected_lines)
 end

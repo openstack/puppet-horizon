@@ -25,20 +25,20 @@ describe 'horizon' do
 
     context 'with default parameters' do
       it {
-          should contain_package('python-lesscpy').with_ensure('present')
-          should contain_package('horizon').with(
+          is_expected.to contain_package('python-lesscpy').with_ensure('present')
+          is_expected.to contain_package('horizon').with(
             :ensure => 'present',
             :tag    => 'openstack'
           )
       }
-      it { should contain_exec('refresh_horizon_django_cache').with({
+      it { is_expected.to contain_exec('refresh_horizon_django_cache').with({
           :command     => '/usr/share/openstack-dashboard/manage.py compress',
           :refreshonly => true,
       })}
-      it { should contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]') }
+      it { is_expected.to contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]') }
 
       it 'configures apache' do
-        should contain_class('horizon::wsgi::apache').with({
+        is_expected.to contain_class('horizon::wsgi::apache').with({
           :servername   => 'some.host.tld',
           :listen_ssl   => false,
           :servername   => 'some.host.tld',
@@ -47,7 +47,7 @@ describe 'horizon' do
       end
 
       it 'generates local_settings.py' do
-        verify_concat_fragment_contents(subject, 'local_settings.py', [
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
           'DEBUG = False',
           "ALLOWED_HOSTS = ['*', ]",
           "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
@@ -71,13 +71,13 @@ describe 'horizon' do
         ])
 
         # From internals of verify_contents, get the contents to check for absence of a line
-        content = subject.resource('concat::fragment', 'local_settings.py').send(:parameters)[:content]
+        content = catalogue.resource('concat::fragment', 'local_settings.py').send(:parameters)[:content]
 
         # With default options, should _not_ have a line to configure SESSION_ENGINE
-        content.should_not match(/^SESSION_ENGINE/)
+        expect(content).not_to match(/^SESSION_ENGINE/)
       end
 
-      it { should_not contain_file(params[:file_upload_temp_dir]) }
+      it { is_expected.not_to contain_file(params[:file_upload_temp_dir]) }
     end
 
     context 'with overridden parameters' do
@@ -102,7 +102,7 @@ describe 'horizon' do
       end
 
       it 'generates local_settings.py' do
-        verify_concat_fragment_contents(subject, 'local_settings.py', [
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
           'DEBUG = True',
           "ALLOWED_HOSTS = ['*', ]",
           'CSRF_COOKIE_SECURE = True',
@@ -129,9 +129,9 @@ describe 'horizon' do
         ])
       end
 
-      it { should_not contain_file(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]') }
+      it { is_expected.not_to contain_file(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]') }
 
-      it { should contain_file(params[:file_upload_temp_dir]) }
+      it { is_expected.to contain_file(params[:file_upload_temp_dir]) }
     end
 
     context 'with overridden parameters and cache_server_ip array' do
@@ -142,12 +142,12 @@ describe 'horizon' do
       end
 
       it 'generates local_settings.py' do
-        verify_concat_fragment_contents(subject, 'local_settings.py', [
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
           "        'LOCATION': [ '10.0.0.1:11211','10.0.0.2:11211', ],",
         ])
       end
 
-      it { should contain_exec('refresh_horizon_django_cache') }
+      it { is_expected.to contain_exec('refresh_horizon_django_cache') }
     end
 
     context 'with vhost_extra_params' do
@@ -158,7 +158,7 @@ describe 'horizon' do
       end
 
       it 'configures apache' do
-        should contain_class('horizon::wsgi::apache').with({
+        is_expected.to contain_class('horizon::wsgi::apache').with({
           :extra_params => { 'add_listen' => false },
         })
       end
@@ -177,7 +177,7 @@ describe 'horizon' do
       end
 
       it 'configures apache' do
-        should contain_class('horizon::wsgi::apache').with({
+        is_expected.to contain_class('horizon::wsgi::apache').with({
           :bind_address => nil,
           :listen_ssl   => true,
           :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
@@ -193,7 +193,7 @@ describe 'horizon' do
       end
 
       it 'does not configure apache' do
-        should_not contain_class('horizon::wsgi::apache')
+        is_expected.not_to contain_class('horizon::wsgi::apache')
       end
     end
 
@@ -208,7 +208,7 @@ describe 'horizon' do
       end
 
       it 'AVAILABLE_REGIONS is configured' do
-        verify_concat_fragment_contents(subject, 'local_settings.py', [
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
           "AVAILABLE_REGIONS = [",
           "    ('http://region-1.example.com:5000/v2.0', 'Region-1'),",
           "    ('http://region-2.example.com:5000/v2.0', 'Region-2'),",
@@ -230,7 +230,7 @@ describe 'horizon' do
       end
 
       it 'POLICY_FILES_PATH and POLICY_FILES are configured' do
-        verify_concat_fragment_contents(subject, 'local_settings.py', [
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
           "POLICY_FILES_PATH = '/opt/openstack-dashboard'",
           "POLICY_FILES = {",
           "    'compute': 'nova_policy.json',",
@@ -251,7 +251,7 @@ describe 'horizon' do
       end
 
       it 'uses the custom local_settings.py template' do
-        verify_concat_fragment_contents(subject, 'local_settings.py', [
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
           '# Custom local_settings.py',
           'DEBUG = True',
           "HORIZON_CONFIG = {",
@@ -280,7 +280,7 @@ describe 'horizon' do
         })
       end
 
-      it { should_not contain_file(params[:file_upload_temp_dir]) }
+      it { is_expected.not_to contain_file(params[:file_upload_temp_dir]) }
     end
   end
 
