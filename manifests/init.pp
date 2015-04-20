@@ -294,7 +294,7 @@ class horizon(
   }
 
   exec { 'refresh_horizon_django_cache':
-    command     => "${::horizon::params::manage_py} compress",
+    command     => "${::horizon::params::manage_py} collectstatic --noinput --clear && ${::horizon::params::manage_py} compress --force",
     refreshonly => true,
     require     => [Package['python-lesscpy'], Package['horizon']],
   }
