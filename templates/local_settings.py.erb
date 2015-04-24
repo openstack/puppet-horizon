@@ -571,3 +571,9 @@ SESSION_TIMEOUT = <%= @session_timeout %>
 # so we add this option to change the directory where uploaded files are temporarily
 # stored until they are loaded into Glance.
 FILE_UPLOAD_TEMP_DIR = '<%= @file_upload_temp_dir %>'
+
+# Import the DC theme if installed
+try:
+  from datacentred_theme import *
+except ImportError:
+  pass
