@@ -150,6 +150,34 @@ describe 'horizon' do
       it { is_expected.to contain_exec('refresh_horizon_django_cache') }
     end
 
+    context 'with tuskar-ui enabled' do
+      before do
+        params.merge!({
+          :tuskar_ui => true,
+          :tuskar_ui_ironic_discoverd_url      => 'http://127.0.0.1:5050',
+          :tuskar_ui_undercloud_admin_password => 'somesecretpassword',
+          :tuskar_ui_deployment_mode           => 'scale',
+        })
+      end
+
+      it 'generates local_settings.py' do
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+          'IRONIC_DISCOVERD_URL = "http://127.0.0.1:5050"',
+          'UNDERCLOUD_ADMIN_PASSWORD = "somesecretpassword"',
+          'DEPLOYMENT_MODE = "scale"',
+        ])
+      end
+    end
+
+    context 'with wrong tuskar_ui_deployment_mode parameter value' do
+      before do
+        params.merge!({
+          :tuskar_ui_deployment_mode => 'wrong' })
+      end
+      it_raises 'a Puppet::Error', /'wrong' is not correct value for tuskar_ui_deployment_mode parameter. It must be either 'scale' or 'poc'./
+    end
+
+
     context 'with vhost_extra_params' do
       before do
         params.merge!({

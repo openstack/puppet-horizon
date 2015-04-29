@@ -569,3 +569,9 @@ COMPRESS_OFFLINE = <%= @compress_offline.to_s.capitalize %>
 # so we add this option to change the directory where uploaded files are temporarily
 # stored until they are loaded into Glance.
 FILE_UPLOAD_TEMP_DIR = '<%= @file_upload_temp_dir %>'
+
+<% if @tuskar_ui %>
+IRONIC_DISCOVERD_URL = "<%= @tuskar_ui_ironic_discoverd_url %>"
+UNDERCLOUD_ADMIN_PASSWORD = "<%= @tuskar_ui_undercloud_admin_password %>"
+DEPLOYMENT_MODE = "<%= @tuskar_ui_deployment_mode %>"
+<% end %>
