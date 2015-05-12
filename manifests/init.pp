@@ -181,6 +181,23 @@
 #    (optional) Selects the session engine for Django to use.
 #    Defaults to undefined - will not add entry to local settings.
 #
+#  [*tuskar_ui*]
+#    (optional) Boolean to enable Tuskar-UI related configuration (http://tuskar-ui.readthedocs.org/)
+#    Defaults to false
+#
+#  [*tuskar_ui_ironic_discoverd_url*]
+#    (optional) Tuskar-UI - Ironic Discoverd API endpoint
+#    Defaults to 'http://127.0.0.1:5050'
+#
+#  [*tuskar_ui_undercloud_admin_password*]
+#    (optional) Tuskar-UI - Undercloud admin password used to authenticate admin user in Tuskar-UI.
+#    It is required by Heat to perform certain actions.
+#    Defaults to undefined
+#
+#  [*tuskar_ui_deployment_mode*]
+#    (optional) Tuskar-UI - Deployment mode ('poc' or 'scale')
+#    Defaults to 'scale'
+#
 # === Examples
 #
 #  class { 'horizon':
@@ -194,43 +211,47 @@
 #
 class horizon(
   $secret_key,
-  $fqdn                    = undef,
-  $package_ensure          = 'present',
-  $cache_server_ip         = '127.0.0.1',
-  $cache_server_port       = '11211',
-  $horizon_app_links       = false,
-  $keystone_url            = 'http://127.0.0.1:5000/v2.0',
-  $keystone_default_role   = '_member_',
-  $django_debug            = 'False',
-  $openstack_endpoint_type = undef,
-  $secondary_endpoint_type = undef,
-  $available_regions       = undef,
-  $api_result_limit        = 1000,
-  $log_level               = 'INFO',
-  $help_url                = 'http://docs.openstack.org',
-  $local_settings_template = 'horizon/local_settings.py.erb',
-  $configure_apache        = true,
-  $bind_address            = undef,
-  $servername              = $::fqdn,
-  $server_aliases          = $::fqdn,
-  $allowed_hosts           = $::fqdn,
-  $listen_ssl              = false,
-  $ssl_redirect            = true,
-  $horizon_cert            = undef,
-  $horizon_key             = undef,
-  $horizon_ca              = undef,
-  $compress_offline        = true,
-  $hypervisor_options      = {},
-  $cinder_options          = {},
-  $neutron_options         = {},
-  $file_upload_temp_dir    = '/tmp',
-  $policy_files_path       = undef,
-  $policy_files            = undef,
+  $fqdn                                = undef,
+  $package_ensure                      = 'present',
+  $cache_server_ip                     = '127.0.0.1',
+  $cache_server_port                   = '11211',
+  $horizon_app_links                   = false,
+  $keystone_url                        = 'http://127.0.0.1:5000/v2.0',
+  $keystone_default_role               = '_member_',
+  $django_debug                        = 'False',
+  $openstack_endpoint_type             = undef,
+  $secondary_endpoint_type             = undef,
+  $available_regions                   = undef,
+  $api_result_limit                    = 1000,
+  $log_level                           = 'INFO',
+  $help_url                            = 'http://docs.openstack.org',
+  $local_settings_template             = 'horizon/local_settings.py.erb',
+  $configure_apache                    = true,
+  $bind_address                        = undef,
+  $servername                          = $::fqdn,
+  $server_aliases                      = $::fqdn,
+  $allowed_hosts                       = $::fqdn,
+  $listen_ssl                          = false,
+  $ssl_redirect                        = true,
+  $horizon_cert                        = undef,
+  $horizon_key                         = undef,
+  $horizon_ca                          = undef,
+  $compress_offline                    = true,
+  $hypervisor_options                  = {},
+  $cinder_options                      = {},
+  $neutron_options                     = {},
+  $file_upload_temp_dir                = '/tmp',
+  $policy_files_path                   = undef,
+  $policy_files                        = undef,
+  $tuskar_ui                           = false,
+  $tuskar_ui_ironic_discoverd_url      = 'http://127.0.0.1:5050',
+  $tuskar_ui_undercloud_admin_password = undef,
+  $tuskar_ui_deployment_mode           = 'scale',
   # DEPRECATED PARAMETERS
-  $can_set_mount_point     = undef,
-  $vhost_extra_params      = undef,
-  $secure_cookies          = false,
-  $django_session_engine   = undef,
+  $can_set_mount_point                 = undef,
+  $vhost_extra_params                  = undef,
+  $secure_cookies                      = false,
+  $django_session_engine               = undef,
 ) {
 
   include ::horizon::params
@@ -326,4 +347,8 @@ class horizon(
     }
   }
 
+  $tuskar_ui_deployment_mode_allowed_values = ['scale', 'poc']
+  if ! (member($tuskar_ui_deployment_mode_allowed_values, $tuskar_ui_deployment_mode)) {
+    fail("'${$tuskar_ui_deployment_mode}' is not correct value for tuskar_ui_deployment_mode parameter. It must be either 'scale' or 'poc'.")
+  }
 }
