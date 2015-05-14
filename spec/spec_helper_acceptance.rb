@@ -33,6 +33,7 @@ RSpec.configure do |c|
       # while lsb-release is installed.
       on host, puppet('module','install','puppetlabs-apt','--version', '1.8.0'), { :acceptable_exit_codes => 0 }
       on host, puppet('module','install','saz/memcached'), { :acceptable_exit_codes => 0 }
+      shell('git clone https://git.openstack.org/stackforge/puppet-openstack_extras /etc/puppet/modules/openstack_extras')
 
       # Install the module being tested
       puppet_module_install(:source => proj_root, :module_name => 'horizon')

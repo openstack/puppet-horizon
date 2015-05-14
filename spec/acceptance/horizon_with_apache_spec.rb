@@ -9,18 +9,10 @@ describe 'horizon class' do
       Exec { logoutput => 'on_failure' }
 
       include ::apt
-      # some packages are not autoupgraded in trusty.
-      # it will be fixed in liberty, but broken in kilo.
-      $need_to_be_upgraded = ['python-tz', 'python-pbr']
-      apt::source { 'trusty-updates-kilo':
-        location          => 'http://ubuntu-cloud.archive.canonical.com/ubuntu/',
-        release           => 'trusty-updates',
-        repos             => 'kilo/main',
-        required_packages => 'ubuntu-cloud-keyring',
-        trusted_source    => true,
-      } ~>
-      exec { '/usr/bin/apt-get -y dist-upgrade': refreshonly => true, }
-      Apt::Source['trusty-updates-kilo'] -> Package<| |>
+      class { '::openstack_extras::repo::debian::ubuntu':
+        release         => 'kilo',
+        package_require => true,
+      }
 
       class { '::horizon':
         secret_key       => 'big_secret',
