@@ -118,6 +118,12 @@
 #      Works only with Xen Hypervisor.
 #      Defaults to 'False'.
 #
+#  [*cinder_options*]
+#    (optional) A hash of parameters to enable features specific to
+#    Cinder.  These include:
+#    'enable_backup': Boolean to enable or disable Cinders's backup feature.
+#      Defaults to False.
+#
 #  [*neutron_options*]
 #    (optional) A hash of parameters to enable features specific to
 #    Neutron.  These include:
@@ -224,6 +230,7 @@ class horizon(
   $horizon_ca              = undef,
   $compress_offline        = true,
   $hypervisor_options      = {},
+  $cinder_options          = {},
   $neutron_options         = {},
   $file_upload_temp_dir    = '/tmp',
   $policy_files_path       = undef,
@@ -281,6 +288,12 @@ class horizon(
     $final_server_aliases = $server_aliases
   }
 
+  # Default options for the OPENSTACK_CINDER_FEATURES section. These will
+  # be merged with user-provided options when the local_settings.py.erb
+  # template is interpolated.
+  $cinder_defaults = {
+    'enable_backup'         => false,
+  }
 
   # Default options for the OPENSTACK_NEUTRON_NETWORK section.  These will
   # be merged with user-provided options when the local_settings.py.erb
