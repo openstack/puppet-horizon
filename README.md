@@ -1,7 +1,7 @@
 horizon
 =======
 
-5.0.0 - 2014.2.0 - Juno
+5.1.0 - 2014.2 - Juno
 
 #### Table of Contents
 
@@ -98,6 +98,14 @@ Contributors
 
 Release Notes
 -------------
+
+**5.1.0**
+
+* spec: pin rspec-puppet to 1.0.1
+* Sort policy files in local_settings.py
+* Pin puppetlabs-concat to 1.2.1 in fixtures
+* Add support for the configuration of OPENSTACK_CINDER_FEATURES
+* Update .gitreview file for project rename
 
 **5.0.0**
 
