@@ -203,6 +203,17 @@ describe 'horizon::wsgi::apache' do
     it {
       is_expected.to contain_class('apache::mod::wsgi').with(:wsgi_socket_prefix => '/var/run/wsgi')
     }
+    it 'configures webroot alias' do
+      if (Gem::Version.new(Puppet.version) >= Gem::Version.new('4.0'))
+        is_expected.to contain_apache__vhost('horizon_vhost').with(
+          'aliases' => [{'alias' => '/dashboard/static', 'path' => '/usr/share/openstack-dashboard/static'}],
+        )
+      else
+        is_expected.to contain_apache__vhost('horizon_vhost').with(
+          'aliases' => [['alias', '/dashboard/static'], ['path', '/usr/share/openstack-dashboard/static']],
+        )
+      end
+    end
   end
 
   context 'on Debian platforms' do
@@ -226,5 +237,16 @@ describe 'horizon::wsgi::apache' do
     end
 
     it_behaves_like 'apache for horizon'
+    it 'configures webroot alias' do
+      if (Gem::Version.new(Puppet.version) >= Gem::Version.new('4.0'))
+        is_expected.to contain_apache__vhost('horizon_vhost').with(
+          'aliases' => [{'alias' => '/horizon/static', 'path' => '/usr/share/openstack-dashboard/static'}],
+        )
+      else
+        is_expected.to contain_apache__vhost('horizon_vhost').with(
+          'aliases' => [['alias', '/horizon/static'], ['path', '/usr/share/openstack-dashboard/static']],
+        )
+      end
+    end
   end
 end
