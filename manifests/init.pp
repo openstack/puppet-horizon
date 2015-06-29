@@ -74,6 +74,9 @@
 #    (optional) Maximum number of Swift containers/objects to display
 #    on a single page. Defaults to 1000.
 #
+#  [*log_handler*]
+#    (optional) Log handler. Defaults to 'file'
+#
 #  [*log_level*]
 #    (optional) Log level. Defaults to 'INFO'. WARNING: Setting this to
 #    DEBUG will let plaintext passwords be logged in the Horizon log file.
@@ -223,6 +226,7 @@ class horizon(
   $secondary_endpoint_type             = undef,
   $available_regions                   = undef,
   $api_result_limit                    = 1000,
+  $log_handler                         = 'file',
   $log_level                           = 'INFO',
   $help_url                            = 'http://docs.openstack.org',
   $local_settings_template             = 'horizon/local_settings.py.erb',
