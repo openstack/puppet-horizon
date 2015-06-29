@@ -20,6 +20,7 @@ describe 'horizon class' do
           class { '::openstack_extras::repo::redhat::redhat':
             release => 'kilo',
           }
+          package { 'openstack-selinux': ensure => 'latest' }
         }
         default: {
           fail("Unsupported osfamily (${::osfamily})")
