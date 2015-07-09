@@ -34,7 +34,7 @@ Setup
 
 ### Installing horizon
 
-    example% puppet module install puppetlabs/horizon
+    example% puppet module install openstack/horizon
 
 ### Beginning with horizon
 
