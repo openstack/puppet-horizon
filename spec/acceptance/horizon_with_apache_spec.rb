@@ -44,11 +44,11 @@ describe 'horizon class' do
     # basic test for now, to make sure Apache serve /horizon dashboard
     if os[:family] == 'Debian'
       describe command('curl --connect-timeout 5 -sL -w "%{http_code} %{url_effective}\n" http://localhost/horizon/ -o /dev/null') do
-        it { should return_exit_status 0 }
+        it { is_expected.to return_exit_status 0 }
       end
     elsif os[:family] == 'RedHat'
       describe command('curl --connect-timeout 5 -sL -w "%{http_code} %{url_effective}\n" http://localhost/dashboard/ -o /dev/null') do
-        it { should return_exit_status 0 }
+        it { is_expected.to return_exit_status 0 }
       end
     end
 
