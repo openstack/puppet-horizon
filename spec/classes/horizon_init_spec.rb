@@ -28,7 +28,7 @@ describe 'horizon' do
           is_expected.to contain_package('python-lesscpy').with_ensure('present')
           is_expected.to contain_package('horizon').with(
             :ensure => 'present',
-            :tag    => 'openstack'
+            :tag    => ['openstack', 'horizon-package'],
           )
       }
       it { is_expected.to contain_exec('refresh_horizon_django_cache').with({
