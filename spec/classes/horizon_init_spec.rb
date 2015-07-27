@@ -90,6 +90,7 @@ describe 'horizon' do
           :django_session_engine   => 'django.contrib.sessions.backends.cache',
           :keystone_default_role   => 'SwiftOperator',
           :keystone_url            => 'https://keystone.example.com:4682',
+          :ssl_no_verify           => true,
           :log_handler             => 'syslog',
           :log_level               => 'DEBUG',
           :openstack_endpoint_type => 'internalURL',
@@ -122,6 +123,7 @@ describe 'horizon' do
           'SESSION_ENGINE = "django.contrib.sessions.backends.cache"',
           'OPENSTACK_KEYSTONE_URL = "https://keystone.example.com:4682"',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "SwiftOperator"',
+          'OPENSTACK_SSL_NO_VERIFY = True',
           "    'can_set_mount_point': False,",
           "    'can_set_password': True,",
           "    'enable_backup': True,",
@@ -138,7 +140,7 @@ describe 'horizon' do
           "            'level': 'DEBUG',",
           "            'handlers': ['syslog'],",
           'COMPRESS_OFFLINE = False',
-          "FILE_UPLOAD_TEMP_DIR = '/var/spool/horizon'"
+          "FILE_UPLOAD_TEMP_DIR = '/var/spool/horizon'",
         ])
       end
 
