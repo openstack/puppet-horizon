@@ -233,6 +233,16 @@
 #    Example: api_versions => {'identity' => 3}
 #    Default to empty hash
 #
+#  [*keystone_multidomain_support*]
+#    (optional) Enables multi-domain in horizon. When this is enabled, it will require user to enter
+#    the Domain name in addition to username for login.
+#    Default to false
+#
+#  [*keystone_default_domain*]
+#    (optional) Overrides the default domain used when running on single-domain model with Keystone V3.
+#    All entities will be created in the default domain.
+#    Default to undefined
+#
 # === Examples
 #
 #  class { 'horizon':
@@ -289,6 +299,8 @@ class horizon(
   $custom_theme_path                   = undef,
   $redirect_type                       = 'permanent',
   $api_versions                        = {},
+  $keystone_multidomain_support        = false,
+  $keystone_default_domain             = undef,
   # DEPRECATED PARAMETERS
   $can_set_mount_point                 = undef,
   $vhost_extra_params                  = undef,
