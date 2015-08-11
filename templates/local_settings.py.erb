@@ -49,6 +49,14 @@ SESSION_COOKIE_SECURE = True
 #     "identity": 3
 # }
 
+<% if ! (@api_versions.empty?) and  @api_versions.kind_of?(Hash) %>
+OPENSTACK_API_VERSIONS = {
+<% @api_versions.sort.each do |opt_name,opt_val| -%>
+  '<%= opt_name -%>': <%= opt_val -%>,
+<%end %>
+}
+<%end %>
+
 # Set this to True if running on multi-domain model. When this is enabled, it
 # will require user to enter the Domain name in addition to username for login.
 # OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = False

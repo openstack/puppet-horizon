@@ -103,7 +103,8 @@ describe 'horizon' do
                                        'enable_distributed_router' => false, 'enable_ha_router' => false, 'profile_support' => 'cisco', },
           :file_upload_temp_dir    => '/var/spool/horizon',
           :secure_cookies          => true,
-          :custom_theme_path       => 'static/themes/green'
+          :custom_theme_path       => 'static/themes/green',
+          :api_versions            => {'identity' => 3},
         })
       end
 
@@ -113,6 +114,7 @@ describe 'horizon' do
           "ALLOWED_HOSTS = ['*', ]",
           'CSRF_COOKIE_SECURE = True',
           'SESSION_COOKIE_SECURE = True',
+          "  'identity': 3,",
           "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
           "                'DEAD_RETRY': 1,",
           "                'SERVER_RETRIES': 1,",

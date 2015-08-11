@@ -228,6 +228,11 @@
 #    set to true.
 #    Defaults to 'permanent'
 #
+#  [*api_versions*]
+#    (optional) A hash of parameters to set specific api versions.
+#    Example: api_versions => {'identity' => 3}
+#    Default to empty hash
+#
 # === Examples
 #
 #  class { 'horizon':
@@ -283,6 +288,7 @@ class horizon(
   $tuskar_ui_deployment_mode           = 'scale',
   $custom_theme_path                   = undef,
   $redirect_type                       = 'permanent',
+  $api_versions                        = {},
   # DEPRECATED PARAMETERS
   $can_set_mount_point                 = undef,
   $vhost_extra_params                  = undef,
@@ -332,6 +338,7 @@ class horizon(
   $hypervisor_options_real = merge($hypervisor_defaults,$hypervisor_options)
   $cinder_options_real     = merge($cinder_defaults,$cinder_options)
   $neutron_options_real    = merge($neutron_defaults,$neutron_options)
+  validate_hash($api_versions)
 
   package { 'horizon':
     ensure => $package_ensure,
