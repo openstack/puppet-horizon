@@ -325,6 +325,7 @@ class horizon(
 
   $hypervisor_options_real = merge($hypervisor_defaults,$hypervisor_options)
   $cinder_options_real     = merge($cinder_defaults,$cinder_options)
+  $neutron_options_real    = merge($neutron_defaults,$neutron_options)
 
   package { 'horizon':
     ensure => $package_ensure,

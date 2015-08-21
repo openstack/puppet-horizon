@@ -207,23 +207,20 @@ OPENSTACK_CINDER_FEATURES = {
 # The OPENSTACK_NEUTRON_NETWORK settings can be used to enable optional
 # services provided by neutron. Options currenly available are load
 # balancer service, security groups, quotas, VPN service.
+# The profile_support option is used to detect if an externa lrouter can be
+# configured via the dashboard. When using specific plugins the
+# profile_support can be turned on if needed.
+<%- if ! (@neutron_options_real.empty?) -%>
 OPENSTACK_NEUTRON_NETWORK = {
-    <%- @neutron_options = @neutron_defaults.merge(@neutron_options) -%>
-    'enable_lb': <%= @neutron_options['enable_lb'].to_s.capitalize %>,
-    'enable_firewall': <%= @neutron_options['enable_firewall'].to_s.capitalize %>,
-    'enable_quotas': <%= @neutron_options['enable_quotas'].to_s.capitalize %>,
-    'enable_security_group': <%= @neutron_options['enable_security_group'].to_s.capitalize %>,
-    'enable_vpn': <%= @neutron_options['enable_vpn'].to_s.capitalize %>,
-    'enable_distributed_router': <%= @neutron_options['enable_distributed_router'].to_s.capitalize %>,
-    'enable_ha_router': <%= @neutron_options['enable_ha_router'].to_s.capitalize %>,
-    # The profile_support option is used to detect if an externa lrouter can be
-    # configured via the dashboard. When using specific plugins the
-    # profile_support can be turned on if needed.
-    <%- if @neutron_options['profile_support'] != 'None' -%>
-    'profile_support': '<%= @neutron_options['profile_support'] %>',
-    <%- end -%>
-    #'profile_support': 'cisco',
+<%- @neutron_options_real.sort.each do |opt_name,opt_val| -%>
+  <%- if opt_val == true or opt_val == false -%>
+    '<%= opt_name -%>': <%= opt_val.to_s.capitalize -%>,
+  <%- else -%>
+    '<%= opt_name -%>': '<%= opt_val -%>',
+  <%-end-%>
+<%-end-%>
 }
+<%-end-%>
 
 # The OPENSTACK_IMAGE_BACKEND settings can be used to customize features
 # in the OpenStack Dashboard related to the Image service, such as the list
