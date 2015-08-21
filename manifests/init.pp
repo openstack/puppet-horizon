@@ -323,6 +323,8 @@ class horizon(
 
   Service <| title == 'memcached' |> -> Class['horizon']
 
+  $hypervisor_options_real = merge($hypervisor_defaults,$hypervisor_options)
+
   package { 'horizon':
     ensure => $package_ensure,
     name   => $::horizon::params::package_name,
