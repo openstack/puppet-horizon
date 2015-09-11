@@ -186,11 +186,13 @@ OPENSTACK_KEYSTONE_BACKEND = {
 
 # The OPENSTACK_HYPERVISOR_FEATURES settings can be used to enable optional
 # services provided by hypervisors.
+<%- if ! (@hypervisor_options_real.empty?) -%>
 OPENSTACK_HYPERVISOR_FEATURES = {
-    <%- @hypervisor_options = @hypervisor_defaults.merge(@hypervisor_options) -%>
-    'can_set_mount_point': <%= @hypervisor_options['can_set_mount_point'].to_s.capitalize %>,
-    'can_set_password': <%= @hypervisor_options['can_set_password'].to_s.capitalize %>,
+<%- @hypervisor_options_real.sort.each do |opt_name,opt_val| -%>
+    '<%= opt_name -%>': <%= opt_val.to_s.capitalize -%>,
+<%-end-%>
 }
+<%-end-%>
 
 # The OPENSTACK_CINDER_FEATURES settings can be used to enable optional
 # # services provided by cinder that is not exposed by its extension API.
