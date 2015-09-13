@@ -41,7 +41,6 @@ describe 'horizon' do
         is_expected.to contain_class('horizon::wsgi::apache').with({
           :servername    => 'some.host.tld',
           :listen_ssl    => false,
-          :servername    => 'some.host.tld',
           :extra_params  => {},
           :redirect_type => 'permanent',
         })
