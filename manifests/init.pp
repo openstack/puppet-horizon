@@ -243,6 +243,12 @@
 #    All entities will be created in the default domain.
 #    Default to undefined
 #
+#  [*image_backend*]
+#    (optional) Overrides the default image backend settings.  This allows the list of supported
+#    image types etc. to be explicitly defined.
+#    Example: image_backend => { 'image_formats' => { '' => 'Select type', 'qcow2' => 'QCOW2' } }
+#    Default to empty hash
+#
 # === Examples
 #
 #  class { 'horizon':
@@ -301,6 +307,7 @@ class horizon(
   $api_versions                        = {},
   $keystone_multidomain_support        = false,
   $keystone_default_domain             = undef,
+  $image_backend                       = {},
   # DEPRECATED PARAMETERS
   $can_set_mount_point                 = undef,
   $vhost_extra_params                  = undef,

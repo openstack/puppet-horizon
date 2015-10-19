@@ -256,6 +256,17 @@ OPENSTACK_NEUTRON_NETWORK = {
 #         ('vmdk', _('VMDK'))
 #     ]
 # }
+<%- if !(@image_backend.empty?) -%>
+OPENSTACK_IMAGE_BACKEND = {
+  <%- @image_backend.each do |opt_name,opt_val| -%>
+    '<%= opt_name %>': [
+      <%- opt_val.each do |val,label| -%>
+        ('<%= val %>', _('<%= label %>')),
+      <%- end -%>
+    ], # <%= opt_name %>
+  <%- end -%>
+} # OPENSTACK_IMAGE_BACKEND
+<%- end -%>
 
 # OPENSTACK_ENDPOINT_TYPE specifies the endpoint type to use for the endpoints
 # in the Keystone service catalog. Use this setting when Horizon is running

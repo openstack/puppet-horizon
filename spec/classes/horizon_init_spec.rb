@@ -332,6 +332,56 @@ describe 'horizon' do
 
       it { is_expected.not_to contain_file(params[:file_upload_temp_dir]) }
     end
+
+    context 'with image_backend' do
+      before do
+        params.merge!({
+          :image_backend => {
+            'image_formats' => {
+              ''      => 'Select image format',
+              'aki'   => 'AKI - Amazon Kernel Image',
+              'ami'   => 'AMI - Amazon Machine Image',
+              'ari'   => 'ARI - Amazon Ramdisk Image',
+              'iso'   => 'ISO - Optical Disk Image',
+              'qcow2' => 'QCOW2 - QEMU Emulator',
+              'raw'   => 'Raw',
+              'vdi'   => 'VDI',
+              'vhi'   => 'VHI',
+              'vmdk'  => 'VMDK',
+            },
+            'architectures' => {
+              ''        => 'Select architecture',
+              'x86_64'  => 'x86-64',
+              'aarch64' => 'ARMv8',
+            },
+          },
+        })
+      end
+
+      it 'configures OPENSTACK_IMAGE_BACKEND' do
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+          "OPENSTACK_IMAGE_BACKEND = {",
+          "    'image_formats': [",
+          "        ('', _('Select image format')),",
+          "        ('aki', _('AKI - Amazon Kernel Image')),",
+          "        ('ami', _('AMI - Amazon Machine Image')),",
+          "        ('ari', _('ARI - Amazon Ramdisk Image')),",
+          "        ('iso', _('ISO - Optical Disk Image')),",
+          "        ('qcow2', _('QCOW2 - QEMU Emulator')),",
+          "        ('raw', _('Raw')),",
+          "        ('vdi', _('VDI')),",
+          "        ('vhi', _('VHI')),",
+          "        ('vmdk', _('VMDK')),",
+          "    ], # image_formats",
+          "    'architectures': [",
+          "        ('', _('Select architecture')),",
+          "        ('x86_64', _('x86-64')),",
+          "        ('aarch64', _('ARMv8')),",
+          "    ], # architectures",
+          "} # OPENSTACK_IMAGE_BACKEND",
+        ])
+      end
+    end
   end
 
   context 'on RedHat platforms' do
