@@ -31,11 +31,23 @@ describe 'horizon' do
             :tag    => ['openstack', 'horizon-package'],
           )
       }
-      it { is_expected.to contain_exec('refresh_horizon_django_cache').with({
+      it {
+        if facts[:os_package_type] == 'redhat'
+          is_expected.to contain_exec('refresh_horizon_django_cache').with({
           :command     => '/usr/share/openstack-dashboard/manage.py collectstatic --noinput --clear && /usr/share/openstack-dashboard/manage.py compress --force',
           :refreshonly => true,
-      })}
-      it { is_expected.to contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]') }
+          })
+        else
+          is_expected.to_not contain_exec('refresh_horizon_django_cache')
+        end
+      }
+      it {
+        if facts[:os_package_type] == 'redhat'
+          is_expected.to contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]')
+        else
+          is_expected.to_not contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]')
+        end
+      }
 
       it 'configures apache' do
         is_expected.to contain_class('horizon::wsgi::apache').with({
@@ -167,7 +179,13 @@ describe 'horizon' do
         ])
       end
 
-      it { is_expected.to contain_exec('refresh_horizon_django_cache') }
+      it {
+        if facts[:os_package_type] == 'redhat'
+          is_expected.to contain_exec('refresh_horizon_django_cache')
+        else
+          is_expected.to_not contain_exec('refresh_horizon_django_cache')
+        end
+      }
     end
 
     context 'with tuskar-ui enabled' do
@@ -361,7 +379,9 @@ describe 'horizon' do
     before do
       facts.merge!({
         :osfamily               => 'Debian',
-        :operatingsystemrelease => '6.0'
+        :operatingsystem        => 'Debian',
+        :operatingsystemrelease => '6.0',
+        :os_package_type        => 'debian'
       })
     end
 
@@ -379,4 +399,30 @@ describe 'horizon' do
       ])
     end
   end
+
+  context 'on Ubuntu platforms' do
+    before do
+      facts.merge!({
+        :osfamily               => 'Debian',
+        :operatingsystem        => 'Ubuntu',
+        :operatingsystemrelease => '14.04',
+        :os_package_type        => 'ubuntu'
+      })
+    end
+
+    let :platforms_params do
+      { :config_file       => '/etc/openstack-dashboard/local_settings.py',
+        :package_name      => 'openstack-dashboard',
+        :root_url          => '/horizon' }
+    end
+
+    it_behaves_like 'horizon'
+
+    it 'sets WEBROOT in local_settings.py' do
+      verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+        "WEBROOT = '/horizon/'",
+      ])
+    end
+  end
+
 end
