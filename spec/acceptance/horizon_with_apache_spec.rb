@@ -6,26 +6,8 @@ describe 'horizon class' do
 
     it 'should work with no errors' do
       pp= <<-EOS
-      Exec { logoutput => 'on_failure' }
-
-      case $::osfamily {
-        'Debian': {
-          include ::apt
-          class { '::openstack_extras::repo::debian::ubuntu':
-            release         => 'liberty',
-            package_require => true,
-          }
-        }
-        'RedHat': {
-          class { '::openstack_extras::repo::redhat::redhat':
-            release => 'liberty',
-          }
-          package { 'openstack-selinux': ensure => 'latest' }
-        }
-        default: {
-          fail("Unsupported osfamily (${::osfamily})")
-        }
-      }
+      include ::openstack_integration
+      include ::openstack_integration::repos
 
       class { '::horizon':
         secret_key       => 'big_secret',
