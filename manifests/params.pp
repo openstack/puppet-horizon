@@ -29,10 +29,10 @@ class horizon::params {
       $apache_group                = 'www-data'
       $wsgi_user                   = 'horizon'
       $wsgi_group                  = 'horizon'
-      case $::operatingsystem {
-        'Debian': {
+      case $::os_package_type {
+        'debian': {
             $package_name          = 'openstack-dashboard-apache'
-            $httpd_config_file     = '/etc/apache2/sites-available/openstack-dashboard.conf'
+            $httpd_config_file     = '/etc/apache2/sites-available/openstack-dashboard-alias-only.conf'
         }
         default: {
             $package_name          = 'openstack-dashboard'
