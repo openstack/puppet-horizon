@@ -376,10 +376,6 @@ class horizon(
     order   => '50',
   }
 
-  package { 'python-lesscpy':
-    ensure  => $package_ensure,
-  }
-
   # debian/ubuntu do not use collect static as the packaging already handles
   # this as part of the packages. This was put in as a work around for Debian
   # who has since fixed their packaging.
@@ -389,7 +385,7 @@ class horizon(
     exec { 'refresh_horizon_django_cache':
       command     => "${::horizon::params::manage_py} collectstatic --noinput --clear && ${::horizon::params::manage_py} compress --force",
       refreshonly => true,
-      require     => [Package['python-lesscpy'], Package['horizon']],
+      require     => Package['horizon'],
     }
 
     if $compress_offline {
