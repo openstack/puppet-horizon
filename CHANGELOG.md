@@ -1,3 +1,34 @@
+##2015-11-25 - 7.0.0
+###Summary
+
+This is a backwards-incompatible major release for OpenStack Liberty.
+
+####Backwards-incompatible changes
+
+####Features
+- allow Orchestration of Image Backend
+- add new parameters for multidomain support
+- add api_versions parameter
+- remove hardcoded 'neutron_options' list
+- remove hardcoded 'cinder_options' list
+- remove hardcoded 'hypervisor_options' list
+- add ssl_no_verify parameter
+- make redirect type configurable
+- add CUSTOM_THEME_PATH variable
+- add tag to package resource
+- add cache_backend and cache_options params
+
+####Bugfixes
+- do not run collectstatic or compress in Debian
+- remove duplicate key for ':servername'
+
+####Maintenance
+- acceptance: enable debug & verbosity for OpenStack logs
+- initial msync run for all Puppet OpenStack modules
+- try to use zuul-cloner to prepare fixtures
+- remove class_parameter_defaults puppet-lint check
+- fix rspec 3.x syntax
+
 ##2015-10-15 - 6.1.0
 ###Summary
 
