@@ -249,6 +249,13 @@
 #    Example: image_backend => { 'image_formats' => { '' => 'Select type', 'qcow2' => 'QCOW2' } }
 #    Default to empty hash
 #
+#  [*overview_days_range*]
+#    (optional) The default date range in the Overview panel meters - either <today> minus N
+#    days (if the value is integer N), or from the beginning of the current month
+#    until today (if it's undefined). This setting should be used to limit the amount
+#    of data fetched by default when rendering the Overview panel.
+#    Defaults to undef.
+#
 # === Examples
 #
 #  class { 'horizon':
@@ -308,6 +315,7 @@ class horizon(
   $keystone_multidomain_support        = false,
   $keystone_default_domain             = undef,
   $image_backend                       = {},
+  $overview_days_range                 = undef,
   # DEPRECATED PARAMETERS
   $can_set_mount_point                 = undef,
   $vhost_extra_params                  = undef,
