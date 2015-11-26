@@ -385,7 +385,7 @@ class horizon(
   # who has since fixed their packaging.
   # See I813b5f6067bb6ecce279cab7278d9227c4d31d28 for the original history
   # behind this section.
-  if $::os_package_type == 'redhat' {
+  if $::os_package_type == 'rpm' {
     exec { 'refresh_horizon_django_cache':
       command     => "${::horizon::params::manage_py} collectstatic --noinput --clear && ${::horizon::params::manage_py} compress --force",
       refreshonly => true,

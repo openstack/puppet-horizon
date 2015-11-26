@@ -32,7 +32,7 @@ describe 'horizon' do
           )
       }
       it {
-        if facts[:os_package_type] == 'redhat'
+        if facts[:os_package_type] == 'rpm'
           is_expected.to contain_exec('refresh_horizon_django_cache').with({
           :command     => '/usr/share/openstack-dashboard/manage.py collectstatic --noinput --clear && /usr/share/openstack-dashboard/manage.py compress --force',
           :refreshonly => true,
@@ -42,7 +42,7 @@ describe 'horizon' do
         end
       }
       it {
-        if facts[:os_package_type] == 'redhat'
+        if facts[:os_package_type] == 'rpm'
           is_expected.to contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]')
         else
           is_expected.to_not contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]')
@@ -180,7 +180,7 @@ describe 'horizon' do
       end
 
       it {
-        if facts[:os_package_type] == 'redhat'
+        if facts[:os_package_type] == 'rpm'
           is_expected.to contain_exec('refresh_horizon_django_cache')
         else
           is_expected.to_not contain_exec('refresh_horizon_django_cache')
