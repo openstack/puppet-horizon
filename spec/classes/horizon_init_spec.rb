@@ -25,7 +25,6 @@ describe 'horizon' do
 
     context 'with default parameters' do
       it {
-          is_expected.to contain_package('python-lesscpy').with_ensure('present')
           is_expected.to contain_package('horizon').with(
             :ensure => 'present',
             :tag    => ['openstack', 'horizon-package'],
