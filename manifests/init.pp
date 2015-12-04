@@ -195,7 +195,7 @@
 #
 #  [*django_session_engine*]
 #    (optional) Selects the session engine for Django to use.
-#    Defaults to undefined - will not add entry to local settings.
+#    Defaults to undef - will not add entry to local settings.
 #
 #  [*tuskar_ui*]
 #    (optional) Boolean to enable Tuskar-UI related configuration (http://tuskar-ui.readthedocs.org/)
@@ -208,7 +208,7 @@
 #  [*tuskar_ui_undercloud_admin_password*]
 #    (optional) Tuskar-UI - Undercloud admin password used to authenticate admin user in Tuskar-UI.
 #    It is required by Heat to perform certain actions.
-#    Defaults to undefined
+#    Defaults to undef
 #
 #  [*tuskar_ui_deployment_mode*]
 #    (optional) Tuskar-UI - Deployment mode ('poc' or 'scale')
@@ -216,7 +216,7 @@
 #
 #  [*custom_theme_path*]
 #    (optional) The directory location for the theme (e.g., "static/themes/blue")
-#    Default to undefined
+#    Default to undef
 #
 #  [*redirect_type*]
 #    (optional) What type of redirect to use when redirecting an http request
@@ -241,7 +241,7 @@
 #  [*keystone_default_domain*]
 #    (optional) Overrides the default domain used when running on single-domain model with Keystone V3.
 #    All entities will be created in the default domain.
-#    Default to undefined
+#    Default to undef
 #
 #  [*image_backend*]
 #    (optional) Overrides the default image backend settings.  This allows the list of supported
