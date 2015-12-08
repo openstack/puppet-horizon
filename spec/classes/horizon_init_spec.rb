@@ -117,7 +117,8 @@ describe 'horizon' do
           :custom_theme_path            => 'static/themes/green',
           :api_versions                 => {'identity' => 3},
           :keystone_multidomain_support => true,
-          :keystone_default_domain      => 'domain.tld'
+          :keystone_default_domain      => 'domain.tld',
+          :overview_days_range          => 1
         })
       end
 
@@ -157,6 +158,7 @@ describe 'horizon' do
           "            'handlers': ['syslog'],",
           'COMPRESS_OFFLINE = False',
           "FILE_UPLOAD_TEMP_DIR = '/var/spool/horizon'",
+          "OVERVIEW_DAYS_RANGE = 1"
         ])
       end
 
