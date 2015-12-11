@@ -125,21 +125,21 @@ class horizon::wsgi::apache (
   }
 
   file { $::horizon::params::logdir:
-    ensure       => directory,
-    owner        => $unix_user,
-    group        => $unix_group,
-    before       => Service[$::horizon::params::http_service],
-    mode         => '0751',
-    require      => Package['horizon']
+    ensure  => directory,
+    owner   => $unix_user,
+    group   => $unix_group,
+    before  => Service[$::horizon::params::http_service],
+    mode    => '0751',
+    require => Package['horizon']
   }
 
   file { "${::horizon::params::logdir}/horizon.log":
-    ensure       => file,
-    owner        => $unix_user,
-    group        => $unix_group,
-    before       => Service[$::horizon::params::http_service],
-    mode         => '0640',
-    require      => [ File[$::horizon::params::logdir], Package['horizon'] ],
+    ensure  => file,
+    owner   => $unix_user,
+    group   => $unix_group,
+    before  => Service[$::horizon::params::http_service],
+    mode    => '0640',
+    require => [ File[$::horizon::params::logdir], Package['horizon'] ],
   }
 
   $default_vhost_conf_no_ip = {
@@ -150,7 +150,8 @@ class horizon::wsgi::apache (
     error_log_file       => 'horizon_error.log',
     priority             => $priority,
     aliases              => [
-      { alias => '/static', path => '/usr/share/openstack-dashboard/static' }
+      { alias => '/static', path         => '/usr/share/openstack-dashboard/static' },
+      { alias => '/static/horizon', path => '/usr/share/openstack-dashboard/static/horizon' },
     ],
     port                 => 80,
     ssl_cert             => $horizon_cert,
