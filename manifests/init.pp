@@ -256,6 +256,11 @@
 #    of data fetched by default when rendering the Overview panel.
 #    Defaults to undef.
 #
+#  [*session_timeout*]
+#    (optional) The session timeout for horizon in seconds. After this manys seconds of inavtivity
+#    the user is logged out.
+#    Defaults to 1800.
+#
 # === Examples
 #
 #  class { 'horizon':
@@ -316,6 +321,7 @@ class horizon(
   $keystone_default_domain             = undef,
   $image_backend                       = {},
   $overview_days_range                 = undef,
+  $session_timeout                     = 1800,
   # DEPRECATED PARAMETERS
   $can_set_mount_point                 = undef,
   $vhost_extra_params                  = undef,

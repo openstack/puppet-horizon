@@ -118,7 +118,8 @@ describe 'horizon' do
           :api_versions                 => {'identity' => 3},
           :keystone_multidomain_support => true,
           :keystone_default_domain      => 'domain.tld',
-          :overview_days_range          => 1
+          :overview_days_range          => 1,
+          :session_timeout              => 1800,
         })
       end
 
@@ -156,6 +157,7 @@ describe 'horizon' do
           "CUSTOM_THEME_PATH = 'static/themes/green'",
           "            'level': 'DEBUG',",
           "            'handlers': ['syslog'],",
+          "SESSION_TIMEOUT = 1800",
           'COMPRESS_OFFLINE = False',
           "FILE_UPLOAD_TEMP_DIR = '/var/spool/horizon'",
           "OVERVIEW_DAYS_RANGE = 1"
