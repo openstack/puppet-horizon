@@ -27,6 +27,12 @@
 # [*listen_ssl*]
 #   (optional) Enable SSL support in Apache. (Defaults to false)
 #
+# [*http_port*]
+#   (optional) Port to use for the HTTP virtual host. (Defaults to 80)
+#
+# [*https_port*]
+#   (optional) Port to use for the HTTPS virtual host. (Defaults to 443)
+#
 # [*horizon_cert*]
 #   (required with listen_ssl) Certificate to use for SSL support.
 #
@@ -75,6 +81,8 @@ class horizon::wsgi::apache (
   $servername          = $::fqdn,
   $server_aliases      = $::fqdn,
   $listen_ssl          = false,
+  $http_port           = 80,
+  $https_port          = 443,
   $ssl_redirect        = true,
   $horizon_cert        = undef,
   $horizon_key         = undef,
@@ -188,7 +196,7 @@ class horizon::wsgi::apache (
       alias => "${$::horizon::params::root_url}/static",
       path  => '/usr/share/openstack-dashboard/static',
     }],
-    port                        => 80,
+    port                        => $http_port,
     ssl_cert                    => $horizon_cert,
     ssl_key                     => $horizon_key,
     ssl_ca                      => $horizon_ca,
@@ -224,7 +232,7 @@ class horizon::wsgi::apache (
     error_log_file       => 'horizon_ssl_error.log',
     priority             => $priority,
     ssl                  => true,
-    port                 => 443,
+    port                 => $https_port,
     ensure               => $ensure_ssl_vhost,
     wsgi_daemon_process  => 'horizon-ssl',
     wsgi_process_group   => 'horizon-ssl',
