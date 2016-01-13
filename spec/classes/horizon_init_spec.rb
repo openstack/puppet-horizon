@@ -111,7 +111,8 @@ describe 'horizon' do
           :hypervisor_options           => {'can_set_mount_point' => false, 'can_set_password' => true },
           :cinder_options               => {'enable_backup' => true },
           :neutron_options              => {'enable_lb' => true, 'enable_firewall' => true, 'enable_quotas' => false, 'enable_security_group' => false, 'enable_vpn' => true,
-                                            'enable_distributed_router' => false, 'enable_ha_router' => false, 'profile_support' => 'cisco', },
+                                            'enable_distributed_router' => false, 'enable_ha_router' => false, 'profile_support' => 'cisco',
+                                            'supported_provider_types' => ['flat', 'vxlan'], 'supported_vnic_types' => ['*'], 'default_ipv4_subnet_pool_label' => 'None', },
           :file_upload_temp_dir         => '/var/spool/horizon',
           :secure_cookies               => true,
           :custom_theme_path            => 'static/themes/green',
@@ -119,7 +120,7 @@ describe 'horizon' do
           :keystone_multidomain_support => true,
           :keystone_default_domain      => 'domain.tld',
           :overview_days_range          => 1,
-          :session_timeout              => 1800,
+          :session_timeout              => 1800
         })
       end
 
@@ -145,12 +146,15 @@ describe 'horizon' do
           "    'can_set_mount_point': False,",
           "    'can_set_password': True,",
           "    'enable_backup': True,",
+          "    'default_ipv4_subnet_pool_label': None,",
           "    'enable_firewall': True,",
           "    'enable_lb': True,",
           "    'enable_quotas': False,",
           "    'enable_security_group': False,",
           "    'enable_vpn': True,",
           "    'profile_support': 'cisco',",
+          "    'supported_provider_types': ['flat', 'vxlan'],",
+          "    'supported_vnic_types': ['*'],",
           'OPENSTACK_ENDPOINT_TYPE = "internalURL"',
           'SECONDARY_ENDPOINT_TYPE = "ANY-VALUE"',
           'API_RESULT_LIMIT = 4682',
@@ -160,7 +164,7 @@ describe 'horizon' do
           "SESSION_TIMEOUT = 1800",
           'COMPRESS_OFFLINE = False',
           "FILE_UPLOAD_TEMP_DIR = '/var/spool/horizon'",
-          "OVERVIEW_DAYS_RANGE = 1"
+          "OVERVIEW_DAYS_RANGE = 1",
         ])
       end
 
