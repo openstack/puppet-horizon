@@ -256,6 +256,10 @@
 #    of data fetched by default when rendering the Overview panel.
 #    Defaults to undef.
 #
+#  [*root_url*]
+#    (optional) The base URL used to contruct horizon web addresses.
+#    Defaults to '/dashboard' or '/horizon' depending OS
+#
 #  [*session_timeout*]
 #    (optional) The session timeout for horizon in seconds. After this many seconds of inactivity
 #    the user is logged out.
@@ -321,15 +325,14 @@ class horizon(
   $keystone_default_domain             = undef,
   $image_backend                       = {},
   $overview_days_range                 = undef,
+  $root_url                            = $::horizon::params::root_url,
   $session_timeout                     = 1800,
   # DEPRECATED PARAMETERS
   $can_set_mount_point                 = undef,
   $vhost_extra_params                  = undef,
   $secure_cookies                      = false,
   $django_session_engine               = undef,
-) {
-
-  include ::horizon::params
+) inherits ::horizon::params {
 
   $hypervisor_defaults = {
     'can_set_mount_point' => true,
@@ -412,6 +415,7 @@ class horizon(
       horizon_ca     => $horizon_ca,
       extra_params   => $vhost_extra_params,
       redirect_type  => $redirect_type,
+      root_url       => $root_url
     }
   }
 

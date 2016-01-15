@@ -13,18 +13,17 @@ TEMPLATE_DEBUG = DEBUG
 
 # WEBROOT is the location relative to Webserver root
 # should end with a slash.
-#WEBROOT = '/'
 #LOGIN_URL = WEBROOT + 'auth/login/'
 #LOGOUT_URL = WEBROOT + 'auth/logout/'
-WEBROOT = '<%= scope.lookupvar("horizon::params::root_url") %>/'
-LOGIN_URL = '<%= scope.lookupvar("horizon::params::root_url") %>/auth/login/'
-LOGOUT_URL = '<%= scope.lookupvar("horizon::params::root_url") %>/auth/logout/'
+WEBROOT = '<%= @root_url %>/'
+LOGIN_URL = '<%= @root_url %>/auth/login/'
+LOGOUT_URL = '<%= @root_url %>/auth/logout/'
 
 # LOGIN_REDIRECT_URL can be used as an alternative for
 # HORIZON_CONFIG.user_home, if user_home is not set.
 # Do not set it to '/home/', as this will cause circular redirect loop
 #LOGIN_REDIRECT_URL = WEBROOT
-LOGIN_REDIRECT_URL = '<%= scope.lookupvar("horizon::params::root_url") %>'
+LOGIN_REDIRECT_URL = '<%= @root_url %>/'
 
 # Required for Django 1.5.
 # If horizon is running in production (DEBUG is False), set this

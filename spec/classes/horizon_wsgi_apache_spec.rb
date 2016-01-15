@@ -122,7 +122,7 @@ describe 'horizon::wsgi::apache' do
           'redirectmatch_dest'     => platforms_params[:root_url],
           'wsgi_process_group'     => 'horizon-ssl',
           'wsgi_daemon_process'    => 'horizon-ssl',
-          'wsgi_script_aliases'    => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' }
+          'wsgi_script_aliases'  => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' },
         )}
 
         it { is_expected.to contain_apache__vhost('horizon_vhost').with(
@@ -139,7 +139,7 @@ describe 'horizon::wsgi::apache' do
           'redirectmatch_dest'   => 'https://some.host.tld',
           'wsgi_process_group'   => platforms_params[:wsgi_group],
           'wsgi_daemon_process'  => platforms_params[:wsgi_group],
-          'wsgi_script_aliases'  => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' }
+          'wsgi_script_aliases'  => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' },
         )}
       end
 

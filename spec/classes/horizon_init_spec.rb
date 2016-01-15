@@ -56,7 +56,7 @@ describe 'horizon' do
           'DEBUG = False',
           "LOGIN_URL = '#{platforms_params[:root_url]}/auth/login/'",
           "LOGOUT_URL = '#{platforms_params[:root_url]}/auth/logout/'",
-          "LOGIN_REDIRECT_URL = '#{platforms_params[:root_url]}'",
+          "LOGIN_REDIRECT_URL = '#{platforms_params[:root_url]}/'",
           "ALLOWED_HOSTS = ['*', ]",
           "  'identity': 3,",
           "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
