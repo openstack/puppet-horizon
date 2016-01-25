@@ -257,7 +257,7 @@
 #    Defaults to undef.
 #
 #  [*session_timeout*]
-#    (optional) The session timeout for horizon in seconds. After this manys seconds of inavtivity
+#    (optional) The session timeout for horizon in seconds. After this many seconds of inactivity
 #    the user is logged out.
 #    Defaults to 1800.
 #
