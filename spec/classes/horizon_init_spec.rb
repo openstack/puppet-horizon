@@ -60,6 +60,9 @@ describe 'horizon' do
       it 'generates local_settings.py' do
         verify_concat_fragment_contents(catalogue, 'local_settings.py', [
           'DEBUG = False',
+          "LOGIN_URL = '#{platforms_params[:root_url]}/auth/login/'",
+          "LOGOUT_URL = '#{platforms_params[:root_url]}/auth/logout/'",
+          "LOGIN_REDIRECT_URL = '#{platforms_params[:root_url]}'",
           "ALLOWED_HOSTS = ['*', ]",
           "  'identity': 3,",
           "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
@@ -75,9 +78,6 @@ describe 'horizon' do
           "    'enable_security_group': True,",
           "    'enable_vpn': False,",
           'API_RESULT_LIMIT = 1000',
-          "LOGIN_URL = '#{platforms_params[:root_url]}/auth/login/'",
-          "LOGOUT_URL = '#{platforms_params[:root_url]}/auth/logout/'",
-          "LOGIN_REDIRECT_URL = '#{platforms_params[:root_url]}'",
           'COMPRESS_OFFLINE = True',
           "FILE_UPLOAD_TEMP_DIR = '/tmp'"
         ])
