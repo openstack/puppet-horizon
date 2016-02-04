@@ -16,21 +16,21 @@ horizon
 Overview
 --------
 
-The horizon module is a part of [OpenStack](https://github.com/openstack), an effort by the Openstack infrastructure team to provide continuous integration testing and code review for Openstack and Openstack community projects as part of the core software.  The module its self is used to flexibly configure and manage the dashboard service for Openstack.
+The horizon module is a part of [OpenStack](https://github.com/openstack), an effort by the OpenStack infrastructure team to provide continuous integration testing and code review for OpenStack and OpenStack community projects as part of the core software.  The module its self is used to flexibly configure and manage the dashboard service for OpenStack.
 
 Module Description
 ------------------
 
 The horizon module is a thorough attempt to make Puppet capable of managing the entirety of horizon.  Horizon is a fairly classic django application, which results in a fairly simply Puppet module.
 
-This module is tested in combination with other modules needed to build and leverage an entire Openstack software stack.
+This module is tested in combination with other modules needed to build and leverage an entire OpenStack software stack.
 
 Setup
 -----
 
 **What the horizon module affects**
 
-* [Horizon](https://wiki.openstack.org/wiki/Horizon), the dashboard service for Openstack.
+* [Horizon](https://wiki.openstack.org/wiki/Horizon), the dashboard service for OpenStack.
 
 ### Installing horizon
 
