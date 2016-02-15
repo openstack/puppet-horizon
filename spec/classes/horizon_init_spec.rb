@@ -30,16 +30,10 @@ describe 'horizon' do
             :tag    => ['openstack', 'horizon-package'],
           )
       }
-      it {
-        if facts[:os_package_type] == 'rpm'
-          is_expected.to contain_exec('refresh_horizon_django_cache').with({
+      it { is_expected.to contain_exec('refresh_horizon_django_cache').with({
           :command     => '/usr/share/openstack-dashboard/manage.py collectstatic --noinput --clear && /usr/share/openstack-dashboard/manage.py compress --force',
           :refreshonly => true,
-          })
-        else
-          is_expected.to_not contain_exec('refresh_horizon_django_cache')
-        end
-      }
+      })}
       it {
         if facts[:os_package_type] == 'rpm'
           is_expected.to contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]')
@@ -187,13 +181,7 @@ describe 'horizon' do
         ])
       end
 
-      it {
-        if facts[:os_package_type] == 'rpm'
-          is_expected.to contain_exec('refresh_horizon_django_cache')
-        else
-          is_expected.to_not contain_exec('refresh_horizon_django_cache')
-        end
-      }
+      it { is_expected.to contain_exec('refresh_horizon_django_cache') }
     end
 
     context 'with tuskar-ui enabled' do
@@ -414,7 +402,8 @@ describe 'horizon' do
     before do
       facts.merge!({
         :osfamily               => 'RedHat',
-        :operatingsystemrelease => '6.0'
+        :operatingsystemrelease => '6.0',
+        :os_package_type        => 'rpm'
       })
     end
 
@@ -437,8 +426,8 @@ describe 'horizon' do
     before do
       facts.merge!({
         :osfamily               => 'Debian',
-        :operatingsystem        => 'Debian',
         :operatingsystemrelease => '6.0',
+        :operatingsystem        => 'Debian',
         :os_package_type        => 'debian'
       })
     end
@@ -482,5 +471,4 @@ describe 'horizon' do
       ])
     end
   end
-
 end

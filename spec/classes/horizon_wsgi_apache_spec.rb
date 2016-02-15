@@ -292,5 +292,4 @@ describe 'horizon::wsgi::apache' do
       end
     end
   end
-
 end
