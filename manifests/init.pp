@@ -380,8 +380,10 @@ class horizon(
   }
 
   concat { $::horizon::params::config_file:
-    mode    => '0644',
+    mode    => '0640',
     require => Package['horizon'],
+    owner   => 'root',
+    group   => ['::params::wsgi_group'],
   }
 
   concat::fragment { 'local_settings.py':
