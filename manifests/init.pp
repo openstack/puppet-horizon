@@ -265,6 +265,10 @@
 #    the user is logged out.
 #    Defaults to 1800.
 #
+#  [*timezone*]
+#    (optional) The timezone of the server.
+#    Defaults to 'UTC'.
+#
 # === Examples
 #
 #  class { 'horizon':
@@ -327,6 +331,7 @@ class horizon(
   $overview_days_range                 = undef,
   $root_url                            = $::horizon::params::root_url,
   $session_timeout                     = 1800,
+  $timezone                            = 'UTC',
   # DEPRECATED PARAMETERS
   $can_set_mount_point                 = undef,
   $vhost_extra_params                  = undef,

@@ -72,6 +72,7 @@ describe 'horizon' do
           "    'enable_security_group': True,",
           "    'enable_vpn': False,",
           'API_RESULT_LIMIT = 1000',
+          'TIME_ZONE = "UTC"',
           'COMPRESS_OFFLINE = True',
           "FILE_UPLOAD_TEMP_DIR = '/tmp'"
         ])
@@ -115,7 +116,8 @@ describe 'horizon' do
           :keystone_multidomain_support => true,
           :keystone_default_domain      => 'domain.tld',
           :overview_days_range          => 1,
-          :session_timeout              => 1800
+          :session_timeout              => 1800,
+          :timezone                     => 'Asia/Shanghai',
         })
       end
 
@@ -153,6 +155,7 @@ describe 'horizon' do
           'OPENSTACK_ENDPOINT_TYPE = "internalURL"',
           'SECONDARY_ENDPOINT_TYPE = "ANY-VALUE"',
           'API_RESULT_LIMIT = 4682',
+          'TIME_ZONE = "Asia/Shanghai"',
           "CUSTOM_THEME_PATH = 'static/themes/green'",
           "            'level': 'DEBUG',",
           "            'handlers': ['syslog'],",
