@@ -1,0 +1,3 @@
+---
+deprecations:
+  - Remove installation of lesscpy package, not needed since Horizon has been using pyscss.

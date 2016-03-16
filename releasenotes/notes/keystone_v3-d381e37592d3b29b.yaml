@@ -1,0 +1,3 @@
+---
+features:
+  - Use keystone v3 with horizon by default.
