@@ -33,6 +33,7 @@ describe 'horizon::wsgi::apache' do
         is_expected.to contain_class('apache')
         is_expected.to contain_class('apache::mod::wsgi')
         is_expected.to contain_service('httpd').with_name(platforms_params[:http_service])
+        is_expected.to contain_package('httpd').with_name(platforms_params[:http_service])
         is_expected.to contain_file(platforms_params[:httpd_config_file])
         is_expected.to contain_package('horizon').with_ensure('present')
         is_expected.to contain_apache__vhost('horizon_vhost').with(
@@ -68,6 +69,7 @@ describe 'horizon::wsgi::apache' do
         is_expected.to contain_class('apache')
         is_expected.to contain_class('apache::mod::wsgi')
         is_expected.to contain_service('httpd').with_name(platforms_params[:http_service])
+        is_expected.to contain_package('httpd').with_name(platforms_params[:http_service])
         is_expected.to contain_file(platforms_params[:httpd_config_file])
         is_expected.to contain_package('horizon').with_ensure('present')
         is_expected.to contain_apache__vhost('horizon_vhost').with(
