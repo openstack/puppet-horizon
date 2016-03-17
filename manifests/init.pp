@@ -249,6 +249,10 @@
 #    Example: image_backend => { 'image_formats' => { '' => 'Select type', 'qcow2' => 'QCOW2' } }
 #    Default to empty hash
 #
+#  [*timezone*]
+#    (optional) The timezone of the server.
+#    Defaults to 'UTC'.
+#
 # === Examples
 #
 #  class { 'horizon':
@@ -308,6 +312,7 @@ class horizon(
   $keystone_multidomain_support        = false,
   $keystone_default_domain             = undef,
   $image_backend                       = {},
+  $timezone                            = 'UTC',
   # DEPRECATED PARAMETERS
   $can_set_mount_point                 = undef,
   $vhost_extra_params                  = undef,
