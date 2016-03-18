@@ -1,0 +1,4 @@
+---
+security:
+  - local_settings file is no longer world readable (from 644 to 640) as it may
+    contain sensitive information.

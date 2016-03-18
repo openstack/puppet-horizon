@@ -394,7 +394,9 @@ class horizon(
   }
 
   concat { $::horizon::params::config_file:
-    mode    => '0644',
+    mode    => '0640',
+    owner   => $::horizon::params::wsgi_user,
+    group   => $::horizon::params::wsgi_group,
     require => Package['horizon'],
   }
 
