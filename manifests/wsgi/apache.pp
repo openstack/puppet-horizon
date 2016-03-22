@@ -168,8 +168,8 @@ class horizon::wsgi::apache (
     fail("Invalid redirect type '${redirect_type} provided.")
   }
 
-  Package['horizon'] -> Package[$::horizon::params::http_service]
-  File[$::horizon::params::config_file] ~> Service[$::horizon::params::http_service]
+  Package['horizon'] -> Package['httpd']
+  File[$::horizon::params::config_file] ~> Service['httpd']
 
   $unix_user = $::osfamily ? {
     'RedHat' => $::horizon::params::apache_user,
@@ -184,7 +184,7 @@ class horizon::wsgi::apache (
     ensure  => directory,
     owner   => $unix_user,
     group   => $unix_group,
-    before  => Service[$::horizon::params::http_service],
+    before  => Service['httpd'],
     mode    => '0751',
     require => Package['horizon'],
   }
@@ -193,7 +193,7 @@ class horizon::wsgi::apache (
     ensure  => file,
     owner   => $unix_user,
     group   => $unix_group,
-    before  => Service[$::horizon::params::http_service],
+    before  => Service['httpd'],
     mode    => '0640',
     require => [ File[$::horizon::params::logdir], Package['horizon'] ],
   }
