@@ -19,6 +19,7 @@ class horizon::params {
       $apache_group                = 'apache'
       $wsgi_user                   = 'dashboard'
       $wsgi_group                  = 'dashboard'
+      $memcache_package            = 'python-memcached'
     }
     'Debian': {
       $http_service                = 'apache2'
@@ -29,6 +30,7 @@ class horizon::params {
       $apache_group                = 'www-data'
       $wsgi_user                   = 'horizon'
       $wsgi_group                  = 'horizon'
+      $memcache_package            = 'python-memcache'
       case $::os_package_type {
         'debian': {
             $package_name          = 'openstack-dashboard-apache'
