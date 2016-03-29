@@ -191,6 +191,21 @@ describe 'horizon' do
       }
     end
 
+    context 'installs python memcache library when cache_backend is set to memcache' do
+      before do
+        params.merge!({
+          :cache_backend => 'django.core.cache.backends.memcached.MemcachedCache'
+        })
+      end
+
+      it {
+        is_expected.to contain_package('python-memcache').with(
+          :ensure => 'present',
+          :tag    => ['openstack', 'horizon-package']
+         )
+      }
+    end
+
     context 'with tuskar-ui enabled' do
       before do
         params.merge!({
