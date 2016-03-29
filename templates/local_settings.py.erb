@@ -36,7 +36,6 @@ ALLOWED_HOSTS = ['<%= @final_allowed_hosts.join("', '") %>', ]
 <% else %>
 ALLOWED_HOSTS = ['<%= @final_allowed_hosts %>', ]
 <% end %>
-
 # Set SSL proxy settings:
 # Pass this header from the proxy after terminating the SSL,
 # and don't forget to strip it from the client's request.
@@ -465,7 +464,7 @@ SECONDARY_ENDPOINT_TYPE = "<%= @secondary_endpoint_type %>"
 # on a single page before providing a paging element (a "more" link)
 # to paginate results.
 #API_RESULT_LIMIT = 1000
-#API_RESULT_PAGE_SIZE = 20$     
+#API_RESULT_PAGE_SIZE = 20$
 API_RESULT_LIMIT = <%= @api_result_limit %>
 API_RESULT_PAGE_SIZE = 20
 
@@ -612,6 +611,7 @@ LOGGING = {
             'filename': '<%= scope.lookupvar("horizon::params::logdir") %>/horizon.log',
             'formatter': 'verbose',
         },
+    <%- if @log_handler == 'syslog' -%>
         'syslog': {
             'level': '<%= @log_level %>',
             'facility': 'local1',
@@ -619,6 +619,7 @@ LOGGING = {
             'address': '/dev/log',
             'formatter': 'normal',
         }
+    <%- end -%>
     },
     'loggers': {
         # Logging from django.db.backends is VERY verbose, send to null
