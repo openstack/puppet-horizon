@@ -381,6 +381,12 @@ class horizon(
   $neutron_options_real    = merge($neutron_defaults,$neutron_options)
   validate_hash($api_versions)
 
+  if $cache_backend =~ /MemcachedCache/ {
+    ensure_packages('python-memcache',
+      { name   => $::horizon::params::memcache_package,
+        tag    => ['openstack', 'horizon-package']})
+  }
+
   package { 'horizon':
     ensure => $package_ensure,
     name   => $::horizon::params::package_name,
