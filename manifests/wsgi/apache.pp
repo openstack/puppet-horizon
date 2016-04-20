@@ -169,7 +169,7 @@ class horizon::wsgi::apache (
   }
 
   Package['horizon'] -> Package['httpd']
-  File[$::horizon::params::config_file] ~> Service['httpd']
+  Concat[$::horizon::params::config_file] ~> Service['httpd']
 
   $unix_user = $::osfamily ? {
     'RedHat' => $::horizon::params::apache_user,
