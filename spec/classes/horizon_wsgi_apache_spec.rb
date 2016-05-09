@@ -200,8 +200,8 @@ describe 'horizon::wsgi::apache' do
         :root_url          => '/dashboard',
         :apache_user       => 'apache',
         :apache_group      => 'apache',
-        :wsgi_user         => 'dashboard',
-        :wsgi_group        => 'dashboard',
+        :wsgi_user         => 'apache',
+        :wsgi_group        => 'apache',
         :unix_user         => 'apache',
         :unix_group        => 'apache' }
     end

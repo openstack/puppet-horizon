@@ -171,14 +171,8 @@ class horizon::wsgi::apache (
   Package['horizon'] -> Package['httpd']
   Concat[$::horizon::params::config_file] ~> Service['httpd']
 
-  $unix_user = $::osfamily ? {
-    'RedHat' => $::horizon::params::apache_user,
-    default  => $::horizon::params::wsgi_user
-  }
-  $unix_group = $::osfamily ? {
-    'RedHat' => $::horizon::params::apache_group,
-    default  => $::horizon::params::wsgi_group,
-  }
+  $unix_user  = $::horizon::params::wsgi_user
+  $unix_group = $::horizon::params::wsgi_group
 
   file { $::horizon::params::logdir:
     ensure  => directory,
