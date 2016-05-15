@@ -8,13 +8,6 @@
 #    (required) Secret key. This is used by Django to provide cryptographic
 #    signing, and should be set to a unique, unpredictable value.
 #
-#  [*fqdn*]
-#    (optional) DEPRECATED, use allowed_hosts and server_aliases instead.
-#    FQDN(s) used to access Horizon. This is used by Django for
-#    security reasons. Can be set to * in environments where security is
-#    deemed unimportant. Also used for Server Aliases in web configs.
-#    Defaults to ::fqdn
-#
 #  [*servername*]
 #    (optional) FQDN used for the Server Name directives
 #    Defaults to ::fqdn.
@@ -184,10 +177,6 @@
 #   (Optional) Policy files
 #   Defaults to undef.
 #
-# [*can_set_mount_point*]
-#   (Optional) DEPRECATED
-#   Defaults to 'undef'.
-#
 #  [*secure_cookies*]
 #    (optional) Enables security settings for cookies. Useful when using
 #    https on public sites. See: http://docs.openstack.org/developer/horizon/topics/deployment.html#secure-site-recommendations
@@ -269,6 +258,15 @@
 #    (optional) The timezone of the server.
 #    Defaults to 'UTC'.
 #
+# === DEPRECATED group/name
+#
+#  [*fqdn*]
+#    (optional) DEPRECATED, use allowed_hosts and server_aliases instead.
+#    FQDN(s) used to access Horizon. This is used by Django for
+#    security reasons. Can be set to * in environments where security is
+#    deemed unimportant. Also used for Server Aliases in web configs.
+#    Defaults to undef
+#
 # === Examples
 #
 #  class { 'horizon':
@@ -282,7 +280,6 @@
 #
 class horizon(
   $secret_key,
-  $fqdn                                = undef,
   $package_ensure                      = 'present',
   $cache_backend                       = 'django.core.cache.backends.locmem.LocMemCache',
   $cache_options                       = undef,
@@ -332,11 +329,11 @@ class horizon(
   $root_url                            = $::horizon::params::root_url,
   $session_timeout                     = 1800,
   $timezone                            = 'UTC',
-  # DEPRECATED PARAMETERS
-  $can_set_mount_point                 = undef,
-  $vhost_extra_params                  = undef,
   $secure_cookies                      = false,
   $django_session_engine               = undef,
+  $vhost_extra_params                  = undef,
+  # DEPRECATED PARAMETERS
+  $fqdn                                = undef,
 ) inherits ::horizon::params {
 
   $hypervisor_defaults = {
