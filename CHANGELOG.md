@@ -1,3 +1,19 @@
+##2016-05-20 - 7.1.0
+
+###Summary
+
+This is a feature and bugfix release in the Liberty series.
+
+####Features
+
+- Added ensure_resource for python-memcache package
+- Support custom TIME_ZONE option in localsettings
+
+####Bugfixes
+
+- Fix wrong use of os_package_type
+
+
 ##2015-11-25 - 7.0.0
 ###Summary
 
