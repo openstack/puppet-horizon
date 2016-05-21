@@ -203,10 +203,6 @@
 #    (optional) Tuskar-UI - Deployment mode ('poc' or 'scale')
 #    Defaults to 'scale'
 #
-#  [*custom_theme_path*]
-#    (optional) The directory location for the theme (e.g., "static/themes/blue")
-#    Default to undef
-#
 #  [*redirect_type*]
 #    (optional) What type of redirect to use when redirecting an http request
 #    for a user. This should be either 'temp' or 'permanent'. Setting this value
@@ -258,6 +254,25 @@
 #    (optional) The timezone of the server.
 #    Defaults to 'UTC'.
 #
+#  [*available_themes*]
+#    (optional) Hash of available themes. Each hash must have the followings keys
+#    for themes to be made available; name, label, path.
+#    Defaults to false
+#
+#    { 'name' => 'theme_name', 'label' => 'theme_label', 'path' => 'theme_path' }
+#
+#    Example:
+#    class { 'horizon':
+#      available_themes => [
+#        { 'name' => 'default', 'label' => 'Default', 'path' => 'themes/default'},
+#        { 'name' => 'material', 'label' => 'Material', 'path' => 'themes/material'},
+#      ]
+#    }
+#
+#  [*default_theme*]
+#    (optional) The default theme to use from list of available themes. Value should be theme_name.
+#    Defaults to false
+#
 # === DEPRECATED group/name
 #
 #  [*fqdn*]
@@ -266,6 +281,10 @@
 #    security reasons. Can be set to * in environments where security is
 #    deemed unimportant. Also used for Server Aliases in web configs.
 #    Defaults to undef
+#
+#  [*custom_theme_path*]
+#    (optional) The directory location for the theme (e.g., "static/themes/blue")
+#    Default to undef
 #
 # === Examples
 #
@@ -319,7 +338,6 @@ class horizon(
   $tuskar_ui_ironic_discoverd_url      = 'http://127.0.0.1:5050',
   $tuskar_ui_undercloud_admin_password = undef,
   $tuskar_ui_deployment_mode           = 'scale',
-  $custom_theme_path                   = undef,
   $redirect_type                       = 'permanent',
   $api_versions                        = {'identity' => '3'},
   $keystone_multidomain_support        = false,
@@ -332,7 +350,10 @@ class horizon(
   $secure_cookies                      = false,
   $django_session_engine               = undef,
   $vhost_extra_params                  = undef,
+  $available_themes                    = false,
+  $default_theme                       = false,
   # DEPRECATED PARAMETERS
+  $custom_theme_path                   = undef,
   $fqdn                                = undef,
 ) inherits ::horizon::params {
 
@@ -348,6 +369,10 @@ class horizon(
   } else {
     $final_allowed_hosts = $allowed_hosts
     $final_server_aliases = $server_aliases
+  }
+
+  if $custom_theme_path {
+    warning('custom_theme_path has been deprecated in mitaka and will be removed in a future release.')
   }
 
   # Default options for the OPENSTACK_CINDER_FEATURES section. These will

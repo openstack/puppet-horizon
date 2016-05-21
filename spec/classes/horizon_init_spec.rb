@@ -111,13 +111,17 @@ describe 'horizon' do
                                             'supported_provider_types' => ['flat', 'vxlan'], 'supported_vnic_types' => ['*'], 'default_ipv4_subnet_pool_label' => 'None', },
           :file_upload_temp_dir         => '/var/spool/horizon',
           :secure_cookies               => true,
-          :custom_theme_path            => 'static/themes/green',
           :api_versions                 => {'identity' => 2.0},
           :keystone_multidomain_support => true,
           :keystone_default_domain      => 'domain.tld',
           :overview_days_range          => 1,
           :session_timeout              => 1800,
           :timezone                     => 'Asia/Shanghai',
+          :available_themes             => [
+            { 'name' => 'default', 'label' => 'Default', 'path' => 'themes/default' },
+            { 'name' => 'material', 'label' => 'Material', 'path' => 'themes/material' },
+          ],
+          :default_theme                => 'default'
         })
       end
 
@@ -156,7 +160,11 @@ describe 'horizon' do
           'SECONDARY_ENDPOINT_TYPE = "ANY-VALUE"',
           'API_RESULT_LIMIT = 4682',
           'TIME_ZONE = "Asia/Shanghai"',
-          "CUSTOM_THEME_PATH = 'static/themes/green'",
+          "AVAILABLE_THEMES = [",
+          "  ('default', 'Default', 'themes/default'),",
+          "  ('material', 'Material', 'themes/material'),",
+          "]",
+          "DEFAULT_THEME = 'default'",
           "            'level': 'DEBUG',",
           "            'handlers': ['syslog'],",
           "SESSION_TIMEOUT = 1800",

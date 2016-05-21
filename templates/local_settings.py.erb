@@ -506,6 +506,18 @@ EXTERNAL_MONITORING = <%= @horizon_app_links %>
 CUSTOM_THEME_PATH = '<%= @custom_theme_path %>'
 <% end %>
 
+<% if @available_themes.kind_of?(Array) %>
+AVAILABLE_THEMES = [
+<% @available_themes.each do |theme| %>
+  ('<%= theme['name'] %>', '<%= theme['label'] %>', '<%= theme['path'] %>'),
+<% end %>
+]
+<% end %>
+
+<% if @default_theme %>
+DEFAULT_THEME = '<%= @default_theme %>'
+<% end %>
+
 # Set this to True to display an 'Admin Password' field on the Change Password
 # form to verify that it is indeed the admin logged-in who wants to change
 # the password.

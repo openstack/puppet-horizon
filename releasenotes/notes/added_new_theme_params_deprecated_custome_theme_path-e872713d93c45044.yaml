@@ -1,0 +1,8 @@
+---
+features:
+  - In mitaka release, available themes was introduced. A parameter was introduced to allow
+    configuration of this setting.
+  - In mitaka release, default theme was introduced where the value would be defined from
+    available themes. A new parameter was introduced to allow configuration of this setting.
+deprecations:
+  - custom_theme_path has been deprecated in mitaka release.
