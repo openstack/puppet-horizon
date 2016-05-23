@@ -186,23 +186,6 @@
 #    (optional) Selects the session engine for Django to use.
 #    Defaults to undef - will not add entry to local settings.
 #
-#  [*tuskar_ui*]
-#    (optional) Boolean to enable Tuskar-UI related configuration (http://tuskar-ui.readthedocs.org/)
-#    Defaults to false
-#
-#  [*tuskar_ui_ironic_discoverd_url*]
-#    (optional) Tuskar-UI - Ironic Discoverd API endpoint
-#    Defaults to 'http://127.0.0.1:5050'
-#
-#  [*tuskar_ui_undercloud_admin_password*]
-#    (optional) Tuskar-UI - Undercloud admin password used to authenticate admin user in Tuskar-UI.
-#    It is required by Heat to perform certain actions.
-#    Defaults to undef
-#
-#  [*tuskar_ui_deployment_mode*]
-#    (optional) Tuskar-UI - Deployment mode ('poc' or 'scale')
-#    Defaults to 'scale'
-#
 #  [*redirect_type*]
 #    (optional) What type of redirect to use when redirecting an http request
 #    for a user. This should be either 'temp' or 'permanent'. Setting this value
@@ -286,6 +269,23 @@
 #    (optional) The directory location for the theme (e.g., "static/themes/blue")
 #    Default to undef
 #
+#  [*tuskar_ui*]
+#    (optional) Boolean to enable Tuskar-UI related configuration (http://tuskar-ui.readthedocs#
+#    Defaults to undef
+#
+#  [*tuskar_ui_ironic_discoverd_url*]
+#    (optional) Tuskar-UI - Ironic Discoverd API endpoint
+#    Defaults to undef
+#
+#  [*tuskar_ui_undercloud_admin_password*]
+#    (optional) Tuskar-UI - Undercloud admin password used to authenticate admin user in Tuskar#
+#    It is required by Heat to perform certain actions.
+#    Defaults to undef
+#
+#  [*tuskar_ui_deployment_mode*]
+#    (optional) Tuskar-UI - Deployment mode ('poc' or 'scale')
+#    Defaults to undef
+#
 # === Examples
 #
 #  class { 'horizon':
@@ -334,10 +334,6 @@ class horizon(
   $file_upload_temp_dir                = '/tmp',
   $policy_files_path                   = undef,
   $policy_files                        = undef,
-  $tuskar_ui                           = false,
-  $tuskar_ui_ironic_discoverd_url      = 'http://127.0.0.1:5050',
-  $tuskar_ui_undercloud_admin_password = undef,
-  $tuskar_ui_deployment_mode           = 'scale',
   $redirect_type                       = 'permanent',
   $api_versions                        = {'identity' => '3'},
   $keystone_multidomain_support        = false,
@@ -355,6 +351,10 @@ class horizon(
   # DEPRECATED PARAMETERS
   $custom_theme_path                   = undef,
   $fqdn                                = undef,
+  $tuskar_ui                           = undef,
+  $tuskar_ui_ironic_discoverd_url      = unedf,
+  $tuskar_ui_undercloud_admin_password = undef,
+  $tuskar_ui_deployment_mode           = undef,
 ) inherits ::horizon::params {
 
   $hypervisor_defaults = {
@@ -373,6 +373,10 @@ class horizon(
 
   if $custom_theme_path {
     warning('custom_theme_path has been deprecated in mitaka and will be removed in a future release.')
+  }
+
+  if $tuskar_ui or $tuskar_ui_ironic_discoverd_url or $tuskar_ui_undercloud_admin_password or $tuskar_ui_deployment_mode {
+    warning('tuskar module is no longer maintained, all tuskar parameters will be removed after Newton cycle.')
   }
 
   # Default options for the OPENSTACK_CINDER_FEATURES section. These will
@@ -463,8 +467,4 @@ class horizon(
     }
   }
 
-  $tuskar_ui_deployment_mode_allowed_values = ['scale', 'poc']
-  if ! (member($tuskar_ui_deployment_mode_allowed_values, $tuskar_ui_deployment_mode)) {
-    fail("'${$tuskar_ui_deployment_mode}' is not correct value for tuskar_ui_deployment_mode parameter. It must be either 'scale' or 'poc'.")
-  }
 }
