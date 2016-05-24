@@ -84,7 +84,7 @@ describe 'horizon' do
         expect(content).not_to match(/^SESSION_ENGINE/)
       end
 
-      it { is_expected.not_to contain_file(params[:file_upload_temp_dir]) }
+      it { is_expected.not_to contain_file('/tmp') }
     end
 
     context 'with overridden parameters' do
