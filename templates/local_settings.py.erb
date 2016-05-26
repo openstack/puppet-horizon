@@ -43,9 +43,7 @@ ALLOWED_HOSTS = ['<%= @final_allowed_hosts %>', ]
 # https://docs.djangoproject.com/en/1.8/ref/settings/#secure-proxy-ssl-header
 #SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 <% if @secure_proxy_ssl_header %>
-SECURE_PROXY_SSL_HEADER = (<% @secure_proxy_ssl_header.sort.each do |header,value| -%>
-  '<%= header -%>', '<%= value -%>',
-<%end %>)
+SECURE_PROXY_SSL_HEADER = (<% @secure_proxy_ssl_header.sort.each do |header,value| -%>'<%= header -%>', '<%= value -%>'<%end %>)
 <% end %>
 
 # If Horizon is being served through SSL, then uncomment the following two
