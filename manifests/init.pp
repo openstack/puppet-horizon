@@ -256,6 +256,10 @@
 #    (optional) The default theme to use from list of available themes. Value should be theme_name.
 #    Defaults to false
 #
+#  [*secure_proxy_ssl_header*]
+#    (optional) The header set by an SSL terminating proxy.
+#    Defaults to undef.
+#
 # === DEPRECATED group/name
 #
 #  [*fqdn*]
@@ -348,6 +352,7 @@ class horizon(
   $vhost_extra_params                  = undef,
   $available_themes                    = false,
   $default_theme                       = false,
+  $secure_proxy_ssl_header             = undef,
   # DEPRECATED PARAMETERS
   $custom_theme_path                   = undef,
   $fqdn                                = undef,
