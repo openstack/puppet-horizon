@@ -352,7 +352,7 @@ class horizon(
   $custom_theme_path                   = undef,
   $fqdn                                = undef,
   $tuskar_ui                           = undef,
-  $tuskar_ui_ironic_discoverd_url      = unedf,
+  $tuskar_ui_ironic_discoverd_url      = undef,
   $tuskar_ui_undercloud_admin_password = undef,
   $tuskar_ui_deployment_mode           = undef,
 ) inherits ::horizon::params {
