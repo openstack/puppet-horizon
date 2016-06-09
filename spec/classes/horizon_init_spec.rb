@@ -60,7 +60,7 @@ describe 'horizon' do
           "ALLOWED_HOSTS = ['*', ]",
           "  'identity': 3,",
           "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
-          'OPENSTACK_KEYSTONE_URL = "http://127.0.0.1:5000/v2.0"',
+          'OPENSTACK_KEYSTONE_URL = "http://127.0.0.1:5000"',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "_member_"',
           "    'can_set_mount_point': True,",
           "    'can_set_password': False,",
@@ -274,8 +274,8 @@ describe 'horizon' do
       before do
         params.merge!({
           :available_regions => [
-            ['http://region-1.example.com:5000/v2.0', 'Region-1'],
-            ['http://region-2.example.com:5000/v2.0', 'Region-2']
+            ['http://region-1.example.com:5000', 'Region-1'],
+            ['http://region-2.example.com:5000', 'Region-2']
           ]
         })
       end
@@ -283,8 +283,8 @@ describe 'horizon' do
       it 'AVAILABLE_REGIONS is configured' do
         verify_concat_fragment_contents(catalogue, 'local_settings.py', [
           "AVAILABLE_REGIONS = [",
-          "    ('http://region-1.example.com:5000/v2.0', 'Region-1'),",
-          "    ('http://region-2.example.com:5000/v2.0', 'Region-2'),",
+          "    ('http://region-1.example.com:5000', 'Region-1'),",
+          "    ('http://region-2.example.com:5000', 'Region-2'),",
           "]"
         ])
       end

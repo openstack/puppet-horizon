@@ -50,7 +50,7 @@
 #    the URIDefaults to false. Defaults to false. (no app links)
 #
 #  [*keystone_url*]
-#    (optional) Full url of keystone public endpoint. (Defaults to 'http://127.0.0.1:5000/v2.0')
+#    (optional) Full url of keystone public endpoint. (Defaults to 'http://127.0.0.1:5000')
 #
 #  [*keystone_default_role*]
 #    (optional) Default Keystone role for new users. Defaults to '_member_'.
@@ -300,10 +300,10 @@
 #
 #  class { 'horizon':
 #    secret_key       => 's3cr3t',
-#    keystone_url => 'https://10.0.0.10:5000/v2.0',
+#    keystone_url => 'https://10.0.0.10:5000',
 #    available_regions => [
-#      ['http://region-1.example.com:5000/v2.0', 'Region-1'],
-#      ['http://region-2.example.com:5000/v2.0', 'Region-2']
+#      ['http://region-1.example.com:5000', 'Region-1'],
+#      ['http://region-2.example.com:5000', 'Region-2']
 #    ]
 #  }
 #
@@ -315,7 +315,7 @@ class horizon(
   $cache_server_ip                     = undef,
   $cache_server_port                   = '11211',
   $horizon_app_links                   = false,
-  $keystone_url                        = 'http://127.0.0.1:5000/v2.0',
+  $keystone_url                        = 'http://127.0.0.1:5000',
   $keystone_default_role               = '_member_',
   $django_debug                        = 'False',
   $openstack_endpoint_type             = undef,
