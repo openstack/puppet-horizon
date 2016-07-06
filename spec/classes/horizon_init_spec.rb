@@ -31,14 +31,20 @@ describe 'horizon' do
           )
       }
       it { is_expected.to contain_exec('refresh_horizon_django_cache').with({
-          :command     => '/usr/share/openstack-dashboard/manage.py collectstatic --noinput --clear && /usr/share/openstack-dashboard/manage.py compress --force',
+          :command     => '/usr/share/openstack-dashboard/manage.py collectstatic --noinput --clear',
+          :refreshonly => true,
+      })}
+      it { is_expected.to contain_exec('refresh_horizon_django_compress').with({
+          :command     => '/usr/share/openstack-dashboard/manage.py compress --force',
           :refreshonly => true,
       })}
       it {
         if facts[:os_package_type] == 'rpm'
           is_expected.to contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]')
+          is_expected.to contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_compress]')
         else
           is_expected.to_not contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]')
+          is_expected.to contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_compress]')
         end
       }
 
@@ -167,6 +173,7 @@ describe 'horizon' do
       end
 
       it { is_expected.not_to contain_file(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]') }
+      it { is_expected.not_to contain_file(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_compress]') }
 
       it { is_expected.to contain_file(params[:file_upload_temp_dir]) }
     end
@@ -185,6 +192,7 @@ describe 'horizon' do
       end
 
       it { is_expected.to contain_exec('refresh_horizon_django_cache') }
+      it { is_expected.to contain_exec('refresh_horizon_django_compress') }
     end
 
     context 'installs python memcache library when cache_backend is set to memcache' do
