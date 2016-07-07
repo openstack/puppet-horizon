@@ -19,13 +19,7 @@ describe 'horizon::wsgi::apache' do
     File.expand_path(File.join(__FILE__, '..', '..', 'fixtures'))
   end
 
-  let :facts do
-    { :concat_basedir => '/var/lib/puppet/concat',
-      :fqdn           => 'some.host.tld'
-    }
-  end
-
-  shared_examples 'apache for horizon' do
+  shared_examples_for 'apache for horizon' do
 
     context 'with default parameters' do
       it 'configures apache' do
@@ -186,27 +180,7 @@ describe 'horizon::wsgi::apache' do
     end
   end
 
-  context 'on RedHat platforms' do
-    before do
-      facts.merge!({
-        :osfamily               => 'RedHat',
-        :operatingsystemrelease => '6.0'
-      })
-    end
-
-    let :platforms_params do
-      { :http_service      => 'httpd',
-        :httpd_config_file => '/etc/httpd/conf.d/openstack-dashboard.conf',
-        :root_url          => '/dashboard',
-        :apache_user       => 'apache',
-        :apache_group      => 'apache',
-        :wsgi_user         => 'apache',
-        :wsgi_group        => 'apache',
-        :unix_user         => 'apache',
-        :unix_group        => 'apache' }
-    end
-
-    it_behaves_like 'apache for horizon'
+  shared_examples_for 'apache for horizon on RedHat platforms' do
     it {
       is_expected.to contain_class('apache::mod::wsgi').with(:wsgi_socket_prefix => '/var/run/wsgi')
     }
@@ -223,29 +197,7 @@ describe 'horizon::wsgi::apache' do
     end
   end
 
-  context 'on Debian platforms' do
-    before do
-      facts.merge!({
-        :osfamily               => 'Debian',
-        :operatingsystem        => 'Debian',
-        :operatingsystemrelease => '6.0',
-        :os_package_type        => 'debian'
-      })
-    end
-
-    let :platforms_params do
-      { :http_service      => 'apache2',
-        :httpd_config_file => '/etc/apache2/sites-available/openstack-dashboard-alias-only.conf',
-        :root_url          => '/horizon',
-        :apache_user       => 'www-data',
-        :apache_group      => 'www-data',
-        :wsgi_user         => 'horizon',
-        :wsgi_group        => 'horizon',
-        :unix_user         => 'horizon',
-        :unix_group        => 'horizon' }
-    end
-
-    it_behaves_like 'apache for horizon'
+  shared_examples_for 'apache for horizon on Debian platforms' do
     it 'configures webroot alias' do
       if (Gem::Version.new(Puppet.version) >= Gem::Version.new('4.0'))
         is_expected.to contain_apache__vhost('horizon_vhost').with(
@@ -259,39 +211,64 @@ describe 'horizon::wsgi::apache' do
     end
   end
 
-  context 'on Ubuntu platforms' do
-    before do
-      facts.merge!({
-        :osfamily               => 'Debian',
-        :operatingsystem        => 'Ubuntu',
-        :operatingsystemrelease => '14.04',
-        :os_package_type        => 'ubuntu'
-      })
-    end
 
-    let :platforms_params do
-      { :http_service      => 'apache2',
-        :httpd_config_file => '/etc/apache2/conf-available/openstack-dashboard.conf',
-        :root_url          => '/horizon',
-        :apache_user       => 'www-data',
-        :apache_group      => 'www-data',
-        :wsgi_user         => 'horizon',
-        :wsgi_group        => 'horizon',
-        :unix_user         => 'horizon',
-        :unix_group        => 'horizon' }
-    end
+  on_supported_os({
+    :supported_os   => OSDefaults.get_supported_os
+  }).each do |os,facts|
+    context "on #{os}" do
+      let (:facts) do
+        if facts[:operatingsystem] == 'Debian'
+          facts.merge!({:os_package_type => 'debian'})
+        end
 
-    it_behaves_like 'apache for horizon'
-    it 'configures webroot alias' do
-      if (Gem::Version.new(Puppet.version) >= Gem::Version.new('4.0'))
-        is_expected.to contain_apache__vhost('horizon_vhost').with(
-          'aliases' => [{'alias' => '/horizon/static', 'path' => '/usr/share/openstack-dashboard/static'}],
-        )
-      else
-        is_expected.to contain_apache__vhost('horizon_vhost').with(
-          'aliases' => [['alias', '/horizon/static'], ['path', '/usr/share/openstack-dashboard/static']],
-        )
+        facts.merge!(OSDefaults.get_facts({
+          :fqdn           => 'some.host.tld',
+          :processorcount => 2,
+          :concat_basedir => '/var/lib/puppet/concat'
+        }))
       end
+
+      let(:platforms_params) do
+        case facts[:osfamily]
+        when 'Debian'
+          case facts[:operatingsystem]
+          when 'Debian'
+            { :http_service      => 'apache2',
+              :httpd_config_file => '/etc/apache2/sites-available/openstack-dashboard-alias-only.conf',
+              :root_url          => '/horizon',
+              :apache_user       => 'www-data',
+              :apache_group      => 'www-data',
+              :wsgi_user         => 'horizon',
+              :wsgi_group        => 'horizon',
+              :unix_user         => 'horizon',
+              :unix_group        => 'horizon' }
+          when 'Ubuntu'
+            { :http_service      => 'apache2',
+              :httpd_config_file => '/etc/apache2/conf-available/openstack-dashboard.conf',
+              :root_url          => '/horizon',
+              :apache_user       => 'www-data',
+              :apache_group      => 'www-data',
+              :wsgi_user         => 'horizon',
+              :wsgi_group        => 'horizon',
+              :unix_user         => 'horizon',
+              :unix_group        => 'horizon' }
+          end
+        when 'RedHat'
+          { :http_service      => 'httpd',
+            :httpd_config_file => '/etc/httpd/conf.d/openstack-dashboard.conf',
+            :root_url          => '/dashboard',
+            :apache_user       => 'apache',
+            :apache_group      => 'apache',
+            :wsgi_user         => 'apache',
+            :wsgi_group        => 'apache',
+            :unix_user         => 'apache',
+            :unix_group        => 'apache' }
+        end
+      end
+
+      it_behaves_like 'apache for horizon'
+      it_behaves_like "apache for horizon on #{facts[:osfamily]} platforms"
     end
   end
+
 end

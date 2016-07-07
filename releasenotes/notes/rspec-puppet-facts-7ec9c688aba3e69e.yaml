@@ -1,0 +1,4 @@
+---
+other:
+  - Tests updated to leverage rspec-puppet-facts for testing
+    multiple OS versions.
