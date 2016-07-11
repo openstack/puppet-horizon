@@ -1,6 +1,7 @@
 # these parameters need to be accessed from several locations and
 # should be considered to be constant
 class horizon::params {
+  include ::openstacklib::defaults
 
   $logdir      = '/var/log/horizon'
   $django_wsgi = '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi'
