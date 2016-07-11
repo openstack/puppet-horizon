@@ -15,13 +15,7 @@ describe 'horizon' do
     File.expand_path(File.join(__FILE__, '..', '..', 'fixtures'))
   end
 
-  let :facts do
-    { :concat_basedir => '/var/lib/puppet/concat',
-      :fqdn           => 'some.host.tld'
-    }
-  end
-
-  shared_examples 'horizon' do
+  shared_examples_for 'horizon' do
 
     context 'with default parameters' do
       it {
@@ -396,23 +390,7 @@ describe 'horizon' do
     end
   end
 
-  context 'on RedHat platforms' do
-    before do
-      facts.merge!({
-        :osfamily               => 'RedHat',
-        :operatingsystemrelease => '6.0',
-        :os_package_type        => 'rpm'
-      })
-    end
-
-    let :platforms_params do
-      { :config_file       => '/etc/openstack-dashboard/local_settings',
-        :package_name      => 'openstack-dashboard',
-        :root_url          => '/dashboard' }
-    end
-
-    it_behaves_like 'horizon'
-
+  shared_examples_for 'horizon on RedHat' do
     it 'sets WEBROOT in local_settings.py' do
       verify_concat_fragment_contents(catalogue, 'local_settings.py', [
         "WEBROOT = '/dashboard/'",
@@ -420,24 +398,7 @@ describe 'horizon' do
     end
   end
 
-  context 'on Debian platforms' do
-    before do
-      facts.merge!({
-        :osfamily               => 'Debian',
-        :operatingsystemrelease => '6.0',
-        :operatingsystem        => 'Debian',
-        :os_package_type        => 'debian'
-      })
-    end
-
-    let :platforms_params do
-      { :config_file       => '/etc/openstack-dashboard/local_settings.py',
-        :package_name      => 'openstack-dashboard-apache',
-        :root_url          => '/horizon' }
-    end
-
-    it_behaves_like 'horizon'
-
+  shared_examples_for 'horizon on Debian' do
     it 'sets WEBROOT in local_settings.py' do
       verify_concat_fragment_contents(catalogue, 'local_settings.py', [
         "WEBROOT = '/horizon/'",
@@ -445,28 +406,34 @@ describe 'horizon' do
     end
   end
 
-  context 'on Ubuntu platforms' do
-    before do
-      facts.merge!({
-        :osfamily               => 'Debian',
-        :operatingsystem        => 'Ubuntu',
-        :operatingsystemrelease => '14.04',
-        :os_package_type        => 'ubuntu'
-      })
-    end
+  on_supported_os({
+    :supported_os   => OSDefaults.get_supported_os
+  }).each do |os,facts|
+    context "on #{os}" do
+      let (:facts) do
+        facts.merge!(OSDefaults.get_facts({
+          :fqdn           => 'some.host.tld',
+          :processorcount => 2,
+          :concat_basedir => '/var/lib/puppet/concat'
+        }))
+      end
 
-    let :platforms_params do
-      { :config_file       => '/etc/openstack-dashboard/local_settings.py',
-        :package_name      => 'openstack-dashboard',
-        :root_url          => '/horizon' }
-    end
+      let(:platforms_params) do
+        case facts[:osfamily]
+        when 'Debian'
+          { :config_file       => '/etc/openstack-dashboard/local_settings.py',
+            :package_name      => 'openstack-dashboard',
+            :root_url          => '/horizon' }
+        when 'RedHat'
+          { :config_file       => '/etc/openstack-dashboard/local_settings',
+            :package_name      => 'openstack-dashboard',
+            :root_url          => '/dashboard' }
+        end
+      end
 
-    it_behaves_like 'horizon'
-
-    it 'sets WEBROOT in local_settings.py' do
-      verify_concat_fragment_contents(catalogue, 'local_settings.py', [
-        "WEBROOT = '/horizon/'",
-      ])
+      it_behaves_like 'horizon'
+      it_behaves_like "horizon on #{facts[:osfamily]}"
     end
   end
+
 end
