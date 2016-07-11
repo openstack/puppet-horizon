@@ -116,6 +116,16 @@
 #    'enable_backup': Boolean to enable or disable Cinders's backup feature.
 #      Defaults to False.
 #
+#  [*keystone_options*]
+#    (optional) A hash of parameters to enable features specific to
+#    Keystone.  These include:
+#    'name': String
+#    'can_edit_user': Boolean
+#    'can_edit_group': Boolean
+#    'can_edit_project': Boolean
+#    'can_edit_domain': Boolean
+#    'can_edit_role': Boolean
+#
 #  [*neutron_options*]
 #    (optional) A hash of parameters to enable features specific to
 #    Neutron.  These include:
@@ -314,6 +324,7 @@ class horizon(
   $compress_offline                    = true,
   $hypervisor_options                  = {},
   $cinder_options                      = {},
+  $keystone_options                    = {},
   $neutron_options                     = {},
   $file_upload_temp_dir                = '/tmp',
   $policy_files_path                   = undef,
@@ -360,6 +371,18 @@ class horizon(
     'enable_backup'         => false,
   }
 
+  # Default options for the OPENSTACK_KEYSTONE_BACKEND section. These will
+  # be merged with user-provided options when the local_settings.py.erb
+  # template is interpolated.
+  $keystone_defaults = {
+    'name'             => 'native',
+    'can_edit_user'    => true,
+    'can_edit_group'   => true,
+    'can_edit_project' => true,
+    'can_edit_domain'  => true,
+    'can_edit_role'    => true,
+  }
+
   # Default options for the OPENSTACK_NEUTRON_NETWORK section.  These will
   # be merged with user-provided options when the local_settings.py.erb
   # template is interpolated.
@@ -378,6 +401,7 @@ class horizon(
 
   $hypervisor_options_real = merge($hypervisor_defaults,$hypervisor_options)
   $cinder_options_real     = merge($cinder_defaults,$cinder_options)
+  $keystone_options_real   = merge($keystone_defaults, $keystone_options)
   $neutron_options_real    = merge($neutron_defaults,$neutron_options)
   validate_hash($api_versions)
 

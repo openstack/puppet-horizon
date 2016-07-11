@@ -270,14 +270,19 @@ OPENSTACK_SSL_NO_VERIFY = True
 # can_edit_user to False and name to 'ldap'.
 #
 # TODO(tres): Remove these once Keystone has an API to identify auth backend.
+<% if @keystone_options_real.kind_of?(Hash) %>
 OPENSTACK_KEYSTONE_BACKEND = {
-    'name': 'native',
-    'can_edit_user': True,
-    'can_edit_group': True,
-    'can_edit_project': True,
-    'can_edit_domain': True,
-    'can_edit_role': True,
+<% @keystone_options_real.sort.each do |opt_name,opt_val| -%>
+  <%- if opt_val == true or opt_val == false -%>
+    '<%= opt_name -%>': <%= opt_val.to_s.capitalize -%>,
+  <%- elsif opt_val == 'None' -%>
+    '<%= opt_name -%>': None,
+  <%- else -%>
+    '<%= opt_name -%>': '<%= opt_val -%>',
+  <%-end-%>
+<% end -%>
 }
+<% end -%>
 
 # Setting this to True, will add a new "Retrieve Password" action on instance,
 # allowing Admin session password retrieval/decryption.
