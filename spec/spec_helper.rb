@@ -12,7 +12,7 @@ end
 
 def verify_concat_fragment_contents(subject, title, expected_lines)
   content = subject.resource('concat::fragment', title).send(:parameters)[:content]
-  expect(content.split("\n") & expected_lines).to eq(expected_lines)
+  expect(expected_lines & content.split("\n")).to eq(expected_lines)
 end
 
 at_exit { RSpec::Puppet::Coverage.report! }
