@@ -433,13 +433,22 @@ class horizon(
   }
 
   exec { 'refresh_horizon_django_cache':
-    command     => "${::horizon::params::manage_py} collectstatic --noinput --clear && ${::horizon::params::manage_py} compress --force",
+    command     => "${::horizon::params::manage_py} collectstatic --noinput --clear",
     refreshonly => true,
     require     => Package['horizon'],
   }
 
-  if $::os_package_type == 'rpm' and $compress_offline {
-    Concat[$::horizon::params::config_file] ~> Exec['refresh_horizon_django_cache']
+  exec { 'refresh_horizon_django_compress':
+    command     => "${::horizon::params::manage_py} compress --force",
+    refreshonly => true,
+    require     => Package['horizon'],
+  }
+
+  if $compress_offline {
+    Concat[$::horizon::params::config_file] ~> Exec['refresh_horizon_django_compress']
+    if $::os_package_type == 'rpm' {
+      Concat[$::horizon::params::config_file] ~> Exec['refresh_horizon_django_cache'] -> Exec['refresh_horizon_django_compress']
+    }
   }
 
   if $configure_apache {
