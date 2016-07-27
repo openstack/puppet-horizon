@@ -384,7 +384,7 @@ class horizon(
   if $cache_backend =~ /MemcachedCache/ {
     ensure_packages('python-memcache',
       { name   => $::horizon::params::memcache_package,
-        tag    => ['openstack', 'horizon-package']})
+        tag    => ['openstack']})
   }
 
   package { 'horizon':
