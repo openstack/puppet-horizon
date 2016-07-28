@@ -266,6 +266,11 @@
 #    (optional) The default theme to use from list of available themes. Value should be theme_name.
 #    Defaults to false
 #
+# [*password_autocomplete*]
+#   (optional) Whether to instruct the client browser to autofill the login form password
+#   Valid values are 'on' and 'off'
+#   Defaults to 'off'
+#
 # === DEPRECATED group/name
 #
 #  [*fqdn*]
@@ -359,6 +364,7 @@ class horizon(
   $vhost_extra_params                  = undef,
   $available_themes                    = false,
   $default_theme                       = false,
+  $password_autocomplete               = 'off',
   # DEPRECATED PARAMETERS
   $custom_theme_path                   = undef,
   $fqdn                                = undef,
@@ -430,6 +436,7 @@ class horizon(
   $keystone_options_real   = merge($keystone_defaults, $keystone_options)
   $neutron_options_real    = merge($neutron_defaults,$neutron_options)
   validate_hash($api_versions)
+  validate_re($password_autocomplete, ['^on$', '^off$'])
 
   if $cache_backend =~ /MemcachedCache/ {
     ensure_packages('python-memcache',
