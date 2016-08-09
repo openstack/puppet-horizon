@@ -1,0 +1,6 @@
+---
+features:
+  - A new panel for glance images based on angularjs
+    has been created in horizon. New parameter images_panel
+    has been added to puppet-horizon to configure
+    the enabled panel for images, legacy or angular.

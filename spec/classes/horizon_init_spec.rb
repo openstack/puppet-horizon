@@ -60,6 +60,7 @@ describe 'horizon' do
           "ALLOWED_HOSTS = ['*', ]",
           "  'identity': 3,",
           'HORIZON_CONFIG["password_autocomplete"] = "off"',
+          'HORIZON_CONFIG["images_panel"] = "legacy"',
           "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
           'OPENSTACK_KEYSTONE_URL = "http://127.0.0.1:5000"',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "_member_"',
@@ -125,6 +126,7 @@ describe 'horizon' do
           ],
           :default_theme                => 'default',
           :password_autocomplete        => 'on',
+          :images_panel                 => 'angular',
         })
       end
 
@@ -138,6 +140,7 @@ describe 'horizon' do
           "OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True",
           "OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = 'domain.tld'",
           'HORIZON_CONFIG["password_autocomplete"] = "on"',
+          'HORIZON_CONFIG["images_panel"] = "angular"',
           "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
           "                'DEAD_RETRY': 1,",
           "                'SERVER_RETRIES': 1,",

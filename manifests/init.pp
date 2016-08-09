@@ -271,6 +271,11 @@
 #   Valid values are 'on' and 'off'
 #   Defaults to 'off'
 #
+# [*images_panel*]
+#   (optional) Enabled panel for images.
+#   Valid values are 'legacy' and 'angular'
+#   Defaults to 'legacy'
+#
 # === DEPRECATED group/name
 #
 #  [*fqdn*]
@@ -365,6 +370,7 @@ class horizon(
   $available_themes                    = false,
   $default_theme                       = false,
   $password_autocomplete               = 'off',
+  $images_panel                        = 'legacy',
   # DEPRECATED PARAMETERS
   $custom_theme_path                   = undef,
   $fqdn                                = undef,
@@ -437,6 +443,7 @@ class horizon(
   $neutron_options_real    = merge($neutron_defaults,$neutron_options)
   validate_hash($api_versions)
   validate_re($password_autocomplete, ['^on$', '^off$'])
+  validate_re($images_panel, ['^legacy$', '^angular$'])
 
   if $cache_backend =~ /MemcachedCache/ {
     ensure_packages('python-memcache',

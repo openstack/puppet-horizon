@@ -137,6 +137,10 @@ HORIZON_CONFIG["password_autocomplete"] = "<%= @password_autocomplete %>"
 # including on the login form.
 #HORIZON_CONFIG["disable_password_reveal"] = False
 
+# Configure enabled image panel. It can be legacy or angular.
+#HORIZON_CONFIG["images_panel"] = "legacy"
+HORIZON_CONFIG["images_panel"] = "<%= @images_panel %>"
+
 LOCAL_PATH = os.path.dirname(os.path.abspath(__file__))
 
 # Set custom secret key:
