@@ -248,9 +248,9 @@
 #    Defaults to 'UTC'.
 #
 #  [*available_themes*]
-#    (optional) Hash of available themes. Each hash must have the followings keys
-#    for themes to be made available; name, label, path.
-#    Defaults to false
+#    (optional) An array of hashes detailing available themes. Each hash must
+#    have the followings keys for themes to be made available; name, label,
+#    path. Defaults to false
 #
 #    { 'name' => 'theme_name', 'label' => 'theme_label', 'path' => 'theme_path' }
 #
@@ -261,6 +261,11 @@
 #        { 'name' => 'material', 'label' => 'Material', 'path' => 'themes/material'},
 #      ]
 #    }
+#
+#   Or in Hiera:
+#   horizon::available_themes:
+#     - { name: 'default', label: 'Default', path: 'themes/default' }
+#     - { name: 'material', label: 'Material', path: 'themes/material' }
 #
 #  [*default_theme*]
 #    (optional) The default theme to use from list of available themes. Value should be theme_name.
