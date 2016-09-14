@@ -391,7 +391,8 @@ class horizon(
   }
 
   if $fqdn {
-    warning('Parameter fqdn is deprecated. Please use parameter allowed_hosts for setting ALLOWED_HOSTS in settings_local.py and parameter server_aliases for setting ServerAlias directives in vhost.conf.')
+    warning('Parameter fqdn is deprecated. Please use parameter allowed_hosts for setting ALLOWED_HOSTS in \
+              settings_local.py and parameter server_aliases for setting ServerAlias directives in vhost.conf.')
     $final_allowed_hosts = $fqdn
     $final_server_aliases = $fqdn
   } else {
