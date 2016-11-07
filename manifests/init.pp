@@ -266,6 +266,10 @@
 #    (optional) The default theme to use from list of available themes. Value should be theme_name.
 #    Defaults to false
 #
+#  [*password_retrieve*]
+#     (optional) Enables the use of 'Retrieve Password' in the Horizon Web UI.
+#     Defaults to false
+#
 # === DEPRECATED group/name
 #
 #  [*fqdn*]
@@ -359,6 +363,7 @@ class horizon(
   $vhost_extra_params                  = undef,
   $available_themes                    = false,
   $default_theme                       = false,
+  $password_retrieve                   = false,
   # DEPRECATED PARAMETERS
   $custom_theme_path                   = undef,
   $fqdn                                = undef,
