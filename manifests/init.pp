@@ -281,6 +281,10 @@
 #   Valid values are 'legacy' and 'angular'
 #   Defaults to 'legacy'
 #
+#  [*password_retrieve*]
+#    (optional) Enables the use of 'Retrieve Password' in the Horizon Web UI.
+#    Defaults to false
+#
 # === DEPRECATED group/name
 #
 #  [*fqdn*]
@@ -376,6 +380,7 @@ class horizon(
   $default_theme                       = false,
   $password_autocomplete               = 'off',
   $images_panel                        = 'legacy',
+  $password_retrieve                   = false,
   # DEPRECATED PARAMETERS
   $custom_theme_path                   = undef,
   $fqdn                                = undef,

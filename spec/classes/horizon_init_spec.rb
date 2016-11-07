@@ -127,6 +127,7 @@ describe 'horizon' do
           :default_theme                => 'default',
           :password_autocomplete        => 'on',
           :images_panel                 => 'angular',
+          :password_retrieve            => true,
         })
       end
 
@@ -171,6 +172,7 @@ describe 'horizon' do
           "    'profile_support': 'cisco',",
           "    'supported_provider_types': ['flat', 'vxlan'],",
           "    'supported_vnic_types': ['*'],",
+          'OPENSTACK_ENABLE_PASSWORD_RETRIEVE = True',
           'OPENSTACK_ENDPOINT_TYPE = "internalURL"',
           'SECONDARY_ENDPOINT_TYPE = "ANY-VALUE"',
           'API_RESULT_LIMIT = 4682',
