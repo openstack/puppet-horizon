@@ -285,6 +285,10 @@
 #    (optional) Enables the use of 'Retrieve Password' in the Horizon Web UI.
 #    Defaults to false
 #
+#  [*disable_password_reveal*]
+#    (optional) Disables the use of reveal button for passwords in the UI.
+#    Defaults to false
+#
 # === DEPRECATED group/name
 #
 #  [*fqdn*]
@@ -381,6 +385,7 @@ class horizon(
   $password_autocomplete               = 'off',
   $images_panel                        = 'legacy',
   $password_retrieve                   = false,
+  $disable_password_reveal             = false,
   # DEPRECATED PARAMETERS
   $custom_theme_path                   = undef,
   $fqdn                                = undef,
