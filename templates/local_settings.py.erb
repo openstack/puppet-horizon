@@ -140,6 +140,14 @@ HORIZON_CONFIG["password_autocomplete"] = "<%= @password_autocomplete %>"
 HORIZON_CONFIG["disable_password_reveal"] = True
 <% end %>
 
+# Set this to True to display an 'Admin Password' field on the Change Password
+# form to verify that it is indeed the admin logged-in who wants to change the
+# password
+#HORIZON_CONFIG["enforce_password_check"] = False
+<% if @enforce_password_check == true %>
+HORIZON_CONFIG["enforce_password_check"] = True
+<% end %>
+
 # Configure enabled image panel. It can be legacy or angular.
 #HORIZON_CONFIG["images_panel"] = "legacy"
 HORIZON_CONFIG["images_panel"] = "<%= @images_panel %>"

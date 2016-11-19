@@ -427,6 +427,20 @@ describe 'horizon' do
         ])
       end
     end
+
+    context 'with enforce password check enabled' do
+      before do
+        params.merge!({
+          :enforce_password_check => true
+        })
+      end
+
+      it 'enforce_password_check is configured' do
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+          'HORIZON_CONFIG["enforce_password_check"] = True',
+        ])
+      end
+    end
   end
 
   shared_examples_for 'horizon on RedHat' do
