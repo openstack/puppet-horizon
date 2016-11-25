@@ -454,9 +454,9 @@ settings_local.py and parameter server_aliases for setting ServerAlias directive
   validate_re($images_panel, ['^legacy$', '^angular$'])
 
   if $cache_backend =~ /MemcachedCache/ {
-    ensure_packages('python-memcache',
+    ensure_resources('package', { 'python-memcache' =>
       { name   => $::horizon::params::memcache_package,
-        tag    => ['openstack']})
+        tag    => ['openstack']}})
   }
 
   package { 'horizon':
