@@ -968,3 +968,7 @@ REST_API_REQUIRED_SETTINGS = ['OPENSTACK_HYPERVISOR_FEATURES',
 # For more information see:
 # http://tinyurl.com/anticlickjack
 #DISALLOW_IFRAME_EMBED = True
+<% if @disallow_iframe_embed == true %>
+HORIZON_CONFIG["disallow_iframe_embed"] = True
+<% end %>
+

@@ -1,0 +1,5 @@
+---
+features:
+  - Making DISALLOW_IFRAME_EMBED in local_settings.py a configurable value
+    DISALLOW_IFRAME_EMBED can be used to prevent Horizon from being embedded
+    within an iframe

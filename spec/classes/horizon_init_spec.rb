@@ -442,6 +442,20 @@ describe 'horizon' do
         ])
       end
     end
+
+    context 'with disallow iframe embed enabled' do
+      before do
+        params.merge!({
+                        :disallow_iframe_embed => true
+                      })
+      end
+
+      it 'disallow_iframe_embed is configured' do
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+                                          'HORIZON_CONFIG["disallow_iframe_embed"] = True',
+                                        ])
+      end
+    end
   end
 
   shared_examples_for 'horizon on RedHat' do

@@ -299,6 +299,12 @@
 #    recommended if you're running horizon behind a proxy.
 #    Defaults to false
 #
+#  [*disallow_iframe_embed*]
+#    (optional)DISALLOW_IFRAME_EMBED can be used to prevent Horizon from being embedded
+#    within an iframe. Legacy browsers are still vulnerable to a Cross-Frame
+#    Scripting (XFS) vulnerability, so this option allows extra security hardening
+#    where iframes are not used in deployment. Default setting is True.
+#
 # === DEPRECATED group/name
 #
 #  [*fqdn*]
@@ -398,6 +404,7 @@ class horizon(
   $disable_password_reveal             = false,
   $enforce_password_check              = false,
   $enable_secure_proxy_ssl_header      = false,
+  $disallow_iframe_embed               = true,
   # DEPRECATED PARAMETERS
   $custom_theme_path                   = undef,
   $fqdn                                = undef,
