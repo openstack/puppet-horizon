@@ -319,6 +319,12 @@
 #        'acme_saml2' => ['acme', 'saml2'],
 #      }
 #
+#  [*enable_secure_proxy_ssl_header*]
+#    (optional) Enables the SECURE_PROXY_SSL_HEADER option which makes django
+#    take the X-Forwarded-Proto header into account. Note that this is only
+#    recommended if you're running horizon behind a proxy.
+#    Defaults to false
+#
 # === DEPRECATED group/name
 #
 #  [*fqdn*]
@@ -418,6 +424,7 @@ class horizon(
   $websso_initial_choice               = undef,
   $websso_choices                      = undef,
   $websso_idp_mapping                  = undef,
+  $enable_secure_proxy_ssl_header      = false,
   # DEPRECATED PARAMETERS
   $custom_theme_path                   = undef,
   $fqdn                                = undef,
