@@ -1,0 +1,5 @@
+---
+features:
+  - Support was added to enable/disable the SECURE_PROXY_SSL_HEADER which
+    enables horizon (via Django) to process the X-Forwarded-Proto header. This
+    done with the "enable_secure_proxy_ssl_header" in the manifest.

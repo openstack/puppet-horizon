@@ -293,6 +293,12 @@
 #    (optional) Disables Admin password prompt on Change Password form.
 #    Defaults to false
 #
+#  [*enable_secure_proxy_ssl_header*]
+#    (optional) Enables the SECURE_PROXY_SSL_HEADER option which makes django
+#    take the X-Forwarded-Proto header into account. Note that this is only
+#    recommended if you're running horizon behind a proxy.
+#    Defaults to false
+#
 # === DEPRECATED group/name
 #
 #  [*fqdn*]
@@ -391,6 +397,7 @@ class horizon(
   $password_retrieve                   = false,
   $disable_password_reveal             = false,
   $enforce_password_check              = false,
+  $enable_secure_proxy_ssl_header      = false,
   # DEPRECATED PARAMETERS
   $custom_theme_path                   = undef,
   $fqdn                                = undef,
