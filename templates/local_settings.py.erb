@@ -127,6 +127,16 @@ HORIZON_CONFIG = {
 #    "regex": '.*',
 #    "help_text": _("Your password does not meet the requirements."),
 #}
+<%if @password_validator %>
+HORIZON_CONFIG["password_validator"] = {
+    "regex": '<%= @password_validator %>',
+<%- if @password_validator_help -%>
+    "help_text": _("<%= @password_validator_help -%>"),
+<%- else -%>
+    "help_text": _("Your password does not meet the requirements."),
+<%- end -%>
+}
+<% end %>
 
 # Disable simplified floating IP address management for deployments with
 # multiple floating IP pools or complex network requirements.
