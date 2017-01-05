@@ -258,6 +258,27 @@ OPENSTACK_KEYSTONE_DEFAULT_ROLE = "<%= @keystone_default_role %>"
 #    "acme_oidc": ("acme", "oidc"),
 #    "acme_saml2": ("acme", "saml2")
 #}
+<% if @websso_enabled -%>
+WEBSSO_ENABLED = <%= @websso_enabled %>
+<% end -%>
+<% if @websso_initial_choice -%>
+WEBSSO_INITIAL_CHOICE = "<%= @websso_initial_choice %>"
+<% end -%>
+<% if @websso_choices.kind_of?(Array) %>
+WEBSSO_CHOICES = (
+    ("credentials", _("Keystone Credentials")),
+<% @websso_choices.each do |r| -%>
+    ("<%= r[0] -%>", _("<%= r[1] -%>")),
+<% end -%>
+)
+<% end -%>
+<% if @websso_idp_mapping.kind_of?(Hash) %>
+WEBSSO_IDP_MAPPING = {
+<% @websso_idp_mapping.each do |key,r| -%>
+    "<%= key -%>": ("<%= r[0] -%>", "<%= r[1] -%>"),
+<% end -%>
+}
+<% end -%>
 
 # Disable SSL certificate checks (useful for self-signed certificates):
 #OPENSTACK_SSL_NO_VERIFY = True

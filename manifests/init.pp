@@ -281,6 +281,44 @@
 #   Valid values are 'legacy' and 'angular'
 #   Defaults to 'legacy'
 #
+#  [*websso_enabled*]
+#    (optional)Enable the WEBSSO_ENABLED option which turn on the keystone web
+#    single-sign-on if set to true.
+#    Default to false
+#
+#  [*websso_initial_choice*]
+#    (optional)Set the WEBSSO_INITIAL_CHOICE option used to determine which
+#    authentication choice to show as default.
+#    Defaults to undef
+#
+#  [*websso_choices*]
+#    (optional)Set the WEBSSO_CHOICES option, A list of authentication
+#    mechanisms which include keystone federation protocols and identity
+#    provide protocol mapping keys (WEBSSO_IDP_MAPPING).
+#    Default to undef
+#
+#    Example:
+#      websso_choices => [
+#        ['oidc', 'OpenID Connect'],
+#        ['saml2', 'Security Assertion Markup Language']
+#      ]
+#
+#  [*websso_idp_mapping*]
+#    (optional)Set the WEBSSO_IDP_MAPPING option.
+#    A dictionary of specific identity provider and protocol combinations.
+#    From theselected authentication mechanism, the value will be looked up as
+#    keys in the dictionary. If a match is found, it will redirect the user to
+#    a identity provider and federation protocol specific WebSSO endpoint in
+#    keystone, otherwise it will use the value as the protocol_id when
+#    redirecting to the WebSSO by protocol endpoint.
+#    Default to undef
+#
+#    Example:
+#      websso_idp_mapping => {
+#        'acme_oidc'  => ['acme', 'oidc'],
+#        'acme_saml2' => ['acme', 'saml2'],
+#      }
+#
 # === DEPRECATED group/name
 #
 #  [*fqdn*]
@@ -376,6 +414,10 @@ class horizon(
   $default_theme                       = false,
   $password_autocomplete               = 'off',
   $images_panel                        = 'legacy',
+  $websso_enabled                      = false,
+  $websso_initial_choice               = undef,
+  $websso_choices                      = undef,
+  $websso_idp_mapping                  = undef,
   # DEPRECATED PARAMETERS
   $custom_theme_path                   = undef,
   $fqdn                                = undef,

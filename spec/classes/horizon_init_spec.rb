@@ -410,6 +410,38 @@ describe 'horizon' do
         ])
       end
     end
+
+    context 'with websso enabled' do
+      before do
+        params.merge!({
+                        :websso_enabled => 'True',
+                        :websso_initial_choice => 'acme',
+                        :websso_choices => [
+                          ['oidc', 'OpenID Connect'],
+                          ['saml2', 'Security Assertion Markup Language'],
+                        ],
+                        :websso_idp_mapping => {
+                          'acme_oidc'  => ['acme', 'oidc'],
+                          'acme_saml2' => ['acme', 'saml2'],
+                        }
+                      })
+      end
+      it 'configures websso options' do
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+                                          'WEBSSO_ENABLED = True',
+                                          'WEBSSO_INITIAL_CHOICE = "acme"',
+                                          'WEBSSO_CHOICES = (',
+                                          '    ("credentials", _("Keystone Credentials")),',
+                                          '    ("oidc", _("OpenID Connect")),',
+                                          '    ("saml2", _("Security Assertion Markup Language")),',
+                                          ')',
+                                          'WEBSSO_IDP_MAPPING = {',
+                                          '    "acme_oidc": ("acme", "oidc"),',
+                                          '    "acme_saml2": ("acme", "saml2"),',
+                                          '}',
+                                        ])
+      end
+    end
   end
 
   shared_examples_for 'horizon on RedHat' do
