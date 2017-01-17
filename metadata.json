@@ -1,6 +1,6 @@
 {
   "name": "openstack-horizon",
-  "version": "9.4.1",
+  "version": "9.5.0",
   "author": "Puppet Labs and OpenStack Contributors",
   "summary": "Puppet module for OpenStack Horizon",
   "license": "Apache-2.0",
