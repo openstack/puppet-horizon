@@ -1,0 +1,3 @@
+---
+fixes:
+  - Fixes wrong apache vhost config when root_url is empty

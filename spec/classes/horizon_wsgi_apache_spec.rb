@@ -195,6 +195,24 @@ describe 'horizon::wsgi::apache' do
         end
       end
 
+      context 'with root_url set to empty' do
+        before do
+          params.merge!({
+            :root_url => '',
+          })
+        end
+
+        it 'should not configure redirectmatch' do
+          is_expected.to_not contain_apache__vhost('horizon_vhost').with(
+            'redirectmatch_regexp' => '(.*)',
+            'redirectmatch_dest'   => '/'
+          )
+          is_expected.to_not contain_apache__vhost('horizon_ssl_vhost').with(
+            'redirectmatch_regexp' => '^/$',
+            'redirectmatch_dest'   => ''
+          )
+        end
+      end
 
     end
   end
