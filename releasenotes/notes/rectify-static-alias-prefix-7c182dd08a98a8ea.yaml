@@ -1,0 +1,4 @@
+---
+fixes:
+  - Rectify static alias prefix since starting from Ocata
+    on Debian platforms static files resides in /var/lib.

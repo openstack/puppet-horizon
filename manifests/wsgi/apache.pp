@@ -206,7 +206,7 @@ class horizon::wsgi::apache (
     priority                    => $priority,
     aliases                     => [{
       alias => "${root_url}/static",
-      path  => '/usr/share/openstack-dashboard/static',
+      path  => "${::horizon::params::static_path}/openstack-dashboard/static",
     }],
     port                        => $http_port,
     ssl_cert                    => $horizon_cert,

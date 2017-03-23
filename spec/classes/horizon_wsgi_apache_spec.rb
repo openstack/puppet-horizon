@@ -220,11 +220,11 @@ describe 'horizon::wsgi::apache' do
     it 'configures webroot alias' do
       if (Gem::Version.new(Puppet.version) >= Gem::Version.new('4.0'))
         is_expected.to contain_apache__vhost('horizon_vhost').with(
-          'aliases' => [{'alias' => '/horizon/static', 'path' => '/usr/share/openstack-dashboard/static'}],
+          'aliases' => [{'alias' => '/horizon/static', 'path' => '/var/lib/openstack-dashboard/static'}],
         )
       else
         is_expected.to contain_apache__vhost('horizon_vhost').with(
-          'aliases' => [['alias', '/horizon/static'], ['path', '/usr/share/openstack-dashboard/static']],
+          'aliases' => [['alias', '/horizon/static'], ['path', '/var/lib/openstack-dashboard/static']],
         )
       end
     end
