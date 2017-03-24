@@ -352,6 +352,10 @@
 #  [*password_validator_help*]
 #    (optional) Help text to display when password validation fails in horizon.
 #
+#  [*enable_user_pass*]
+#    (optional) Enable the password field while launching a Heat stack.
+#    Defaults to true
+#
 # === DEPRECATED group/name
 #
 #  [*fqdn*]
@@ -458,6 +462,7 @@ class horizon(
   $websso_idp_mapping                  = undef,
   $password_validator                  = undef,
   $password_validator_help             = undef,
+  $enable_user_pass                    = true,
   # DEPRECATED PARAMETERS
   $custom_theme_path                   = undef,
   $fqdn                                = undef,

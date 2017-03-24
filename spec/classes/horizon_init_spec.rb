@@ -76,7 +76,10 @@ describe 'horizon' do
           'API_RESULT_LIMIT = 1000',
           'TIME_ZONE = "UTC"',
           'COMPRESS_OFFLINE = True',
-          "FILE_UPLOAD_TEMP_DIR = '/tmp'"
+          "FILE_UPLOAD_TEMP_DIR = '/tmp'",
+          "OPENSTACK_HEAT_STACK = {",
+          "    'enable_user_pass': True",
+          "}",
         ])
 
         # From internals of verify_contents, get the contents to check for absence of a line
@@ -197,6 +200,19 @@ describe 'horizon' do
       it { is_expected.not_to contain_file(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_compress]') }
 
       it { is_expected.to contain_file(params[:file_upload_temp_dir]) }
+    end
+
+    context 'with enable_user_pass disabled' do
+      before do
+        params.merge!({ :enable_user_pass => false })
+      end
+      it {
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+          "OPENSTACK_HEAT_STACK = {",
+          "    'enable_user_pass': False",
+          "}",
+        ])
+      }
     end
 
     context 'with overridden parameters and cache_server_ip array' do

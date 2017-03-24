@@ -1,0 +1,5 @@
+---
+features:
+  - Added ability to enable/disable the password field while launching
+    a Heat stack by setting the enable_user_pass parameter of the
+    OPENSTACK_HEAT_STACK dictionary in local_settings.py.

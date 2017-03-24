@@ -453,6 +453,13 @@ OPENSTACK_NEUTRON_NETWORK = {
 #OPENSTACK_HEAT_STACK = {
 #   'enable_user_pass': True,
 #}
+OPENSTACK_HEAT_STACK = {
+<%- if @enable_user_pass -%>
+    'enable_user_pass': True
+<%- else -%>
+    'enable_user_pass': False
+<%- end -%>
+}
 
 # The OPENSTACK_IMAGE_BACKEND settings can be used to customize features
 # in the OpenStack Dashboard related to the Image service, such as the list
