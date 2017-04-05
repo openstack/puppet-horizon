@@ -1,61 +1,61 @@
 {
-  "name": "openstack-horizon",
-  "version": "11.0.0-dev",
-  "author": "Puppet Labs and OpenStack Contributors",
-  "summary": "Puppet module for OpenStack Horizon",
-  "license": "Apache-2.0",
-  "source": "git://github.com/openstack/puppet-horizon.git",
-  "project_page": "https://launchpad.net/puppet-horizon",
-  "issues_url": "https://bugs.launchpad.net/puppet-horizon",
-  "requirements": [
-    {
-      "name": "pe",
-      "version_requirement": "4.x"
-    },
-    {
-      "name": "puppet",
-      "version_requirement": "4.x"
-    }
-  ],
-  "operatingsystem_support": [
-    {
-      "operatingsystem": "Debian",
-      "operatingsystemrelease": [
-        "8"
-      ]
-    },
-    {
-      "operatingsystem": "Fedora",
-      "operatingsystemrelease": [
-        "24"
-      ]
-    },
-    {
-      "operatingsystem": "RedHat",
-      "operatingsystemrelease": [
-        "7"
-      ]
-    },
-    {
-      "operatingsystem": "Ubuntu",
-      "operatingsystemrelease": [
-        "16.04"
-      ]
-    }
-  ],
-  "description": "Installs and configures OpenStack Horizon (Dashboard).",
-  "dependencies": [
-    {
-      "name": "puppetlabs/apache",
-      "version_requirement": ">=1.2.0 <2.0.0"
-    },
-    {
-      "name": "puppetlabs/stdlib",
-      "version_requirement": ">=4.0.0 <5.0.0"
-    },
-    {
-      "name": "saz/memcached",
-      "version_requirement": ">=2.0.2 <3.0.0"
-    }
-  ]
+    "author": "Puppet Labs and OpenStack Contributors",
+    "dependencies": [
+        {
+            "name": "puppetlabs/apache",
+            "version_requirement": ">=1.2.0 <2.0.0"
+        },
+        {
+            "name": "puppetlabs/stdlib",
+            "version_requirement": ">=4.0.0 <5.0.0"
+        },
+        {
+            "name": "saz/memcached",
+            "version_requirement": ">=2.0.2 <3.0.0"
+        }
+    ],
+    "description": "Installs and configures OpenStack Horizon (Dashboard).",
+    "issues_url": "https://bugs.launchpad.net/puppet-horizon",
+    "license": "Apache-2.0",
+    "name": "openstack-horizon",
+    "operatingsystem_support": [
+        {
+            "operatingsystem": "Debian",
+            "operatingsystemrelease": [
+                "8"
+            ]
+        },
+        {
+            "operatingsystem": "Fedora",
+            "operatingsystemrelease": [
+                "24"
+            ]
+        },
+        {
+            "operatingsystem": "RedHat",
+            "operatingsystemrelease": [
+                "7"
+            ]
+        },
+        {
+            "operatingsystem": "Ubuntu",
+            "operatingsystemrelease": [
+                "16.04"
+            ]
+        }
+    ],
+    "project_page": "https://launchpad.net/puppet-horizon",
+    "requirements": [
+        {
+            "name": "pe",
+            "version_requirement": "4.x"
+        },
+        {
+            "name": "puppet",
+            "version_requirement": "4.x"
+        }
+    ],
+    "source": "git://github.com/openstack/puppet-horizon.git",
+    "summary": "Puppet module for OpenStack Horizon",
+    "version": "11.0.0"
 }
