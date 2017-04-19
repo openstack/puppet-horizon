@@ -269,6 +269,28 @@ describe 'horizon' do
       end
     end
 
+    context 'with default root_path' do
+      it 'configures apache' do
+        is_expected.to contain_class('horizon::wsgi::apache').with({
+          :root_path    => "#{platforms_params[:root_path]}",
+        })
+      end
+    end
+
+    context 'with root_path set to /tmp/horizon' do
+      before do
+        params.merge!({
+          :root_path    => '/tmp/horizon',
+        })
+      end
+
+      it 'configures apache' do
+        is_expected.to contain_class('horizon::wsgi::apache').with({
+          :root_path    => '/tmp/horizon',
+        })
+      end
+    end
+
     context 'without apache' do
       before do
         params.merge!({ :configure_apache => false })
@@ -522,11 +544,15 @@ describe 'horizon' do
         when 'Debian'
           { :config_file       => '/etc/openstack-dashboard/local_settings.py',
             :package_name      => 'openstack-dashboard',
-            :root_url          => '/horizon' }
+            :root_url          => '/horizon',
+            :root_path         => '/var/lib/openstack-dashboard',
+          }
         when 'RedHat'
           { :config_file       => '/etc/openstack-dashboard/local_settings',
             :package_name      => 'openstack-dashboard',
-            :root_url          => '/dashboard' }
+            :root_url          => '/dashboard',
+            :root_path         => '/usr/share/openstack-dashboard',
+          }
         end
       end
 

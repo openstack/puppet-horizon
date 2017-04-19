@@ -1,0 +1,3 @@
+---
+features:
+  - Allows to specify a custom root_path to static assets.
