@@ -238,6 +238,10 @@
 #    (optional) The base URL used to contruct horizon web addresses.
 #    Defaults to '/dashboard' or '/horizon' depending OS
 #
+#  [*root_path*]
+#    (optional) The path to the location of static assets.
+#    Defaults to "${::horizon::params::static_path}/openstack-dashboard"
+#
 #  [*session_timeout*]
 #    (optional) The session timeout for horizon in seconds. After this many seconds of inactivity
 #    the user is logged out.
@@ -442,6 +446,7 @@ class horizon(
   $image_backend                       = {},
   $overview_days_range                 = undef,
   $root_url                            = $::horizon::params::root_url,
+  $root_path                           = "${::horizon::params::static_path}/openstack-dashboard",
   $session_timeout                     = 1800,
   $timezone                            = 'UTC',
   $secure_cookies                      = false,
@@ -539,6 +544,7 @@ settings_local.py and parameter server_aliases for setting ServerAlias directive
   validate_hash($api_versions)
   validate_re($password_autocomplete, ['^on$', '^off$'])
   validate_re($images_panel, ['^legacy$', '^angular$'])
+  validate_absolute_path($root_path)
 
   if $cache_backend =~ /MemcachedCache/ {
     ensure_resources('package', { 'python-memcache' =>
@@ -596,7 +602,8 @@ settings_local.py and parameter server_aliases for setting ServerAlias directive
       horizon_ca     => $horizon_ca,
       extra_params   => $vhost_extra_params,
       redirect_type  => $redirect_type,
-      root_url       => $root_url
+      root_url       => $root_url,
+      root_path      => $root_path,
     }
   }
 

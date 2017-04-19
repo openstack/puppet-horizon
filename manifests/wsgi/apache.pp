@@ -79,6 +79,10 @@
 #    (optional) The base URL used to contruct horizon web addresses.
 #    Defaults to '/dashboard' or '/horizon' depending OS
 #
+#  [*root_path*]
+#    (optional) The path to the location of static assets.
+#    Defaults to "${::horizon::params::static_path}/openstack-dashboard"
+#
 class horizon::wsgi::apache (
   $bind_address        = undef,
   $fqdn                = undef,
@@ -99,6 +103,7 @@ class horizon::wsgi::apache (
   $extra_params        = {},
   $redirect_type       = 'permanent',
   $root_url            = $::horizon::params::root_url,
+  $root_path           = "${::horizon::params::static_path}/openstack-dashboard",
 ) inherits horizon::params {
 
   include ::apache
@@ -206,7 +211,7 @@ class horizon::wsgi::apache (
     priority                    => $priority,
     aliases                     => [{
       alias => "${root_url}/static",
-      path  => "${::horizon::params::static_path}/openstack-dashboard/static",
+      path  => "${root_path}/static",
     }],
     port                        => $http_port,
     ssl_cert                    => $horizon_cert,
