@@ -24,7 +24,7 @@ class horizon::params {
       $memcache_package            = 'python-memcached'
     }
     'Debian': {
-      $http_service                = 'apache2'
+      $http_service                = 'httpd'
       $config_file                 = '/etc/openstack-dashboard/local_settings.py'
       $httpd_listen_config_file    = '/etc/apache2/ports.conf'
       $root_url                    = '/horizon'
