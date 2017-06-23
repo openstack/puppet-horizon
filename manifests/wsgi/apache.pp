@@ -220,9 +220,10 @@ class horizon::wsgi::apache (
       user                      => $unix_user,
       group                     => $unix_group,
     },
-    wsgi_import_script   => $::horizon::params::django_wsgi,
-    wsgi_process_group   => $::horizon::params::wsgi_group,
-    redirectmatch_status => $redirect_type,
+    wsgi_import_script     => $::horizon::params::django_wsgi,
+    wsgi_process_group     => $::horizon::params::wsgi_group,
+    wsgi_application_group => $::horizon::params::wsgi_application_group,
+    redirectmatch_status   => $redirect_type,
   }
 
   # Only add the 'ip' element to the $default_vhost_conf hash if it was explicitly

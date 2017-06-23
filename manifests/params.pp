@@ -3,9 +3,10 @@
 class horizon::params {
   include ::openstacklib::defaults
 
-  $logdir      = '/var/log/horizon'
-  $django_wsgi = '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi'
-  $manage_py   = '/usr/share/openstack-dashboard/manage.py'
+  $logdir                 = '/var/log/horizon'
+  $django_wsgi            = '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi'
+  $manage_py              = '/usr/share/openstack-dashboard/manage.py'
+  $wsgi_application_group = '%{GLOBAL}'
 
   case $::osfamily {
     'RedHat': {
