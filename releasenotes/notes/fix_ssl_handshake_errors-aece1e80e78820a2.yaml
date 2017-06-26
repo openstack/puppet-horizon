@@ -1,0 +1,4 @@
+---
+issues:
+  - an issue with horizon having ssl handshake issues under apache with ssl endpoints.
+    Fix adds in WSGIApplicationGroup apache directive.
