@@ -1,0 +1,6 @@
+---
+security:
+  - |
+    The horizon_ca option is now optional. This implies that you could in theory
+    use the CA configured in the global httpd SSL configuration (ssl.conf) or
+    simply not using this value.

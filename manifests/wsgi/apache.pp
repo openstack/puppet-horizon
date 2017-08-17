@@ -137,10 +137,6 @@ class horizon::wsgi::apache (
     include ::apache::mod::ssl
     $ensure_ssl_vhost = 'present'
 
-    if $horizon_ca == undef {
-      fail('The horizon_ca parameter is required when listen_ssl is true')
-    }
-
     if $horizon_cert == undef {
       fail('The horizon_cert parameter is required when listen_ssl is true')
     }

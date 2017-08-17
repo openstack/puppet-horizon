@@ -145,11 +145,6 @@ describe 'horizon::wsgi::apache' do
 
       context 'without required parameters' do
 
-        context 'without horizon_ca parameter' do
-          before { params.delete(:horizon_ca) }
-          it_raises 'a Puppet::Error', /The horizon_ca parameter is required when listen_ssl is true/
-        end
-
         context 'without horizon_cert parameter' do
           before { params.delete(:horizon_cert) }
           it_raises 'a Puppet::Error', /The horizon_cert parameter is required when listen_ssl is true/
