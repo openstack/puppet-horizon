@@ -285,6 +285,10 @@
 #   Valid values are 'legacy' and 'angular'
 #   Defaults to 'legacy'
 #
+# [*create_image_defaults*]
+#   (optional) A dictionary of default settings for create image modal.
+#   Defaults to undef - will not add entry to local settings.
+#
 #  [*password_retrieve*]
 #    (optional) Enables the use of 'Retrieve Password' in the Horizon Web UI.
 #    Defaults to false
@@ -467,6 +471,7 @@ class horizon(
   $default_theme                       = false,
   $password_autocomplete               = 'off',
   $images_panel                        = 'legacy',
+  $create_image_defaults               = undef,
   $password_retrieve                   = false,
   $disable_password_reveal             = false,
   $enforce_password_check              = false,

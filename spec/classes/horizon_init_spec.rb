@@ -130,6 +130,7 @@ describe 'horizon' do
           :default_theme                  => 'default',
           :password_autocomplete          => 'on',
           :images_panel                   => 'angular',
+          :create_image_defaults          => {'image_visibility' => 'private'},
           :password_retrieve              => true,
           :enable_secure_proxy_ssl_header => true,
         })
@@ -178,6 +179,8 @@ describe 'horizon' do
           "    'supported_provider_types': ['flat', 'vxlan'],",
           "    'supported_vnic_types': ['*'],",
           'OPENSTACK_ENABLE_PASSWORD_RETRIEVE = True',
+          'CREATE_IMAGE_DEFAULTS = {',
+          "    'image_visibility': 'private',",
           'OPENSTACK_ENDPOINT_TYPE = "internalURL"',
           'SECONDARY_ENDPOINT_TYPE = "ANY-VALUE"',
           'API_RESULT_LIMIT = 4682',
