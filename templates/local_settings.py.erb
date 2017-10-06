@@ -391,6 +391,14 @@ OPENSTACK_CINDER_FEATURES = {
 }
 <%-end-%>
 
+<%- if ! (@instance_options_real.empty?) -%>
+LAUNCH_INSTANCE_DEFAULTS = {
+<%- @instance_options_real.sort.each do |opt_name,opt_val| -%>
+    '<%= opt_name -%>': <%= opt_val.to_s.capitalize -%>,
+<%-end-%>
+}
+<%-end-%>
+
 # The OPENSTACK_NEUTRON_NETWORK settings can be used to enable optional
 # services provided by neutron. Options currently available are load
 # balancer service, security groups, quotas, VPN service.
