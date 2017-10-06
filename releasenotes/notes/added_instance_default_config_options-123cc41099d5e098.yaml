@@ -1,0 +1,3 @@
+---
+features:
+  - Added parameter to horizon class to allow configuring LAUNCH_INSTANCE_DEFAULTS.
