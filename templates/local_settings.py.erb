@@ -111,6 +111,9 @@ HORIZON_CONFIG = {
     'exceptions': {'recoverable': exceptions.RECOVERABLE,
                    'not_found': exceptions.NOT_FOUND,
                    'unauthorized': exceptions.UNAUTHORIZED},
+<% if @customization_module and ! (@customization_module.empty?) -%>
+    'customization_module': '<%= @customization_module -%>',
+<% end -%>
 }
 
 # If provided, a "Report Bug" link will be displayed in the site header

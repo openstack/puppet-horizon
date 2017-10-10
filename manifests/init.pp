@@ -356,6 +356,17 @@
 #  [*password_validator_help*]
 #    (optional) Help text to display when password validation fails in horizon.
 #
+#  [*customization_module*]
+#    (optional) Horizon has a global override mechanism available to perform
+#    customizations. This adds a key - customization_module - to HORIZON_CONFIG
+#    dictionary in local_settings.py. The value should be a string with the
+#    path to your module containing modifications in dotted python path
+#    notation.
+#    Defaults to undef
+#
+#    Example:
+#      customization_module => "my_project.overrides"
+#
 # === DEPRECATED group/name
 #
 #  [*fqdn*]
@@ -463,6 +474,7 @@ class horizon(
   $websso_idp_mapping                  = undef,
   $password_validator                  = undef,
   $password_validator_help             = undef,
+  $customization_module                = undef,
   # DEPRECATED PARAMETERS
   $custom_theme_path                   = undef,
   $fqdn                                = undef,
