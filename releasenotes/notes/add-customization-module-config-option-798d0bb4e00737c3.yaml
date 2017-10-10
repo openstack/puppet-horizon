@@ -1,0 +1,8 @@
+---
+features:
+  - Horizon has a global override mechanism available to perform
+    customizations. This change adds customization_module key
+    to HORIZON_CONFIG dictionary in local_settings.py. The
+    value of the parameter should be a string with the path
+    to the module containing modifications in dotted python
+    path notation.
