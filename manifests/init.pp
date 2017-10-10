@@ -325,6 +325,17 @@
 #    recommended if you're running horizon behind a proxy.
 #    Defaults to false
 #
+#  [*customization_module*]
+#    (optional) Horizon has a global override mechanism available to perform
+#    customizations. This adds a key - customization_module - to HORIZON_CONFIG
+#    dictionary in local_settings.py. The value should be a string with the
+#    path to your module containing modifications in dotted python path
+#    notation.
+#    Defaults to undef
+#
+#    Example:
+#      customization_module => "my_project.overrides"
+#
 # === DEPRECATED group/name
 #
 #  [*fqdn*]
@@ -425,6 +436,7 @@ class horizon(
   $websso_choices                      = undef,
   $websso_idp_mapping                  = undef,
   $enable_secure_proxy_ssl_header      = false,
+  $customization_module                = undef,
   # DEPRECATED PARAMETERS
   $custom_theme_path                   = undef,
   $fqdn                                = undef,
