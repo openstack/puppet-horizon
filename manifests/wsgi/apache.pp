@@ -50,6 +50,14 @@
 #   (optional) Number of thread to run in a Horizon process
 #   Defaults to '10'
 #
+# [*custom_wsgi_process_options*]
+#   (optional) gives you the oportunity to add custom process options or to
+#   overwrite the default options for the WSGI main process.
+#   eg. to use a virtual python environment for the WSGI process
+#   you could set it to:
+#   { python-path => '/my/python/virtualenv' }
+#   Defaults to {}
+#
 # [*priority*]
 #   (optional) The apache vhost priority.
 #   Defaults to '15'. To set Horizon as the primary vhost, change to '10'.
@@ -84,26 +92,27 @@
 #    Defaults to "${::horizon::params::static_path}/openstack-dashboard"
 #
 class horizon::wsgi::apache (
-  $bind_address        = undef,
-  $fqdn                = undef,
-  $servername          = $::fqdn,
-  $server_aliases      = $::fqdn,
-  $listen_ssl          = false,
-  $http_port           = 80,
-  $https_port          = 443,
-  $ssl_redirect        = true,
-  $horizon_cert        = undef,
-  $horizon_key         = undef,
-  $horizon_ca          = undef,
-  $wsgi_processes      = '3',
-  $wsgi_threads        = '10',
-  $priority            = '15',
-  $vhost_conf_name     = 'horizon_vhost',
-  $vhost_ssl_conf_name = 'horizon_ssl_vhost',
-  $extra_params        = {},
-  $redirect_type       = 'permanent',
-  $root_url            = $::horizon::params::root_url,
-  $root_path           = "${::horizon::params::static_path}/openstack-dashboard",
+  $bind_address                = undef,
+  $fqdn                        = undef,
+  $servername                  = $::fqdn,
+  $server_aliases              = $::fqdn,
+  $listen_ssl                  = false,
+  $http_port                   = 80,
+  $https_port                  = 443,
+  $ssl_redirect                = true,
+  $horizon_cert                = undef,
+  $horizon_key                 = undef,
+  $horizon_ca                  = undef,
+  $wsgi_processes              = '3',
+  $wsgi_threads                = '10',
+  $custom_wsgi_process_options = {},
+  $priority                    = '15',
+  $vhost_conf_name             = 'horizon_vhost',
+  $vhost_ssl_conf_name         = 'horizon_ssl_vhost',
+  $extra_params                = {},
+  $redirect_type               = 'permanent',
+  $root_url                    = $::horizon::params::root_url,
+  $root_path                   = "${::horizon::params::static_path}/openstack-dashboard",
 ) inherits horizon::params {
 
   include ::apache
@@ -198,6 +207,17 @@ class horizon::wsgi::apache (
     default => $root_url,
   }
 
+  $wsgi_daemon_process_options = merge(
+    {
+      processes    => $wsgi_processes,
+      threads      => $wsgi_threads,
+      user         => $unix_user,
+      group        => $unix_group,
+      display-name => 'horizon',
+    },
+    $custom_wsgi_process_options
+  )
+
   $default_vhost_conf_no_ip = {
     servername                  => $servername,
     serveraliases               => os_any2array($final_server_aliases),
@@ -215,17 +235,11 @@ class horizon::wsgi::apache (
     ssl_ca                      => $horizon_ca,
     wsgi_script_aliases         => hash([$script_url, $::horizon::params::django_wsgi]),
     wsgi_daemon_process         => $::horizon::params::wsgi_group,
-    wsgi_daemon_process_options => {
-      processes                 => $wsgi_processes,
-      threads                   => $wsgi_threads,
-      user                      => $unix_user,
-      group                     => $unix_group,
-      display-name              => 'horizon',
-    },
-    wsgi_import_script     => $::horizon::params::django_wsgi,
-    wsgi_process_group     => $::horizon::params::wsgi_group,
-    wsgi_application_group => $::horizon::params::wsgi_application_group,
-    redirectmatch_status   => $redirect_type,
+    wsgi_daemon_process_options => $wsgi_daemon_process_options,
+    wsgi_import_script          => $::horizon::params::django_wsgi,
+    wsgi_process_group          => $::horizon::params::wsgi_group,
+    wsgi_application_group      => $::horizon::params::wsgi_application_group,
+    redirectmatch_status        => $redirect_type,
   }
 
   # Only add the 'ip' element to the $default_vhost_conf hash if it was explicitly
