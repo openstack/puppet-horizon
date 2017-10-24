@@ -220,6 +220,7 @@ class horizon::wsgi::apache (
       threads                   => $wsgi_threads,
       user                      => $unix_user,
       group                     => $unix_group,
+      display-name              => 'horizon',
     },
     wsgi_import_script     => $::horizon::params::django_wsgi,
     wsgi_process_group     => $::horizon::params::wsgi_group,
