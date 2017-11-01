@@ -46,7 +46,7 @@ describe 'horizon::wsgi::apache' do
           'wsgi_process_group'     => platforms_params[:wsgi_group],
           'wsgi_daemon_process'    => platforms_params[:wsgi_group],
           'wsgi_application_group' => '%{GLOBAL}',
-          'wsgi_daemon_process_options' => { 'processes' => params[:wsgi_processes], 'threads' => params[:wsgi_threads], 'user' => platforms_params[:unix_user], 'group' => platforms_params[:unix_group] }
+          'wsgi_daemon_process_options' => { 'processes' => params[:wsgi_processes], 'threads' => params[:wsgi_threads], 'user' => platforms_params[:unix_user], 'group' => platforms_params[:unix_group], 'display-name' => 'horizon' }
          )
       end
     end
@@ -83,7 +83,7 @@ describe 'horizon::wsgi::apache' do
           'wsgi_process_group'     => platforms_params[:wsgi_group],
           'wsgi_daemon_process'    => platforms_params[:wsgi_group],
           'wsgi_application_group' => '%{GLOBAL}',
-          'wsgi_daemon_process_options' => { 'processes' => params[:wsgi_processes], 'threads' => params[:wsgi_threads], 'user' => platforms_params[:unix_user], 'group' => platforms_params[:unix_group] }
+          'wsgi_daemon_process_options' => { 'processes' => params[:wsgi_processes], 'threads' => params[:wsgi_threads], 'user' => platforms_params[:unix_user], 'group' => platforms_params[:unix_group], 'display-name' => 'horizon' }
          )
       end
     end
