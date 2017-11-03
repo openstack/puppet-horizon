@@ -1,0 +1,4 @@
+---
+fixes:
+  - |
+    Updated the cap on the puppetlabs-apache module to include the 2.x series.
