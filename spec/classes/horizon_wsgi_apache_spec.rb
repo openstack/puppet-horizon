@@ -88,6 +88,29 @@ describe 'horizon::wsgi::apache' do
       end
     end
 
+    context 'with custom_custom_wsgi_options' do
+      before do
+        params.merge!({
+          :custom_wsgi_process_options => {
+            'user'        => 'myuser',
+            'python_path' => '/my/python/admin/path',
+          },
+        })
+      end
+      it 'configures apache' do
+        is_expected.to contain_apache__vhost('horizon_vhost').with(
+          'wsgi_daemon_process_options' => {
+            'processes'    => params[:wsgi_processes],
+            'threads'      => params[:wsgi_threads],
+            'user'         => 'myuser',
+            'group'        => platforms_params[:unix_group],
+            'display-name' => 'horizon',
+            'python_path'  => '/my/python/admin/path'
+          }
+        )
+      end
+    end
+
     context 'with ssl enabled' do
       before do
         params.merge!({
