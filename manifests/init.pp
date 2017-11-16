@@ -213,7 +213,7 @@
 #
 #  [*secure_cookies*]
 #    (optional) Enables security settings for cookies. Useful when using
-#    https on public sites. See: http://docs.openstack.org/developer/horizon/topics/deployment.html#secure-site-recommendations
+#    https on public sites. See: https://docs.openstack.org/security-guide/dashboard/cookies.html
 #    Defaults to false
 #
 #  [*django_session_engine*]
