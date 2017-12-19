@@ -1,0 +1,6 @@
+---
+
+features:
+  - Add the config option "HORIZON_IMAGES_UPLOAD_MODE".
+    now it is possible in puppet to configure the option
+    with "off", "legacy" and "direct".
