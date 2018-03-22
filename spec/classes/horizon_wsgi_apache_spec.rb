@@ -51,7 +51,7 @@ describe 'horizon::wsgi::apache' do
       end
     end
 
-    context 'with overriden parameters' do
+    context 'with overridden parameters' do
       before do
         params.merge!({
           :priority      => '10',
