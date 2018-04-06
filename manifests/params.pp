@@ -34,15 +34,16 @@ class horizon::params {
       $apache_group                = 'www-data'
       $wsgi_user                   = 'horizon'
       $wsgi_group                  = 'horizon'
-      $memcache_package            = 'python-memcache'
       case $::os_package_type {
         'debian': {
             $package_name          = 'openstack-dashboard-apache'
             $httpd_config_file     = '/etc/apache2/sites-available/openstack-dashboard-alias-only.conf'
+            $memcache_package      = 'python3-memcache'
         }
         default: {
             $package_name          = 'openstack-dashboard'
             $httpd_config_file     = '/etc/apache2/conf-available/openstack-dashboard.conf'
+            $memcache_package      = 'python-memcache'
         }
       }
     }

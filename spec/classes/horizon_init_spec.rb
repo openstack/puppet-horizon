@@ -251,7 +251,8 @@ describe 'horizon' do
 
       it {
         is_expected.to contain_package('python-memcache').with(
-          :tag    => ['openstack', 'horizon-package']
+          :tag    => ['openstack', 'horizon-package'],
+          :name   => platforms_params[:memcache_package],
          )
       }
     end
@@ -659,16 +660,27 @@ describe 'horizon' do
       let(:platforms_params) do
         case facts[:osfamily]
         when 'Debian'
-          { :config_file       => '/etc/openstack-dashboard/local_settings.py',
-            :package_name      => 'openstack-dashboard',
-            :root_url          => '/horizon',
-            :root_path         => '/var/lib/openstack-dashboard',
-          }
+          if facts[:os_package_type] == 'debian'
+            { :config_file      => '/etc/openstack-dashboard/local_settings.py',
+              :package_name     => 'openstack-dashboard-apache',
+              :root_url         => '/horizon',
+              :root_path        => '/var/lib/openstack-dashboard',
+              :memcache_package => 'python3-memcache',
+            }
+          else
+            { :config_file      => '/etc/openstack-dashboard/local_settings.py',
+              :package_name     => 'openstack-dashboard',
+              :root_url         => '/horizon',
+              :root_path        => '/var/lib/openstack-dashboard',
+              :memcache_package => 'python-memcache',
+            }
+          end
         when 'RedHat'
-          { :config_file       => '/etc/openstack-dashboard/local_settings',
-            :package_name      => 'openstack-dashboard',
-            :root_url          => '/dashboard',
-            :root_path         => '/usr/share/openstack-dashboard',
+          { :config_file      => '/etc/openstack-dashboard/local_settings',
+            :package_name     => 'openstack-dashboard',
+            :root_url         => '/dashboard',
+            :root_path        => '/usr/share/openstack-dashboard',
+            :memcache_package => 'python-memcached',
           }
         end
       end
