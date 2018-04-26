@@ -1,0 +1,6 @@
+---
+fixes:
+  - |
+    Fixed a bug where passing a '/' as root_url would cause faulty paths in
+    local_settings.py and apache configuration. You can now set it to '/' and
+    the module will fix the correct root url for you.
