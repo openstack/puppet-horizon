@@ -273,7 +273,6 @@ describe 'horizon' do
       end
     end
 
-
     context 'with ssl enabled' do
       before do
         params.merge!({
@@ -292,6 +291,22 @@ describe 'horizon' do
           :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
           :horizon_key  => '/etc/pki/tls/private/httpd.key',
           :horizon_ca   => '/etc/pki/tls/certs/ca.crt',
+        })
+      end
+    end
+
+    context 'with overriden http and https ports' do
+      before do
+        params.merge!({
+          :http_port  => 1028,
+          :https_port => 1029,
+        })
+      end
+
+      it 'configures apache' do
+        is_expected.to contain_class('horizon::wsgi::apache').with({
+          :http_port  => 1028,
+          :https_port => 1029,
         })
       end
     end

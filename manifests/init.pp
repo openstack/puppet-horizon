@@ -174,6 +174,12 @@
 #  [*listen_ssl*]
 #    (optional) Enable SSL support in Apache. (Defaults to false)
 #
+#  [*http_port*]
+#    (optional) Port to use for the HTTP virtual host. (Defaults to 80)
+#
+#  [*https_port*]
+#    (optional) Port to use for the HTTPS virtual host. (Defaults to 443)
+#
 #  [*ssl_no_verify*]
 #    (optionsl) Disable SSL hostname verifying. Set it if you don't have
 #    properly configured DNS which will resolve hostnames for SSL endpoints
@@ -471,6 +477,8 @@ class horizon(
   $server_aliases                      = $::fqdn,
   $allowed_hosts                       = $::fqdn,
   $listen_ssl                          = false,
+  $http_port                           = 80,
+  $https_port                          = 443,
   $ssl_no_verify                       = false,
   $ssl_redirect                        = true,
   $horizon_cert                        = undef,
@@ -659,6 +667,8 @@ settings_local.py and parameter server_aliases for setting ServerAlias directive
       servername     => $servername,
       server_aliases => $final_server_aliases,
       listen_ssl     => $listen_ssl,
+      http_port      => $http_port,
+      https_port     => $https_port,
       ssl_redirect   => $ssl_redirect,
       horizon_cert   => $horizon_cert,
       horizon_key    => $horizon_key,
