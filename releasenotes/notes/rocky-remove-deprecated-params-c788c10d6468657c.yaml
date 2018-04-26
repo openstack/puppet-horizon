@@ -1,0 +1,14 @@
+---
+upgrade:
+  - |
+    The deprecated horizon::fqdn parameter is now removed.
+    Please use the allowed_hosts and server_aliases parameters instead.
+  - |
+    The deprecated horizon::wsgi::apache::fqdn parameter is now removed.
+    Please use the server_aliases parameter instead.
+  - |
+    The deprecated horizon::custom_theme_path parameter is now removed.
+    Please use the available_themes parameter instead.
+  - |
+    The deprecated tuskar_ui, tuskar_ui_ironic_discoverd_url, tuskar_ui_undercloud_admin_password
+    and tuskar_ui_deployment_mode is now removed. Please remove the usage of these parameters.

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'horizon::wsgi::apache' do
 
   let :params do
-    { :fqdn           => '*',
+    {
       :servername     => 'some.host.tld',
       :wsgi_processes => '3',
       :wsgi_threads   => '10',
@@ -35,7 +35,7 @@ describe 'horizon::wsgi::apache' do
           'access_log_file'        => 'horizon_access.log',
           'error_log_file'         => 'horizon_error.log',
           'priority'               => '15',
-          'serveraliases'          => ['*'],
+          'serveraliases'          => ['some.host.tld'],
           'docroot'                => '/var/www/',
           'ssl'                    => 'false',
           'port'                   => '80',
@@ -72,7 +72,7 @@ describe 'horizon::wsgi::apache' do
           'access_log_file'        => 'horizon_access.log',
           'error_log_file'         => 'horizon_error.log',
           'priority'               => params[:priority],
-          'serveraliases'          => ['*'],
+          'serveraliases'          => ['some.host.tld'],
           'docroot'                => '/var/www/',
           'ssl'                    => 'false',
           'port'                   => '80',
@@ -131,7 +131,7 @@ describe 'horizon::wsgi::apache' do
           'access_log_file'        => 'horizon_ssl_access.log',
           'error_log_file'         => 'horizon_ssl_error.log',
           'priority'               => '15',
-          'serveraliases'          => ['*'],
+          'serveraliases'          => ['some.host.tld'],
           'docroot'                => '/var/www/',
           'ssl'                    => 'true',
           'port'                   => '443',
@@ -152,7 +152,7 @@ describe 'horizon::wsgi::apache' do
           'access_log_file'        => 'horizon_access.log',
           'error_log_file'         => 'horizon_error.log',
           'priority'               => '15',
-          'serveraliases'          => ['*'],
+          'serveraliases'          => ['some.host.tld'],
           'docroot'                => '/var/www/',
           'ssl'                    => 'false',
           'port'                   => '80',

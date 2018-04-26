@@ -7,10 +7,6 @@
 # [*bind_address*]
 #   (optional) Bind address in Apache for Horizon. (Defaults to '0.0.0.0')
 #
-# [*fqdn*]
-#   (Optional) Fqdn
-#   Defaults to undef.
-#
 # [*servername*]
 #   (Optional) Server Name
 #   Defaults to ::fqdn.
@@ -93,7 +89,6 @@
 #
 class horizon::wsgi::apache (
   $bind_address                = undef,
-  $fqdn                        = undef,
   $servername                  = $::fqdn,
   $server_aliases              = $::fqdn,
   $listen_ssl                  = false,
@@ -116,14 +111,6 @@ class horizon::wsgi::apache (
 ) inherits horizon::params {
 
   include ::apache
-
-  if $fqdn {
-    warning('Parameter fqdn is deprecated. Please use parameter server_aliases for setting ServerAlias directives in vhost.conf.')
-    $final_server_aliases = $fqdn
-  } else {
-    $final_server_aliases = $server_aliases
-  }
-
   include ::apache::mod::wsgi
 
   # We already use apache::vhost to generate our own
@@ -220,7 +207,7 @@ class horizon::wsgi::apache (
 
   $default_vhost_conf_no_ip = {
     servername                  => $servername,
-    serveraliases               => os_any2array($final_server_aliases),
+    serveraliases               => os_any2array($server_aliases),
     docroot                     => '/var/www/',
     access_log_file             => 'horizon_access.log',
     error_log_file              => 'horizon_error.log',

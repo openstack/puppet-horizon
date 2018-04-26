@@ -31,10 +31,10 @@ LOGIN_REDIRECT_URL = '<%= @root_url %>/'
 # For more information see:
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 #ALLOWED_HOSTS = ['horizon.example.com', ]
-<% if @final_allowed_hosts.kind_of?(Array) %>
-ALLOWED_HOSTS = ['<%= @final_allowed_hosts.join("', '") %>', ]
+<% if @allowed_hosts.kind_of?(Array) %>
+ALLOWED_HOSTS = ['<%= @allowed_hosts.join("', '") %>', ]
 <% else %>
-ALLOWED_HOSTS = ['<%= @final_allowed_hosts %>', ]
+ALLOWED_HOSTS = ['<%= @allowed_hosts %>', ]
 <% end %>
 # Set SSL proxy settings:
 # Pass this header from the proxy after terminating the SSL,
@@ -584,16 +584,6 @@ EXTERNAL_MONITORING = <%= @horizon_app_links %>
 #    'key': my_awesome_callback_method,
 #    'reverse': False,
 #}
-
-# CUSTOM_THEME_PATH allows to set to the directory location for the
-# theme (e.g., "static/themes/blue"). The path can either be
-# relative to the openstack_dashboard directory or an absolute path
-# to an accessible location on the file system.
-# If not specified, the default CUSTOM_THEME_PATH is
-# static/themes/default.
-<% if @custom_theme_path %>
-CUSTOM_THEME_PATH = '<%= @custom_theme_path %>'
-<% end %>
 
 <% if @available_themes.kind_of?(Array) %>
 AVAILABLE_THEMES = [

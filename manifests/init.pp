@@ -404,37 +404,6 @@
 #     will disable the function in Horizon, direct will allow the user agent to directly
 #     talk to the glance-api.
 #
-#
-# === DEPRECATED group/name
-#
-#  [*fqdn*]
-#    (optional) DEPRECATED, use allowed_hosts and server_aliases instead.
-#    FQDN(s) used to access Horizon. This is used by Django for
-#    security reasons. Can be set to * in environments where security is
-#    deemed unimportant. Also used for Server Aliases in web configs.
-#    Defaults to undef
-#
-#  [*custom_theme_path*]
-#    (optional) The directory location for the theme (e.g., "static/themes/blue")
-#    Default to undef
-#
-#  [*tuskar_ui*]
-#    (optional) Boolean to enable Tuskar-UI related configuration (http://tuskar-ui.readthedocs#
-#    Defaults to undef
-#
-#  [*tuskar_ui_ironic_discoverd_url*]
-#    (optional) Tuskar-UI - Ironic Discoverd API endpoint
-#    Defaults to undef
-#
-#  [*tuskar_ui_undercloud_admin_password*]
-#    (optional) Tuskar-UI - Undercloud admin password used to authenticate admin user in Tuskar#
-#    It is required by Heat to perform certain actions.
-#    Defaults to undef
-#
-#  [*tuskar_ui_deployment_mode*]
-#    (optional) Tuskar-UI - Deployment mode ('poc' or 'scale')
-#    Defaults to undef
-#
 # === Examples
 #
 #  class { 'horizon':
@@ -517,38 +486,11 @@ class horizon(
   $enable_user_pass                    = true,
   $customization_module                = undef,
   $horizon_upload_mode                 = undef,
-  # DEPRECATED PARAMETERS
-  $custom_theme_path                   = undef,
-  $fqdn                                = undef,
-  $tuskar_ui                           = undef,
-  $tuskar_ui_ironic_discoverd_url      = undef,
-  $tuskar_ui_undercloud_admin_password = undef,
-  $tuskar_ui_deployment_mode           = undef,
 ) inherits ::horizon::params {
 
   $hypervisor_defaults = {
     'can_set_mount_point' => true,
     'can_set_password'    => false,
-  }
-
-  if $fqdn {
-
-    warning("Parameter fqdn is deprecated. Please use parameter allowed_hosts for setting ALLOWED_HOSTS in \
-settings_local.py and parameter server_aliases for setting ServerAlias directives in vhost.conf.")
-
-    $final_allowed_hosts = $fqdn
-    $final_server_aliases = $fqdn
-  } else {
-    $final_allowed_hosts = $allowed_hosts
-    $final_server_aliases = $server_aliases
-  }
-
-  if $custom_theme_path {
-    warning('custom_theme_path has been deprecated in mitaka and will be removed in a future release.')
-  }
-
-  if $tuskar_ui or $tuskar_ui_ironic_discoverd_url or $tuskar_ui_undercloud_admin_password or $tuskar_ui_deployment_mode {
-    warning('tuskar module is no longer maintained, all tuskar parameters will be removed after Newton cycle.')
   }
 
   # Default options for the OPENSTACK_CINDER_FEATURES section. These will
@@ -657,7 +599,7 @@ settings_local.py and parameter server_aliases for setting ServerAlias directive
     class { '::horizon::wsgi::apache':
       bind_address   => $bind_address,
       servername     => $servername,
-      server_aliases => $final_server_aliases,
+      server_aliases => $server_aliases,
       listen_ssl     => $listen_ssl,
       ssl_redirect   => $ssl_redirect,
       horizon_cert   => $horizon_cert,
