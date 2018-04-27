@@ -29,6 +29,9 @@ class horizon::deps {
   -> anchor { 'horizon::compress::begin': }
   -> Exec<| tag == 'horizon-compress' |>
   ~> anchor { 'horizon::compress::end': }
+  -> anchor { 'horizon::dashboard::begin': }
+  -> Package<| tag == 'horizon-dashboard-package' |>
+  ~> anchor { 'horizon::dashboard::end': }
   -> anchor { 'horizon::service::begin': }
   -> Service<| title == 'httpd' |>
   ~> anchor { 'horizon::service::end': }
