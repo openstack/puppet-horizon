@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    You can now override the http and https port to horizon by passing integers
+    to the http_port and https_ports parameters. Default values are still the same.
