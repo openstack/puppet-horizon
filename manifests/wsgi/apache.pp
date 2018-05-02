@@ -110,6 +110,7 @@ class horizon::wsgi::apache (
   $root_path                   = "${::horizon::params::static_path}/openstack-dashboard",
 ) inherits horizon::params {
 
+  include ::horizon::deps
   include ::apache
   include ::apache::mod::wsgi
 
@@ -125,7 +126,7 @@ class horizon::wsgi::apache (
 # - ${priority}-${vhost_conf_name}.conf
 # - ${priority}-${vhost_ssl_conf_name}.conf
 #",
-    require => Package['horizon'],
+    require => Anchor['horizon::config::begin'],
   }
 
   # NOTE(tobasco): If root_url is set to '/' the paths in the apache
@@ -184,7 +185,7 @@ class horizon::wsgi::apache (
     group   => $unix_group,
     before  => Service['httpd'],
     mode    => '0751',
-    require => Package['horizon'],
+    require => Anchor['horizon::config::begin'],
   }
 
   file { "${::horizon::params::logdir}/horizon.log":
@@ -193,7 +194,7 @@ class horizon::wsgi::apache (
     group   => $unix_group,
     before  => Service['httpd'],
     mode    => '0640',
-    require => [ File[$::horizon::params::logdir], Package['horizon'] ],
+    require => File[$::horizon::params::logdir],
   }
 
   $script_url = $root_url_real ? {

@@ -496,6 +496,8 @@ class horizon(
   $horizon_upload_mode                 = undef,
 ) inherits ::horizon::params {
 
+  include ::horizon::deps
+
   $hypervisor_defaults = {
     'can_set_mount_point' => true,
     'can_set_password'    => false,
@@ -562,7 +564,7 @@ class horizon(
   if $cache_backend =~ /MemcachedCache/ {
     ensure_resources('package', { 'python-memcache' =>
       { name   => $::horizon::params::memcache_package,
-        tag    => ['openstack']}})
+        tag    => ['openstack', 'horizon-package']}})
   }
 
   package { 'horizon':
@@ -575,7 +577,7 @@ class horizon(
     mode    => '0640',
     owner   => $::horizon::params::wsgi_user,
     group   => $::horizon::params::wsgi_group,
-    require => Package['horizon'],
+    require => Anchor['horizon::config::begin'],
   }
 
   concat::fragment { 'local_settings.py':
@@ -587,13 +589,13 @@ class horizon(
   exec { 'refresh_horizon_django_cache':
     command     => "${::horizon::params::manage_py} collectstatic --noinput --clear",
     refreshonly => true,
-    require     => Package['horizon'],
+    tag         => ['horizon-compress'],
   }
 
   exec { 'refresh_horizon_django_compress':
     command     => "${::horizon::params::manage_py} compress --force",
     refreshonly => true,
-    require     => Package['horizon'],
+    tag         => ['horizon-compress'],
   }
 
   if $compress_offline {
