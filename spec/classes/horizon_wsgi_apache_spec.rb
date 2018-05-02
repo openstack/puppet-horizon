@@ -202,7 +202,15 @@ describe 'horizon::wsgi::apache' do
         before do
           params.merge!({
             :root_url => '/',
+            :root_path => '/tmp/horizon'
           })
+        end
+
+        it 'configures apache with correct root url' do
+          is_expected.to contain_apache__vhost('horizon_vhost').with(
+            'aliases'             => [{'alias' => '/static', 'path' => '/tmp/horizon/static'}],
+            'wsgi_script_aliases' => { '/' => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' },
+          )
         end
 
         it 'should not configure redirectmatch' do

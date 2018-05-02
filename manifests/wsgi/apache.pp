@@ -128,6 +128,13 @@ class horizon::wsgi::apache (
     require => Package['horizon'],
   }
 
+  # NOTE(tobasco): If root_url is set to '/' the paths in the apache
+  # configuration will be wrong (double slashes) so we fix that here.
+  if $root_url == '/' {
+    $root_url_real = ''
+  } else {
+    $root_url_real = $root_url
+  }
 
   if $listen_ssl {
     include ::apache::mod::ssl
@@ -147,7 +154,7 @@ class horizon::wsgi::apache (
     }
 
   } else {
-    case $root_url {
+    case $root_url_real {
       '': {
         $ensure_ssl_vhost = 'absent'
         $redirect_match = "^${::horizon::params::root_url}\$"
@@ -156,7 +163,7 @@ class horizon::wsgi::apache (
       default: {
         $ensure_ssl_vhost = 'absent'
         $redirect_match = '^/$'
-        $redirect_url   = $root_url
+        $redirect_url   = $root_url_real
       }
     }
   }
@@ -189,9 +196,9 @@ class horizon::wsgi::apache (
     require => [ File[$::horizon::params::logdir], Package['horizon'] ],
   }
 
-  $script_url = $root_url ? {
+  $script_url = $root_url_real ? {
     ''      => '/',
-    default => $root_url,
+    default => $root_url_real,
   }
 
   $wsgi_daemon_process_options = merge(
@@ -213,7 +220,7 @@ class horizon::wsgi::apache (
     error_log_file              => 'horizon_error.log',
     priority                    => $priority,
     aliases                     => [{
-      alias => "${root_url}/static",
+      alias => "${root_url_real}/static",
       path  => "${root_path}/static",
     }],
     port                        => $http_port,
@@ -240,8 +247,8 @@ class horizon::wsgi::apache (
   }
 
   ensure_resource('apache::vhost', $vhost_conf_name, merge ($default_vhost_conf, $extra_params, {
-    redirectmatch_regexp => $root_url ? { '' => undef, '/' => undef, default => $redirect_match },
-    redirectmatch_dest   => $root_url ? { '' => undef, '/' => undef, default => $redirect_url },
+    redirectmatch_regexp => $root_url_real ? { '' => undef, '/' => undef, default => $redirect_match },
+    redirectmatch_dest   => $root_url_real ? { '' => undef, '/' => undef, default => $redirect_url },
   }))
   ensure_resource('apache::vhost', $vhost_ssl_conf_name, merge ($default_vhost_conf, $extra_params, {
     access_log_file      => 'horizon_ssl_access.log',
@@ -252,8 +259,8 @@ class horizon::wsgi::apache (
     ensure               => $ensure_ssl_vhost,
     wsgi_daemon_process  => 'horizon-ssl',
     wsgi_process_group   => 'horizon-ssl',
-    redirectmatch_regexp => $root_url ? { '' => undef, '/' => undef, default => '^/$' },
-    redirectmatch_dest   => $root_url ? { '' => undef, '/' => undef, default => $root_url },
+    redirectmatch_regexp => $root_url_real ? { '' => undef, '/' => undef, default => '^/$' },
+    redirectmatch_dest   => $root_url_real ? { '' => undef, '/' => undef, default => $root_url_real },
   }))
 
 }
