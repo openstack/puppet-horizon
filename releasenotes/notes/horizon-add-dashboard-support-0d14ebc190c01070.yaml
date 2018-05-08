@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Added new resource horizon::dashboard which can be used to install
+    additional dashboards that is not shipped with the horizon packages.
+    Example would be install the heat-dashboard using horizon::dashboard { 'heat': }

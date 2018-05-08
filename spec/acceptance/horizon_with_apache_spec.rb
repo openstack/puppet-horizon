@@ -17,6 +17,8 @@ describe 'horizon class' do
         allowed_hosts    => [$::fqdn, 'localhost'],
         server_aliases   => [$::fqdn, 'localhost'],
       }
+
+      horizon::dashboard { 'heat': }
       EOS
 
       # Run it twice and test for idempotency
