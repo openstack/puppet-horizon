@@ -39,4 +39,5 @@ class horizon::deps {
   # Installation or config changes will always restart services.
   Anchor['horizon::install::end'] ~> Anchor['horizon::service::begin']
   Anchor['horizon::config::end'] ~> Anchor['horizon::service::begin']
+  Anchor['horizon::dashboard::end'] ~> Anchor['horizon::service::begin']
 }
