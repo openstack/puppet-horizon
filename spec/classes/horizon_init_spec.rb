@@ -295,7 +295,7 @@ describe 'horizon' do
       end
     end
 
-    context 'with overriden http and https ports' do
+    context 'with overridden http and https ports' do
       before do
         params.merge!({
           :http_port  => 1028,
