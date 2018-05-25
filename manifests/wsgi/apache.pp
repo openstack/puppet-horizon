@@ -67,7 +67,7 @@
 #   Defaults to 'horizon_ssl_vhost'.
 #
 # [*extra_params*]
-#   (optional) A hash of extra paramaters for apache::wsgi class.
+#   (optional) A hash of extra parameters for apache::wsgi class.
 #   Defaults to {}
 #
 # [*redirect_type*]
