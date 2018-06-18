@@ -35,6 +35,11 @@
 #   (optional) A hash of parameters to enable specific cache options.
 #   Defaults to undef
 #
+#  [*cache_server_url*]
+#    (optional) URL of a cache server.
+#    This allows arbitary strings to be set as CACHE BACKEND LOCATION.
+#    Defaults to undef.
+#
 #  [*cache_server_ip*]
 #    (optional) Memcached IP address. Can be a string, or an array.
 #    Defaults to undef.
@@ -426,6 +431,7 @@ class horizon(
   $package_ensure                      = 'present',
   $cache_backend                       = 'django.core.cache.backends.locmem.LocMemCache',
   $cache_options                       = undef,
+  $cache_server_url                    = undef,
   $cache_server_ip                     = undef,
   $cache_server_port                   = '11211',
   $horizon_app_links                   = false,
@@ -497,6 +503,10 @@ class horizon(
 ) inherits ::horizon::params {
 
   include ::horizon::deps
+
+  if $cache_server_url and $cache_server_ip {
+    fail('Only one of cache_server_url or cache_server_ip can be set.')
+  }
 
   $hypervisor_defaults = {
     'can_set_mount_point' => true,

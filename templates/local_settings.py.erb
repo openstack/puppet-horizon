@@ -226,6 +226,9 @@ CACHES = {
         'LOCATION': '<%= @cache_server_ip %>:<%= @cache_server_port %>',
           <% end %>
     <% end %>
+    <% if @cache_server_url %>
+        'LOCATION': '<%= @cache_server_url %>',
+    <% end %>
     }
 }
 
