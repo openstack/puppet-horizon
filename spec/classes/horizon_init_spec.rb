@@ -243,6 +243,23 @@ describe 'horizon' do
       it { is_expected.to contain_exec('refresh_horizon_django_compress') }
     end
 
+    context 'with overridden parameters and cache_server_url' do
+      before do
+        params.merge!({
+          :cache_server_url => 'redis://:password@10.0.0.1:6379/1',
+        })
+      end
+
+      it 'generates local_settings.py' do
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+          "        'LOCATION': 'redis://:password@10.0.0.1:6379/1',",
+        ])
+      end
+
+      it { is_expected.to contain_exec('refresh_horizon_django_cache') }
+      it { is_expected.to contain_exec('refresh_horizon_django_compress') }
+    end
+
     context 'installs python memcache library when cache_backend is set to memcache' do
       before do
         params.merge!({
