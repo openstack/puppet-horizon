@@ -152,8 +152,10 @@ class horizon::wsgi::apache (
     if $ssl_redirect {
       $redirect_match = '(.*)'
       $redirect_url   = "https://${servername}"
+    } else {
+      $redirect_match = '^/$'
+      $redirect_url = $root_url_real
     }
-
   } else {
     case $root_url_real {
       '': {
@@ -247,9 +249,19 @@ class horizon::wsgi::apache (
     $default_vhost_conf = $default_vhost_conf_no_ip
   }
 
+  if $listen_ssl and $ssl_redirect {
+    # If we run SSL and has enabled ssl redirect we should always force https
+    # no matter what the root url is.
+    $redirectmatch_regexp_real = $redirect_match
+    $redirectmatch_url_real = $redirect_url
+  } else {
+    $redirectmatch_regexp_real = $root_url_real ? { '' => undef, '/' => undef, default => $redirect_match }
+    $redirectmatch_url_real = $root_url_real ? { '' => undef, '/' => undef, default => $redirect_url }
+  }
+
   ensure_resource('apache::vhost', $vhost_conf_name, merge ($default_vhost_conf, $extra_params, {
-    redirectmatch_regexp => $root_url_real ? { '' => undef, '/' => undef, default => $redirect_match },
-    redirectmatch_dest   => $root_url_real ? { '' => undef, '/' => undef, default => $redirect_url },
+    redirectmatch_regexp => $redirectmatch_regexp_real,
+    redirectmatch_dest   => $redirectmatch_url_real,
   }))
   ensure_resource('apache::vhost', $vhost_ssl_conf_name, merge ($default_vhost_conf, $extra_params, {
     access_log_file      => 'horizon_ssl_access.log',
