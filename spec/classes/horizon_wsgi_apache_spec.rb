@@ -235,7 +235,147 @@ describe 'horizon::wsgi::apache' do
           )
         end
       end
+    end
 
+    context 'without ssl and custom root_url' do
+      before do
+        params.merge!({
+          :listen_ssl => false,
+          :root_url   => '/custom',
+        })
+      end
+
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :redirectmatch_regexp => '^/$',
+        :redirectmatch_dest   => '/custom',
+      )}
+    end
+
+    context 'without ssl and slash root_url' do
+      before do
+        params.merge!({
+          :listen_ssl => false,
+          :root_url   => '/',
+        })
+      end
+
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :redirectmatch_regexp => nil,
+        :redirectmatch_dest   => nil,
+      )}
+    end
+
+    context 'with listen_ssl and ssl_redirect set to true' do
+      before do
+        params.merge!({
+          :listen_ssl   => true,
+          :ssl_redirect => true,
+          :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
+          :horizon_key  => '/etc/pki/tls/private/httpd.key',
+          :horizon_ca   => '/etc/pki/tls/certs/ca.crt',
+        })
+      end
+
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :redirectmatch_regexp => '(.*)',
+        :redirectmatch_dest   => 'https://some.host.tld',
+      )}
+
+      it { should contain_apache__vhost('horizon_ssl_vhost').with(
+        :redirectmatch_regexp => '^/$',
+        :redirectmatch_dest   => platforms_params[:root_url],
+      )}
+    end
+
+    context 'with listen_ssl and ssl_redirect with a slash root_url' do
+      before do
+        params.merge!({
+          :listen_ssl   => true,
+          :ssl_redirect => true,
+          :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
+          :horizon_key  => '/etc/pki/tls/private/httpd.key',
+          :horizon_ca   => '/etc/pki/tls/certs/ca.crt',
+          :root_url     => '/',
+        })
+      end
+
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :redirectmatch_regexp => '(.*)',
+        :redirectmatch_dest   => 'https://some.host.tld',
+      )}
+
+      it { should contain_apache__vhost('horizon_ssl_vhost').with(
+        :redirectmatch_regexp => nil,
+        :redirectmatch_dest   => nil,
+      )}
+    end
+
+    context 'with listen_ssl and ssl_redirect with a empty root_url' do
+      before do
+        params.merge!({
+          :listen_ssl   => true,
+          :ssl_redirect => true,
+          :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
+          :horizon_key  => '/etc/pki/tls/private/httpd.key',
+          :horizon_ca   => '/etc/pki/tls/certs/ca.crt',
+          :root_url     => '',
+        })
+      end
+
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :redirectmatch_regexp => '(.*)',
+        :redirectmatch_dest   => 'https://some.host.tld',
+      )}
+
+      it { should contain_apache__vhost('horizon_ssl_vhost').with(
+        :redirectmatch_regexp => nil,
+        :redirectmatch_dest   => nil,
+      )}
+    end
+
+    context 'with listen_ssl and ssl_redirect disabled' do
+      before do
+        params.merge!({
+          :listen_ssl   => true,
+          :ssl_redirect => false,
+          :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
+          :horizon_key  => '/etc/pki/tls/private/httpd.key',
+          :horizon_ca   => '/etc/pki/tls/certs/ca.crt',
+        })
+      end
+
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :redirectmatch_regexp => '^/$',
+        :redirectmatch_dest   => platforms_params[:root_url],
+      )}
+
+      it { should contain_apache__vhost('horizon_ssl_vhost').with(
+        :redirectmatch_regexp => '^/$',
+        :redirectmatch_dest   => platforms_params[:root_url],
+      )}
+    end
+
+    context 'with listen_ssl and ssl_redirect disabled with custom root_url' do
+      before do
+        params.merge!({
+          :listen_ssl   => true,
+          :ssl_redirect => false,
+          :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
+          :horizon_key  => '/etc/pki/tls/private/httpd.key',
+          :horizon_ca   => '/etc/pki/tls/certs/ca.crt',
+          :root_url     => '/custom',
+        })
+      end
+
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :redirectmatch_regexp => '^/$',
+        :redirectmatch_dest   => '/custom',
+      )}
+
+      it { should contain_apache__vhost('horizon_ssl_vhost').with(
+        :redirectmatch_regexp => '^/$',
+        :redirectmatch_dest   => '/custom',
+      )}
     end
   end
 
