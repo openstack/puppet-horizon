@@ -94,6 +94,15 @@ OPENSTACK_API_VERSIONS = {
 OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True
 <% end %>
 
+<% if @keystone_domain_choices.kind_of?(Array) %>
+OPENSTACK_KEYSTONE_DOMAIN_DROPDOWN = True
+OPENSTACK_KEYSTONE_DOMAIN_CHOICES = (
+<% @keystone_domain_choices.each do |d| -%>
+    ('<%= d['name'] -%>', '<%= d['display'] -%>'),
+<% end -%>
+)
+<% end -%>
+
 # Overrides the default domain used when running on single-domain model
 # with Keystone V3. All entities will be created in the default domain.
 #OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = 'Default'

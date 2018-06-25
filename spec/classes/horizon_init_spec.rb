@@ -645,6 +645,26 @@ describe 'horizon' do
         ])
       end
     end
+
+    context 'with keystone_domain_choices' do
+      before do
+        params.merge!({
+          :keystone_domain_choices  => [
+            {'name' => 'default', 'display' => 'The default domain'},
+            {'name' => 'LDAP', 'display' => 'The LDAP Catalog'},
+          ],
+        })
+      end
+      it 'sets OPENSTACK_KEYSTONE_DOMAIN_DROPDOWN in local_settings.py' do
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+          'OPENSTACK_KEYSTONE_DOMAIN_DROPDOWN = True',
+          'OPENSTACK_KEYSTONE_DOMAIN_CHOICES = (',
+          "    ('default', 'The default domain'),",
+          "    ('LDAP', 'The LDAP Catalog'),",
+          ')',
+        ])
+      end
+    end
   end
 
   shared_examples_for 'horizon on RedHat' do

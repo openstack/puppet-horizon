@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Added the parameter "keystone_domain_choices" to the ::horizon class.
+    Setting this parameter would replace the domain text-field at the horizon
+    login-page with a drop-down menu. The parameter should be an array with
+    hashes, and the hashes should have two items each (name, display) containing
+    the domain name and a human-readable description of the domain respectively.

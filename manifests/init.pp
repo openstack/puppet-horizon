@@ -256,6 +256,15 @@
 #    All entities will be created in the default domain.
 #    Default to undef
 #
+#  [*keystone_domain_choices*]
+#    (optional) A hash of hashes to populate a dropdown for the domain field on
+#    the horizon login page.
+#      Example: [
+#         {'name' => 'default', 'display' => 'The default domain'},
+#         {'name' => 'LDAP', 'display' => 'The LDAP Catalog'},
+#      ]
+#    Defaults to undef
+#
 #  [*image_backend*]
 #    (optional) Overrides the default image backend settings.  This allows the list of supported
 #    image types etc. to be explicitly defined.
@@ -472,6 +481,7 @@ class horizon(
   $api_versions                        = {'identity' => '3'},
   $keystone_multidomain_support        = false,
   $keystone_default_domain             = undef,
+  $keystone_domain_choices             = undef,
   $image_backend                       = {},
   $overview_days_range                 = undef,
   $root_url                            = $::horizon::params::root_url,
