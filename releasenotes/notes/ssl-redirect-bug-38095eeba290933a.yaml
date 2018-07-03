@@ -1,0 +1,9 @@
+---
+fixes:
+  - |
+    Fixed a bug where having ssl and redirection enabled combined with a empty
+    root_url did not redirect. If you are setting listen_ssl and ssl_redirect to
+    true it will always redirect to https no matter what your root_url is.
+  - |
+    Fixed a bug where the http vhost would not redirect to the custom root_url when
+    setting listen_ssl to true and ssl_redirect to false.

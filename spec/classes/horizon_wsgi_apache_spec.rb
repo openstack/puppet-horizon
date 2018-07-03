@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe 'horizon::wsgi::apache' do
-
   let :params do
     {
       :servername     => 'some.host.tld',
@@ -11,44 +10,49 @@ describe 'horizon::wsgi::apache' do
   end
 
   let :pre_condition do
-    "include apache\n" +
-    "class { 'horizon': secret_key => 's3cr3t', configure_apache => false }"
+    "include apache
+    class { 'horizon': secret_key => 's3cr3t', configure_apache => false }"
   end
 
   let :fixtures_path do
     File.expand_path(File.join(__FILE__, '..', '..', 'fixtures'))
   end
 
-  shared_examples_for 'apache for horizon' do
+  shared_examples 'horizon::wsgi::apache' do
 
     context 'with default parameters' do
-      it 'configures apache' do
-        is_expected.to contain_class('horizon::params')
-        is_expected.to contain_class('apache')
-        is_expected.to contain_class('apache::mod::wsgi')
-        is_expected.to contain_service('httpd').with_name(platforms_params[:http_service])
-        is_expected.to contain_package('httpd').with_name(platforms_params[:http_service])
-        is_expected.to contain_file(platforms_params[:httpd_config_file])
-        is_expected.to contain_package('horizon').with_ensure('present')
-        is_expected.to contain_apache__vhost('horizon_vhost').with(
-          'servername'             => 'some.host.tld',
-          'access_log_file'        => 'horizon_access.log',
-          'error_log_file'         => 'horizon_error.log',
-          'priority'               => '15',
-          'serveraliases'          => ['some.host.tld'],
-          'docroot'                => '/var/www/',
-          'ssl'                    => 'false',
-          'port'                   => '80',
-          'redirectmatch_status'   => 'permanent',
-          'redirectmatch_regexp'   => '^/$',
-          'redirectmatch_dest'     => platforms_params[:root_url],
-          'wsgi_script_aliases'    => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' },
-          'wsgi_process_group'     => platforms_params[:wsgi_group],
-          'wsgi_daemon_process'    => platforms_params[:wsgi_group],
-          'wsgi_application_group' => '%{GLOBAL}',
-          'wsgi_daemon_process_options' => { 'processes' => params[:wsgi_processes], 'threads' => params[:wsgi_threads], 'user' => platforms_params[:unix_user], 'group' => platforms_params[:unix_group], 'display-name' => 'horizon' }
-         )
-      end
+      it { should contain_class('horizon::params') }
+      it { should contain_class('apache') }
+      it { should contain_class('apache::mod::wsgi') }
+      it { should contain_service('httpd').with_name(platforms_params[:http_service]) }
+      it { should contain_package('httpd').with_name(platforms_params[:http_service]) }
+      it { should contain_file(platforms_params[:httpd_config_file]) }
+      it { should contain_package('horizon').with_ensure('present') }
+
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :servername                  => 'some.host.tld',
+        :access_log_file             => 'horizon_access.log',
+        :error_log_file              => 'horizon_error.log',
+        :priority                    => '15',
+        :serveraliases               => ['some.host.tld'],
+        :docroot                     => '/var/www/',
+        :ssl                         => 'false',
+        :port                        => '80',
+        :redirectmatch_status        => 'permanent',
+        :redirectmatch_regexp        => '^/$',
+        :redirectmatch_dest          => platforms_params[:root_url],
+        :wsgi_script_aliases         => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' },
+        :wsgi_process_group          => platforms_params[:wsgi_group],
+        :wsgi_daemon_process         => platforms_params[:wsgi_group],
+        :wsgi_application_group      => '%{GLOBAL}',
+        :wsgi_daemon_process_options => {
+          'processes'    => params[:wsgi_processes],
+          'threads'      => params[:wsgi_threads],
+          'user'         => platforms_params[:unix_user],
+          'group'        => platforms_params[:unix_group],
+          'display-name' => 'horizon'
+        }
+      )}
     end
 
     context 'with overridden parameters' do
@@ -59,33 +63,38 @@ describe 'horizon::wsgi::apache' do
         })
       end
 
-      it 'configures apache' do
-        is_expected.to contain_class('horizon::params')
-        is_expected.to contain_class('apache')
-        is_expected.to contain_class('apache::mod::wsgi')
-        is_expected.to contain_service('httpd').with_name(platforms_params[:http_service])
-        is_expected.to contain_package('httpd').with_name(platforms_params[:http_service])
-        is_expected.to contain_file(platforms_params[:httpd_config_file])
-        is_expected.to contain_package('horizon').with_ensure('present')
-        is_expected.to contain_apache__vhost('horizon_vhost').with(
-          'servername'             => 'some.host.tld',
-          'access_log_file'        => 'horizon_access.log',
-          'error_log_file'         => 'horizon_error.log',
-          'priority'               => params[:priority],
-          'serveraliases'          => ['some.host.tld'],
-          'docroot'                => '/var/www/',
-          'ssl'                    => 'false',
-          'port'                   => '80',
-          'redirectmatch_status'   => 'temp',
-          'redirectmatch_regexp'   => '^/$',
-          'redirectmatch_dest'     => platforms_params[:root_url],
-          'wsgi_script_aliases'    => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' },
-          'wsgi_process_group'     => platforms_params[:wsgi_group],
-          'wsgi_daemon_process'    => platforms_params[:wsgi_group],
-          'wsgi_application_group' => '%{GLOBAL}',
-          'wsgi_daemon_process_options' => { 'processes' => params[:wsgi_processes], 'threads' => params[:wsgi_threads], 'user' => platforms_params[:unix_user], 'group' => platforms_params[:unix_group], 'display-name' => 'horizon' }
-         )
-      end
+      it { should contain_class('horizon::params') }
+      it { should contain_class('apache') }
+      it { should contain_class('apache::mod::wsgi') }
+      it { should contain_service('httpd').with_name(platforms_params[:http_service]) }
+      it { should contain_package('httpd').with_name(platforms_params[:http_service]) }
+      it { should contain_file(platforms_params[:httpd_config_file]) }
+      it { should contain_package('horizon').with_ensure('present') }
+
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :servername                  => 'some.host.tld',
+        :access_log_file             => 'horizon_access.log',
+        :error_log_file              => 'horizon_error.log',
+        :priority                    => params[:priority],
+        :serveraliases               => ['some.host.tld'],
+        :docroot                     => '/var/www/',
+        :ssl                         => 'false',
+        :port                        => '80',
+        :redirectmatch_status        => 'temp',
+        :redirectmatch_regexp        => '^/$',
+        :redirectmatch_dest          => platforms_params[:root_url],
+        :wsgi_script_aliases         => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' },
+        :wsgi_process_group          => platforms_params[:wsgi_group],
+        :wsgi_daemon_process         => platforms_params[:wsgi_group],
+        :wsgi_application_group      => '%{GLOBAL}',
+        :wsgi_daemon_process_options => {
+          'processes'    => params[:wsgi_processes],
+          'threads'      => params[:wsgi_threads],
+          'user'         => platforms_params[:unix_user],
+          'group'        => platforms_params[:unix_group],
+          'display-name' => 'horizon'
+        }
+      )}
     end
 
     context 'with custom_custom_wsgi_options' do
@@ -97,18 +106,17 @@ describe 'horizon::wsgi::apache' do
           },
         })
       end
-      it 'configures apache' do
-        is_expected.to contain_apache__vhost('horizon_vhost').with(
-          'wsgi_daemon_process_options' => {
-            'processes'    => params[:wsgi_processes],
-            'threads'      => params[:wsgi_threads],
-            'user'         => 'myuser',
-            'group'        => platforms_params[:unix_group],
-            'display-name' => 'horizon',
-            'python_path'  => '/my/python/admin/path'
-          }
-        )
-      end
+
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :wsgi_daemon_process_options => {
+          'processes'    => params[:wsgi_processes],
+          'threads'      => params[:wsgi_threads],
+          'user'         => 'myuser',
+          'group'        => platforms_params[:unix_group],
+          'display-name' => 'horizon',
+          'python_path'  => '/my/python/admin/path'
+        }
+      )}
     end
 
     context 'with ssl enabled' do
@@ -122,145 +130,291 @@ describe 'horizon::wsgi::apache' do
         })
       end
 
-      context 'with required parameters' do
-        it 'configures apache for SSL' do
-          is_expected.to contain_class('apache::mod::ssl')
-        end
-        it { is_expected.to contain_apache__vhost('horizon_ssl_vhost').with(
-          'servername'             => 'some.host.tld',
-          'access_log_file'        => 'horizon_ssl_access.log',
-          'error_log_file'         => 'horizon_ssl_error.log',
-          'priority'               => '15',
-          'serveraliases'          => ['some.host.tld'],
-          'docroot'                => '/var/www/',
-          'ssl'                    => 'true',
-          'port'                   => '443',
-          'ssl_cert'               => '/etc/pki/tls/certs/httpd.crt',
-          'ssl_key'                => '/etc/pki/tls/private/httpd.key',
-          'ssl_ca'                 => '/etc/pki/tls/certs/ca.crt',
-          'redirectmatch_status'   => 'permanent',
-          'redirectmatch_regexp'   => '^/$',
-          'redirectmatch_dest'     => platforms_params[:root_url],
-          'wsgi_process_group'     => 'horizon-ssl',
-          'wsgi_daemon_process'    => 'horizon-ssl',
-          'wsgi_application_group' => '%{GLOBAL}',
-          'wsgi_script_aliases'  => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' },
-        )}
+      it { should contain_class('apache::mod::ssl') }
 
-        it { is_expected.to contain_apache__vhost('horizon_vhost').with(
-          'servername'             => 'some.host.tld',
-          'access_log_file'        => 'horizon_access.log',
-          'error_log_file'         => 'horizon_error.log',
-          'priority'               => '15',
-          'serveraliases'          => ['some.host.tld'],
-          'docroot'                => '/var/www/',
-          'ssl'                    => 'false',
-          'port'                   => '80',
-          'redirectmatch_status'   => 'permanent',
-          'redirectmatch_regexp'   => '(.*)',
-          'redirectmatch_dest'     => 'https://some.host.tld',
-          'wsgi_process_group'     => platforms_params[:wsgi_group],
-          'wsgi_daemon_process'    => platforms_params[:wsgi_group],
-          'wsgi_application_group' => '%{GLOBAL}',
-          'wsgi_script_aliases'    => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' },
-        )}
+      it { should contain_apache__vhost('horizon_ssl_vhost').with(
+        :servername             => 'some.host.tld',
+        :access_log_file        => 'horizon_ssl_access.log',
+        :error_log_file         => 'horizon_ssl_error.log',
+        :priority               => '15',
+        :serveraliases          => ['some.host.tld'],
+        :docroot                => '/var/www/',
+        :ssl                    => 'true',
+        :port                   => '443',
+        :ssl_cert               => '/etc/pki/tls/certs/httpd.crt',
+        :ssl_key                => '/etc/pki/tls/private/httpd.key',
+        :ssl_ca                 => '/etc/pki/tls/certs/ca.crt',
+        :redirectmatch_status   => 'permanent',
+        :redirectmatch_regexp   => '^/$',
+        :redirectmatch_dest     => platforms_params[:root_url],
+        :wsgi_process_group     => 'horizon-ssl',
+        :wsgi_daemon_process    => 'horizon-ssl',
+        :wsgi_application_group => '%{GLOBAL}',
+        :wsgi_script_aliases    => {
+          platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi'
+        }
+      )}
+
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :servername             => 'some.host.tld',
+        :access_log_file        => 'horizon_access.log',
+        :error_log_file         => 'horizon_error.log',
+        :priority               => '15',
+        :serveraliases          => ['some.host.tld'],
+        :docroot                => '/var/www/',
+        :ssl                    => 'false',
+        :port                   => '80',
+        :redirectmatch_status   => 'permanent',
+        :redirectmatch_regexp   => '(.*)',
+        :redirectmatch_dest     => 'https://some.host.tld',
+        :wsgi_process_group     => platforms_params[:wsgi_group],
+        :wsgi_daemon_process    => platforms_params[:wsgi_group],
+        :wsgi_application_group => '%{GLOBAL}',
+        :wsgi_script_aliases    => {
+          platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi'
+        }
+      )}
+    end
+
+    context 'without horizon_cert parameter' do
+      before do
+        params.merge!( :listen_ssl => true )
       end
 
-      context 'without required parameters' do
+      it { should raise_error(Puppet::Error, /The horizon_cert parameter is required when listen_ssl is true/) }
+    end
 
-        context 'without horizon_cert parameter' do
-          before { params.delete(:horizon_cert) }
-          it_raises 'a Puppet::Error', /The horizon_cert parameter is required when listen_ssl is true/
-        end
-
-        context 'without horizon_key parameter' do
-          before { params.delete(:horizon_key) }
-          it_raises 'a Puppet::Error', /The horizon_key parameter is required when listen_ssl is true/
-        end
+    context 'without horizon_key parameter' do
+      before do
+        params.merge!( :listen_ssl   => true,
+                       :horizon_cert => '/etc/pki/tls/certs/httpd.crt' )
       end
 
-      context 'with extra parameters' do
-        before do
-          params.merge!({
-            :extra_params  => {
-              'add_listen' => false,
-              'docroot' => '/tmp'
-            },
-          })
-        end
+      it { should raise_error(Puppet::Error, /The horizon_key parameter is required when listen_ssl is true/) }
+    end
 
-        it 'configures apache' do
-          is_expected.to contain_apache__vhost('horizon_vhost').with(
+    context 'with extra parameters' do
+      before do
+        params.merge!({
+          :extra_params  => {
             'add_listen' => false,
-            'docroot'    => '/tmp'
-          )
-        end
-
+            'docroot' => '/tmp'
+          },
+        })
       end
 
-      context 'with root_url set to /' do
-        before do
-          params.merge!({
-            :root_url => '/',
-            :root_path => '/tmp/horizon'
-          })
-        end
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :add_listen => false,
+        :docroot    => '/tmp'
+      )}
+    end
 
-        it 'configures apache with correct root url' do
-          is_expected.to contain_apache__vhost('horizon_vhost').with(
-            'aliases'             => [{'alias' => '/static', 'path' => '/tmp/horizon/static'}],
-            'wsgi_script_aliases' => { '/' => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' },
-          )
-        end
-
-        it 'should not configure redirectmatch' do
-          is_expected.to_not contain_apache__vhost('horizon_vhost').with(
-            'redirectmatch_regexp' => '^/$',
-            'redirectmatch_dest'   => '/'
-          )
-          is_expected.to_not contain_apache__vhost('horizon_ssl_vhost').with(
-            'redirectmatch_regexp' => '^/$',
-            'redirectmatch_dest'   => '/'
-          )
-        end
+    context 'with root_url set to /' do
+      before do
+        params.merge!({
+          :root_url  => '/',
+          :root_path => '/tmp/horizon'
+        })
       end
 
-      context 'with root_url set to empty' do
-        before do
-          params.merge!({
-            :root_url => '',
-          })
-        end
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :aliases             => [
+          { 'alias' => '/static', 'path' => '/tmp/horizon/static' }
+        ],
+        :wsgi_script_aliases => {
+          '/' => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi'
+        }
+      )}
 
-        it 'should not configure redirectmatch' do
-          is_expected.to_not contain_apache__vhost('horizon_vhost').with(
-            'redirectmatch_regexp' => '(.*)',
-            'redirectmatch_dest'   => '/'
-          )
-          is_expected.to_not contain_apache__vhost('horizon_ssl_vhost').with(
-            'redirectmatch_regexp' => '^/$',
-            'redirectmatch_dest'   => ''
-          )
-        end
+      it { should_not contain_apache__vhost('horizon_vhost').with(
+        :redirectmatch_regexp => '^/$',
+        :redirectmatch_dest   => '/'
+      )}
+
+      it { should_not contain_apache__vhost('horizon_ssl_vhost').with(
+        :redirectmatch_regexp => '^/$',
+        :redirectmatch_dest   => '/'
+      )}
+    end
+
+    context 'with root_url set to empty' do
+      before do
+        params.merge!({
+          :root_url => '',
+        })
       end
 
+      it { should_not contain_apache__vhost('horizon_vhost').with(
+        :redirectmatch_regexp => '(.*)',
+        :redirectmatch_dest   => '/'
+      )}
+
+      it { should_not contain_apache__vhost('horizon_ssl_vhost').with(
+        :redirectmatch_regexp => '^/$',
+        :redirectmatch_dest   => ''
+      )}
+    end
+
+    context 'without ssl and custom root_url' do
+      before do
+        params.merge!({
+          :listen_ssl => false,
+          :root_url   => '/custom',
+        })
+      end
+
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :redirectmatch_regexp => '^/$',
+        :redirectmatch_dest   => '/custom',
+      )}
+    end
+
+    context 'without ssl and slash root_url' do
+      before do
+        params.merge!({
+          :listen_ssl => false,
+          :root_url   => '/',
+        })
+      end
+
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :redirectmatch_regexp => nil,
+        :redirectmatch_dest   => nil,
+      )}
+    end
+
+    context 'with listen_ssl and ssl_redirect set to true' do
+      before do
+        params.merge!({
+          :listen_ssl   => true,
+          :ssl_redirect => true,
+          :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
+          :horizon_key  => '/etc/pki/tls/private/httpd.key',
+          :horizon_ca   => '/etc/pki/tls/certs/ca.crt',
+        })
+      end
+
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :redirectmatch_regexp => '(.*)',
+        :redirectmatch_dest   => 'https://some.host.tld',
+      )}
+
+      it { should contain_apache__vhost('horizon_ssl_vhost').with(
+        :redirectmatch_regexp => '^/$',
+        :redirectmatch_dest   => platforms_params[:root_url],
+      )}
+    end
+
+    context 'with listen_ssl and ssl_redirect with a slash root_url' do
+      before do
+        params.merge!({
+          :listen_ssl   => true,
+          :ssl_redirect => true,
+          :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
+          :horizon_key  => '/etc/pki/tls/private/httpd.key',
+          :horizon_ca   => '/etc/pki/tls/certs/ca.crt',
+          :root_url     => '/',
+        })
+      end
+
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :redirectmatch_regexp => '(.*)',
+        :redirectmatch_dest   => 'https://some.host.tld',
+      )}
+
+      it { should contain_apache__vhost('horizon_ssl_vhost').with(
+        :redirectmatch_regexp => nil,
+        :redirectmatch_dest   => nil,
+      )}
+    end
+
+    context 'with listen_ssl and ssl_redirect with a empty root_url' do
+      before do
+        params.merge!({
+          :listen_ssl   => true,
+          :ssl_redirect => true,
+          :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
+          :horizon_key  => '/etc/pki/tls/private/httpd.key',
+          :horizon_ca   => '/etc/pki/tls/certs/ca.crt',
+          :root_url     => '',
+        })
+      end
+
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :redirectmatch_regexp => '(.*)',
+        :redirectmatch_dest   => 'https://some.host.tld',
+      )}
+
+      it { should contain_apache__vhost('horizon_ssl_vhost').with(
+        :redirectmatch_regexp => nil,
+        :redirectmatch_dest   => nil,
+      )}
+    end
+
+    context 'with listen_ssl and ssl_redirect disabled' do
+      before do
+        params.merge!({
+          :listen_ssl   => true,
+          :ssl_redirect => false,
+          :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
+          :horizon_key  => '/etc/pki/tls/private/httpd.key',
+          :horizon_ca   => '/etc/pki/tls/certs/ca.crt',
+        })
+      end
+
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :redirectmatch_regexp => '^/$',
+        :redirectmatch_dest   => platforms_params[:root_url],
+      )}
+
+      it { should contain_apache__vhost('horizon_ssl_vhost').with(
+        :redirectmatch_regexp => '^/$',
+        :redirectmatch_dest   => platforms_params[:root_url],
+      )}
+    end
+
+    context 'with listen_ssl and ssl_redirect disabled with custom root_url' do
+      before do
+        params.merge!({
+          :listen_ssl   => true,
+          :ssl_redirect => false,
+          :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
+          :horizon_key  => '/etc/pki/tls/private/httpd.key',
+          :horizon_ca   => '/etc/pki/tls/certs/ca.crt',
+          :root_url     => '/custom',
+        })
+      end
+
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :redirectmatch_regexp => '^/$',
+        :redirectmatch_dest   => '/custom',
+      )}
+
+      it { should contain_apache__vhost('horizon_ssl_vhost').with(
+        :redirectmatch_regexp => '^/$',
+        :redirectmatch_dest   => '/custom',
+      )}
     end
   end
 
-  shared_examples_for 'apache for horizon on RedHat platforms' do
-    it {
-      is_expected.to contain_class('apache::mod::wsgi').with(:wsgi_socket_prefix => '/var/run/wsgi')
-    }
-    it 'configures webroot alias' do
-      if (Gem::Version.new(Puppet.version) >= Gem::Version.new('4.0'))
-        is_expected.to contain_apache__vhost('horizon_vhost').with(
-          'aliases' => [{'alias' => '/dashboard/static', 'path' => '/usr/share/openstack-dashboard/static'}],
-        )
-      else
-        is_expected.to contain_apache__vhost('horizon_vhost').with(
-          'aliases' => [['alias', '/dashboard/static'], ['path', '/usr/share/openstack-dashboard/static']],
-        )
-      end
+  shared_examples 'horizon::wsgi::apache on RedHat' do
+    it { should contain_class('apache::mod::wsgi').with(
+      :wsgi_socket_prefix => '/var/run/wsgi'
+    )}
+
+    if (Gem::Version.new(Puppet.version) >= Gem::Version.new('4.0'))
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :aliases => [
+          { 'alias' => '/dashboard/static', 'path' => '/usr/share/openstack-dashboard/static' }
+        ],
+      )}
+    else
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :aliases => [
+          ['alias', '/dashboard/static'],
+          ['path', '/usr/share/openstack-dashboard/static']
+        ],
+      )}
     end
 
     context 'with root_path set to /tmp/horizon' do
@@ -270,31 +424,37 @@ describe 'horizon::wsgi::apache' do
         })
       end
 
-      it 'configures webroot alias' do
-        if (Gem::Version.new(Puppet.version) >= Gem::Version.new('4.0'))
-          is_expected.to contain_apache__vhost('horizon_vhost').with(
-            'aliases' => [{'alias' => '/dashboard/static', 'path' => '/tmp/horizon/static'}],
-          )
-        else
-          is_expected.to contain_apache__vhost('horizon_vhost').with(
-            'aliases' => [['alias', '/dashboard/static'], ['path', '/tmp/horizon/static']],
-          )
-        end
+      if (Gem::Version.new(Puppet.version) >= Gem::Version.new('4.0'))
+        it { should contain_apache__vhost('horizon_vhost').with(
+          :aliases => [
+            { 'alias' => '/dashboard/static', 'path' => '/tmp/horizon/static' }
+          ],
+        )}
+      else
+        it { should contain_apache__vhost('horizon_vhost').with(
+          :aliases => [
+            ['alias', '/dashboard/static'],
+            ['path', '/tmp/horizon/static']
+          ],
+        )}
       end
     end
   end
 
-  shared_examples_for 'apache for horizon on Debian platforms' do
-    it 'configures webroot alias' do
-      if (Gem::Version.new(Puppet.version) >= Gem::Version.new('4.0'))
-        is_expected.to contain_apache__vhost('horizon_vhost').with(
-          'aliases' => [{'alias' => '/horizon/static', 'path' => '/var/lib/openstack-dashboard/static'}],
-        )
-      else
-        is_expected.to contain_apache__vhost('horizon_vhost').with(
-          'aliases' => [['alias', '/horizon/static'], ['path', '/var/lib/openstack-dashboard/static']],
-        )
-      end
+  shared_examples 'horizon::wsgi::apache on Debian' do
+    if (Gem::Version.new(Puppet.version) >= Gem::Version.new('4.0'))
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :aliases => [
+          { 'alias' => '/horizon/static', 'path' => '/var/lib/openstack-dashboard/static' }
+        ],
+      )}
+    else
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :aliases => [
+          ['alias', '/horizon/static'],
+          ['path', '/var/lib/openstack-dashboard/static']
+        ],
+      )}
     end
 
     context 'with root_path set to /tmp/horizon' do
@@ -304,28 +464,30 @@ describe 'horizon::wsgi::apache' do
         })
       end
 
-      it 'configures webroot alias' do
-        if (Gem::Version.new(Puppet.version) >= Gem::Version.new('4.0'))
-          is_expected.to contain_apache__vhost('horizon_vhost').with(
-            'aliases' => [{'alias' => '/horizon/static', 'path' => '/tmp/horizon/static'}],
-          )
-        else
-          is_expected.to contain_apache__vhost('horizon_vhost').with(
-            'aliases' => [['alias', '/horizon/static'], ['path', '/tmp/horizon/static']],
-          )
-        end
+      if (Gem::Version.new(Puppet.version) >= Gem::Version.new('4.0'))
+        it { should contain_apache__vhost('horizon_vhost').with(
+          :aliases => [
+            { 'alias' => '/horizon/static', 'path' => '/tmp/horizon/static' }
+          ],
+        )}
+      else
+        it { should contain_apache__vhost('horizon_vhost').with(
+          :aliases => [
+            ['alias', '/horizon/static'],
+            ['path', '/tmp/horizon/static']
+          ],
+        )}
       end
     end
   end
-
 
   on_supported_os({
-    :supported_os   => OSDefaults.get_supported_os
+    :supported_os => OSDefaults.get_supported_os
   }).each do |os,facts|
     context "on #{os}" do
       let (:facts) do
         if facts[:operatingsystem] == 'Debian'
-          facts.merge!({:os_package_type => 'debian'})
+          facts.merge!( :os_package_type => 'debian' )
         end
 
         facts.merge!(OSDefaults.get_facts({
@@ -372,8 +534,8 @@ describe 'horizon::wsgi::apache' do
         end
       end
 
-      it_behaves_like 'apache for horizon'
-      it_behaves_like "apache for horizon on #{facts[:osfamily]} platforms"
+      it_behaves_like 'horizon::wsgi::apache'
+      it_behaves_like "horizon::wsgi::apache on #{facts[:osfamily]}"
     end
   end
 
