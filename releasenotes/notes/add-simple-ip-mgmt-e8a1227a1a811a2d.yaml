@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    New parameter horizon::simple_ip_manage can now be set to true to set and
+    enable simple_ip_management in the Horizon local_settings config.
