@@ -163,6 +163,9 @@ HORIZON_CONFIG["password_validator"] = {
 # Disable simplified floating IP address management for deployments with
 # multiple floating IP pools or complex network requirements.
 #HORIZON_CONFIG["simple_ip_management"] = False
+<% if @simple_ip_management %>
+HORIZON_CONFIG["simple_ip_management"] = True
+<% end %>
 
 # Turn off browser autocompletion for forms including the login form and
 # the database creation workflow if so desired.

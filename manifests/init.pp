@@ -214,13 +214,13 @@
 #    Specify an absolute pathname.
 #    Defaults to /tmp
 #
-# [*policy_files_path*]
-#   (Optional) The path to the policy files
-#   Defaults to undef.
+#  [*policy_files_path*]
+#    (Optional) The path to the policy files
+#    Defaults to undef.
 #
-# [*policy_files*]
-#   (Optional) Policy files
-#   Defaults to undef.
+#  [*policy_files*]
+#    (Optional) Policy files
+#    Defaults to undef.
 #
 #  [*secure_cookies*]
 #    (optional) Enables security settings for cookies. Useful when using
@@ -316,22 +316,26 @@
 #     - { name: 'material', label: 'Material', path: 'themes/material' }
 #
 #  [*default_theme*]
-#    (optional) The default theme to use from list of available themes. Value should be theme_name.
+#   (optional) The default theme to use from list of available themes. Value should be theme_name.
+#   Defaults to false
+#
+#  [*simple_ip_management*]
+#    (optional) Boolean to enable or disable the simple_ip_management option to Horizon.
 #    Defaults to false
 #
-# [*password_autocomplete*]
-#   (optional) Whether to instruct the client browser to autofill the login form password
-#   Valid values are 'on' and 'off'
-#   Defaults to 'off'
+#  [*password_autocomplete*]
+#    (optional) Whether to instruct the client browser to autofill the login form password
+#    Valid values are 'on' and 'off'
+#    Defaults to 'off'
 #
-# [*images_panel*]
-#   (optional) Enabled panel for images.
-#   Valid values are 'legacy' and 'angular'
-#   Defaults to 'legacy'
+#  [*images_panel*]
+#    (optional) Enabled panel for images.
+#    Valid values are 'legacy' and 'angular'
+#    Defaults to 'legacy'
 #
-# [*create_image_defaults*]
-#   (optional) A dictionary of default settings for create image modal.
-#   Defaults to undef - will not add entry to local settings.
+#  [*create_image_defaults*]
+#    (optional) A dictionary of default settings for create image modal.
+#    Defaults to undef - will not add entry to local settings.
 #
 #  [*password_retrieve*]
 #    (optional) Enables the use of 'Retrieve Password' in the Horizon Web UI.
@@ -493,6 +497,7 @@ class horizon(
   $vhost_extra_params                  = undef,
   $available_themes                    = false,
   $default_theme                       = false,
+  $simple_ip_management                = false,
   $password_autocomplete               = 'off',
   $images_panel                        = 'legacy',
   $create_image_defaults               = undef,
