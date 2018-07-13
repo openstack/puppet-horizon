@@ -190,6 +190,10 @@
 #    properly configured DNS which will resolve hostnames for SSL endpoints
 #    Horizon will connect to. (Defaults to false)
 #
+#  [*openstack_ssl_cacert*]
+#    (optional) The CA certificate to use to verify SSL
+#    openstack connection.
+#
 #  [*ssl_redirect*]
 #    (optional) Whether to redirect http to https
 #    Defaults to True
@@ -468,6 +472,7 @@ class horizon(
   $http_port                           = 80,
   $https_port                          = 443,
   $ssl_no_verify                       = false,
+  $openstack_ssl_cacert                = '',
   $ssl_redirect                        = true,
   $horizon_cert                        = undef,
   $horizon_key                         = undef,
