@@ -71,7 +71,7 @@ Implementation
 Horizon is a simple module using the combination of a package, template, and the file_line type.  Most all the configuration lives inside the included local_settings template and the file_line type is for selectively inserting needed lines into configuration files that aren't explicitly managed by the horizon module.
 
 Limitations
-------------
+-----------
 
 * Only supports Apache using mod_wsgi.
 
@@ -103,6 +103,6 @@ Contributors
 * https://github.com/openstack/puppet-horizon/graphs/contributors
 
 Repository
--------------
+----------
 
 * https://git.openstack.org/cgit/openstack/puppet-horizon
