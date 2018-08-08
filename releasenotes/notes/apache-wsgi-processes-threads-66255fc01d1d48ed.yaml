@@ -1,0 +1,6 @@
+---
+upgrade:
+  - |
+    The default value for horizon::wsgi::apache::wsgi_processes changed to $::os_workers
+  - |
+    The default value for horizon::wsgi::apache::wsgi_threads changed to 1

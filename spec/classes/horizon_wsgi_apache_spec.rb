@@ -3,9 +3,7 @@ require 'spec_helper'
 describe 'horizon::wsgi::apache' do
   let :params do
     {
-      :servername     => 'some.host.tld',
-      :wsgi_processes => '3',
-      :wsgi_threads   => '10',
+      :servername => 'some.host.tld',
     }
   end
 
@@ -46,8 +44,8 @@ describe 'horizon::wsgi::apache' do
         :wsgi_daemon_process         => platforms_params[:wsgi_group],
         :wsgi_application_group      => '%{GLOBAL}',
         :wsgi_daemon_process_options => {
-          'processes'    => params[:wsgi_processes],
-          'threads'      => params[:wsgi_threads],
+          'processes'    => facts[:os_workers],
+          'threads'      => '1',
           'user'         => platforms_params[:unix_user],
           'group'        => platforms_params[:unix_group],
           'display-name' => 'horizon'
@@ -58,8 +56,10 @@ describe 'horizon::wsgi::apache' do
     context 'with overridden parameters' do
       before do
         params.merge!({
-          :priority      => '10',
-          :redirect_type => 'temp',
+          :priority       => '10',
+          :redirect_type  => 'temp',
+          :wsgi_processes => '13',
+          :wsgi_threads   => '3'
         })
       end
 
@@ -88,8 +88,8 @@ describe 'horizon::wsgi::apache' do
         :wsgi_daemon_process         => platforms_params[:wsgi_group],
         :wsgi_application_group      => '%{GLOBAL}',
         :wsgi_daemon_process_options => {
-          'processes'    => params[:wsgi_processes],
-          'threads'      => params[:wsgi_threads],
+          'processes'    => '13',
+          'threads'      => '3',
           'user'         => platforms_params[:unix_user],
           'group'        => platforms_params[:unix_group],
           'display-name' => 'horizon'
@@ -109,8 +109,8 @@ describe 'horizon::wsgi::apache' do
 
       it { should contain_apache__vhost('horizon_vhost').with(
         :wsgi_daemon_process_options => {
-          'processes'    => params[:wsgi_processes],
-          'threads'      => params[:wsgi_threads],
+          'processes'    => facts[:os_workers],
+          'threads'      => '1',
           'user'         => 'myuser',
           'group'        => platforms_params[:unix_group],
           'display-name' => 'horizon',
@@ -492,7 +492,8 @@ describe 'horizon::wsgi::apache' do
 
         facts.merge!(OSDefaults.get_facts({
           :fqdn           => 'some.host.tld',
-          :concat_basedir => '/var/lib/puppet/concat'
+          :concat_basedir => '/var/lib/puppet/concat',
+          :os_workers     => '6'
         }))
       end
 

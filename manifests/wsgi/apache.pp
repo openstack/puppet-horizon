@@ -40,11 +40,11 @@
 #
 # [*wsgi_processes*]
 #   (optional) Number of Horizon processes to spawn
-#   Defaults to '3'
+#   Defaults to $::os_workers
 #
 # [*wsgi_threads*]
 #   (optional) Number of thread to run in a Horizon process
-#   Defaults to '10'
+#   Defaults to '1'
 #
 # [*custom_wsgi_process_options*]
 #   (optional) gives you the oportunity to add custom process options or to
@@ -98,8 +98,8 @@ class horizon::wsgi::apache (
   $horizon_cert                = undef,
   $horizon_key                 = undef,
   $horizon_ca                  = undef,
-  $wsgi_processes              = '3',
-  $wsgi_threads                = '10',
+  $wsgi_processes              = $::os_workers,
+  $wsgi_threads                = '1',
   $custom_wsgi_process_options = {},
   $priority                    = '15',
   $vhost_conf_name             = 'horizon_vhost',
