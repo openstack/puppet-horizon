@@ -197,8 +197,16 @@
 #  [*horizon_ca*]
 #    (required with listen_ssl) CA certificate to use for SSL support.
 #
+#  [*wsgi_processes*]
+#    (optional) Number of Horizon processes to spawn
+#    Defaults to '3'
+#
+#  [*wsgi_threads*]
+#    (optional) Number of thread to run in a Horizon process
+#    Defaults to '10'
+#
 #  [*vhost_extra_params*]
-#    (optionnal) extra parameter to pass to the apache::vhost class
+#    (optional) extra parameter to pass to the apache::vhost class
 #    Defaults to undef
 #
 #  [*file_upload_temp_dir*]
@@ -482,6 +490,8 @@ class horizon(
   $horizon_cert                        = undef,
   $horizon_key                         = undef,
   $horizon_ca                          = undef,
+  $wsgi_processes                      = '3',
+  $wsgi_threads                        = '10',
   $compress_offline                    = true,
   $hypervisor_options                  = {},
   $cinder_options                      = {},
@@ -673,6 +683,8 @@ settings_local.py and parameter server_aliases for setting ServerAlias directive
       horizon_cert   => $horizon_cert,
       horizon_key    => $horizon_key,
       horizon_ca     => $horizon_ca,
+      wsgi_processes => $wsgi_processes,
+      wsgi_threads   => $wsgi_threads,
       extra_params   => $vhost_extra_params,
       redirect_type  => $redirect_type,
       root_url       => $root_url,

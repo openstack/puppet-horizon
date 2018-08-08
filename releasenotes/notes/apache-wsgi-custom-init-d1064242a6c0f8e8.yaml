@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The wsgi_processes and wsgi_threads options that is passed to horizon::wsgi::apache
+    can now be set in ::horizon class.
