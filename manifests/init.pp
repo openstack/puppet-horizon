@@ -207,8 +207,16 @@
 #  [*horizon_ca*]
 #    (required with listen_ssl) CA certificate to use for SSL support.
 #
+#  [*wsgi_processes*]
+#    (optional) Number of Horizon processes to spawn
+#    Defaults to $::os_workers
+#
+#  [*wsgi_threads*]
+#    (optional) Number of thread to run in a Horizon process
+#    Defaults to '1'
+#
 #  [*vhost_extra_params*]
-#    (optionnal) extra parameter to pass to the apache::vhost class
+#    (optional) extra parameter to pass to the apache::vhost class
 #    Defaults to undef
 #
 #  [*file_upload_temp_dir*]
@@ -477,6 +485,8 @@ class horizon(
   $horizon_cert                        = undef,
   $horizon_key                         = undef,
   $horizon_ca                          = undef,
+  $wsgi_processes                      = $::os_workers,
+  $wsgi_threads                        = '1',
   $compress_offline                    = true,
   $hypervisor_options                  = {},
   $cinder_options                      = {},
@@ -647,6 +657,8 @@ class horizon(
       horizon_cert   => $horizon_cert,
       horizon_key    => $horizon_key,
       horizon_ca     => $horizon_ca,
+      wsgi_processes => $wsgi_processes,
+      wsgi_threads   => $wsgi_threads,
       extra_params   => $vhost_extra_params,
       redirect_type  => $redirect_type,
       root_url       => $root_url,

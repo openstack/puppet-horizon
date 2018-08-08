@@ -43,10 +43,12 @@ describe 'horizon' do
 
       it 'configures apache' do
         is_expected.to contain_class('horizon::wsgi::apache').with({
-          :servername    => 'some.host.tld',
-          :listen_ssl    => false,
-          :extra_params  => {},
-          :redirect_type => 'permanent',
+          :servername     => 'some.host.tld',
+          :listen_ssl     => false,
+          :wsgi_processes => facts[:os_workers],
+          :wsgi_threads   => '1',
+          :extra_params   => {},
+          :redirect_type  => 'permanent',
         })
       end
 
@@ -116,6 +118,8 @@ describe 'horizon' do
                                             'supported_provider_types' => ['flat', 'vxlan'], 'supported_vnic_types' => ['*'], 'default_ipv4_subnet_pool_label' => 'None', },
           :instance_options               => {'disable_image' => true, 'disable_instance_snapshot' => true, 'disable_volume' => true, 'disable_volume_snapshot' => true, 'create_volume' => false },
           :file_upload_temp_dir           => '/var/spool/horizon',
+          :wsgi_processes                 => '30',
+          :wsgi_threads                   => '5',
           :secure_cookies                 => true,
           :api_versions                   => {'identity' => 2.0},
           :keystone_multidomain_support   => true,
@@ -274,6 +278,18 @@ describe 'horizon' do
           :name   => platforms_params[:memcache_package],
          )
       }
+    end
+
+    context 'with custom wsgi options' do
+      before do
+        params.merge!( :wsgi_processes => '30',
+                       :wsgi_threads   => '5' )
+      end
+
+      it { should contain_class('horizon::wsgi::apache').with(
+        :wsgi_processes => '30',
+        :wsgi_threads   => '5',
+      )}
     end
 
     context 'with vhost_extra_params' do
@@ -692,7 +708,8 @@ describe 'horizon' do
       let (:facts) do
         facts.merge!(OSDefaults.get_facts({
           :fqdn           => 'some.host.tld',
-          :concat_basedir => '/var/lib/puppet/concat'
+          :concat_basedir => '/var/lib/puppet/concat',
+          :os_workers     => '6'
         }))
       end
 
