@@ -1,0 +1,5 @@
+---
+fixes:
+  - |
+    Django WSGI entrypoint changed from django.wsgi to wsgi.py file as deprecated
+    by the Horizon project.
