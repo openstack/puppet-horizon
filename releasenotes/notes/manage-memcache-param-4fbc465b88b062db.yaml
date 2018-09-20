@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Added a new parameter horizon::manage_memcache_package that can be used to
+    determine if you want the python memcache library installed if the cache
+    backend is set to using memcache.

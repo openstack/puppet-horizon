@@ -47,6 +47,10 @@
 #  [*cache_server_port*]
 #    (optional) Memcached port. Defaults to '11211'.
 #
+#  [*manage_memcache_package*]
+#    (optional) Boolean if we should manage the memcache package.
+#    Defaults to true
+#
 #  [*horizon_app_links*]
 #    (optional) Array of arrays that can be used to add call-out links
 #    to the dashboard for other apps. There is no specific requirement
@@ -467,6 +471,7 @@ class horizon(
   $cache_server_url                    = undef,
   $cache_server_ip                     = undef,
   $cache_server_port                   = '11211',
+  $manage_memcache_package             = true,
   $horizon_app_links                   = false,
   $keystone_url                        = 'http://127.0.0.1:5000',
   $keystone_default_role               = '_member_',
@@ -629,7 +634,7 @@ settings_local.py and parameter server_aliases for setting ServerAlias directive
   validate_re($images_panel, ['^legacy$', '^angular$'])
   validate_absolute_path($root_path)
 
-  if $cache_backend =~ /MemcachedCache/ {
+  if $manage_memcache_package and $cache_backend =~ /MemcachedCache/ {
     ensure_resources('package', { 'python-memcache' =>
       { name   => $::horizon::params::memcache_package,
         tag    => ['openstack']}})
