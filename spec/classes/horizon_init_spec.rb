@@ -280,6 +280,15 @@ describe 'horizon' do
       }
     end
 
+    context 'does not install python memcache when manage_memcache_package set to false' do
+      before do
+        params.merge!( :cache_backend           => 'django.core.cache.backends.memcached.MemcachedCache',
+                       :manage_memcache_package => false )
+      end
+
+      it { is_expected.not_to contain_package('python-memcache') }
+    end
+
     context 'with custom wsgi options' do
       before do
         params.merge!( :wsgi_processes => '30',
