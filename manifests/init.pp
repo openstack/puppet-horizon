@@ -335,10 +335,6 @@
 #   (optional) The default theme to use from list of available themes. Value should be theme_name.
 #   Defaults to false
 #
-#  [*simple_ip_management*]
-#    (optional) Boolean to enable or disable the simple_ip_management option to Horizon.
-#    Defaults to false
-#
 #  [*password_autocomplete*]
 #    (optional) Whether to instruct the client browser to autofill the login form password
 #    Valid values are 'on' and 'off'
@@ -517,7 +513,6 @@ class horizon(
   $vhost_extra_params                  = undef,
   $available_themes                    = false,
   $default_theme                       = false,
-  $simple_ip_management                = false,
   $password_autocomplete               = 'off',
   $images_panel                        = 'legacy',
   $create_image_defaults               = undef,
