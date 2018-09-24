@@ -335,10 +335,6 @@
 #   (optional) The default theme to use from list of available themes. Value should be theme_name.
 #   Defaults to false
 #
-#  [*simple_ip_management*]
-#    (optional) Boolean to enable or disable the simple_ip_management option to Horizon.
-#    Defaults to false
-#
 #  [*password_autocomplete*]
 #    (optional) Whether to instruct the client browser to autofill the login form password
 #    Valid values are 'on' and 'off'
@@ -444,6 +440,12 @@
 #     will disable the function in Horizon, direct will allow the user agent to directly
 #     talk to the glance-api.
 #
+#### DEPRECATED PARAMS
+#
+#  [*simple_ip_management*]
+#    (optional) Boolean to enable or disable the simple_ip_management option to Horizon.
+#    Defaults to false
+#
 # === Examples
 #
 #  class { 'horizon':
@@ -517,7 +519,6 @@ class horizon(
   $vhost_extra_params                  = undef,
   $available_themes                    = false,
   $default_theme                       = false,
-  $simple_ip_management                = false,
   $password_autocomplete               = 'off',
   $images_panel                        = 'legacy',
   $create_image_defaults               = undef,
@@ -535,9 +536,15 @@ class horizon(
   $enable_user_pass                    = true,
   $customization_module                = undef,
   $horizon_upload_mode                 = undef,
+### DEPRECATED PARAMS
+  $simple_ip_management                = false,
 ) inherits ::horizon::params {
 
   include ::horizon::deps
+
+  if $simple_ip_management {
+    warning('horizon::simple_ip_management is deprecated and will be removed next release.')
+  }
 
   if $cache_server_url and $cache_server_ip {
     fail('Only one of cache_server_url or cache_server_ip can be set.')

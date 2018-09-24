@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    The horizon::simple_ip_management was removed in Rocky and has no effect
+    and will be removed from the Puppet interface in Stein.
