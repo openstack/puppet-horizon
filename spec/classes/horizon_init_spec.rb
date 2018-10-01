@@ -108,6 +108,7 @@ describe 'horizon' do
           :openstack_endpoint_type        => 'internalURL',
           :secondary_endpoint_type        => 'ANY-VALUE',
           :django_debug                   => true,
+          :site_branding                  => 'mysite',
           :api_result_limit               => 4682,
           :compress_offline               => false,
           :hypervisor_options             => {'can_set_mount_point' => false, 'can_set_password' => true },
@@ -144,6 +145,7 @@ describe 'horizon' do
       it 'generates local_settings.py' do
         verify_concat_fragment_contents(catalogue, 'local_settings.py', [
           'DEBUG = True',
+          "SITE_BRANDING = 'mysite'",
           "ALLOWED_HOSTS = ['some.host.tld', ]",
           "SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')",
           'CSRF_COOKIE_SECURE = True',

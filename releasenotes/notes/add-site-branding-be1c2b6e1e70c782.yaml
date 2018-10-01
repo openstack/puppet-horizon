@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Added new parameter horizon::site_branding which can be used to set the
+    SITE_BRANDING settings that controls the title of the web pages that
+    horizon will render. The default value is undef which will not add this
+    value to the configuration file and the horizon default value of
+    'OpenStack Dashboard' will be used.
