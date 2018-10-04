@@ -39,7 +39,7 @@ describe 'horizon::wsgi::apache' do
         :redirectmatch_status        => 'permanent',
         :redirectmatch_regexp        => '^/$',
         :redirectmatch_dest          => platforms_params[:root_url],
-        :wsgi_script_aliases         => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' },
+        :wsgi_script_aliases         => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi.py' },
         :wsgi_process_group          => platforms_params[:wsgi_group],
         :wsgi_daemon_process         => platforms_params[:wsgi_group],
         :wsgi_application_group      => '%{GLOBAL}',
@@ -83,7 +83,7 @@ describe 'horizon::wsgi::apache' do
         :redirectmatch_status        => 'temp',
         :redirectmatch_regexp        => '^/$',
         :redirectmatch_dest          => platforms_params[:root_url],
-        :wsgi_script_aliases         => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi' },
+        :wsgi_script_aliases         => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi.py' },
         :wsgi_process_group          => platforms_params[:wsgi_group],
         :wsgi_daemon_process         => platforms_params[:wsgi_group],
         :wsgi_application_group      => '%{GLOBAL}',
@@ -151,7 +151,7 @@ describe 'horizon::wsgi::apache' do
         :wsgi_daemon_process    => 'horizon-ssl',
         :wsgi_application_group => '%{GLOBAL}',
         :wsgi_script_aliases    => {
-          platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi'
+          platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi.py'
         }
       )}
 
@@ -171,7 +171,7 @@ describe 'horizon::wsgi::apache' do
         :wsgi_daemon_process    => platforms_params[:wsgi_group],
         :wsgi_application_group => '%{GLOBAL}',
         :wsgi_script_aliases    => {
-          platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi'
+          platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi.py'
         }
       )}
     end
@@ -222,7 +222,7 @@ describe 'horizon::wsgi::apache' do
           { 'alias' => '/static', 'path' => '/tmp/horizon/static' }
         ],
         :wsgi_script_aliases => {
-          '/' => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi/django.wsgi'
+          '/' => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi.py'
         }
       )}
 
