@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    The horizon::simple_ip_management parameter has been removed.
