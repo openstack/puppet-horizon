@@ -10,6 +10,9 @@ from openstack_dashboard.settings import HORIZON_CONFIG
 DEBUG = <%= @django_debug.to_s.capitalize %>
 TEMPLATE_DEBUG = DEBUG
 
+<% if @site_branding %>
+SITE_BRANDING = '<%= @site_branding %>'
+<% end %>
 
 # WEBROOT is the location relative to Webserver root
 # should end with a slash.

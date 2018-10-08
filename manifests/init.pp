@@ -67,6 +67,10 @@
 #  [*django_debug*]
 #    (optional) Enable or disable Django debugging. Defaults to 'False'.
 #
+#  [*site_branding*]
+#    (optional) Set the SITE_BRANDING config option that controls the
+#    title of the web pages in the browser. Defaults to 'undef'.
+#
 #  [*openstack_endpoint_type*]
 #    (optional) endpoint type to use for the endpoints in the Keystone
 #    service catalog. Defaults to 'undef'.
@@ -464,6 +468,7 @@ class horizon(
   $keystone_url                        = 'http://127.0.0.1:5000',
   $keystone_default_role               = '_member_',
   $django_debug                        = 'False',
+  $site_branding                       = undef,
   $openstack_endpoint_type             = undef,
   $secondary_endpoint_type             = undef,
   $available_regions                   = undef,
