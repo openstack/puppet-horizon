@@ -587,6 +587,7 @@ class horizon(
   $instance_defaults = {
     'config_drive'              => false,
     'create_volume'             => true,
+    'hide_create_volume'        => false,
     'disable_image'             => false,
     'disable_instance_snapshot' => false,
     'disable_volume'            => false,
