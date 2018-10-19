@@ -5,4 +5,22 @@
       - puppet-openstack-integration-jobs-scenario003
       - puppet-openstack-beaker-jobs
       - release-notes-jobs-python3
-      - tripleo-puppet-standalone
+    check:
+      jobs:
+        - puppet-horizon-tripleo-standalone
+    gate:
+      jobs:
+        - puppet-horizon-tripleo-standalone
+
+- job:
+    name: puppet-horizon-tripleo-standalone
+    parent: tripleo-puppet-ci-centos-7-standalone
+    description: |
+      TripleO standalone Job running Horizon specific Tempest tests.
+    vars:
+      featureset_override:
+        run_tempest: true
+        tempest_whitelist:
+          - 'horizon'
+        tempest_plugins:
+          - 'python-horizon-tests-tempest'
