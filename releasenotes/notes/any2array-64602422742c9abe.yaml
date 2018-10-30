@@ -1,0 +1,7 @@
+---
+upgrade:
+  - |
+    The os_any2array function that the Horizon module used internally is now
+    removed and it instead uses the any2array function exposed by the stdlib
+    module. The stdlib module introduced the any2array function in 2013 so we
+    are now expecting that you are using atleast stdlib >= 4.0.0

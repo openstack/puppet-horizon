@@ -217,7 +217,7 @@ class horizon::wsgi::apache (
 
   $default_vhost_conf_no_ip = {
     servername                  => $servername,
-    serveraliases               => os_any2array($server_aliases),
+    serveraliases               => any2array($server_aliases),
     docroot                     => '/var/www/',
     access_log_file             => 'horizon_access.log',
     error_log_file              => 'horizon_error.log',
