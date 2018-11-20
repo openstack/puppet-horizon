@@ -1,0 +1,12 @@
+features:
+  - |
+    The default keystone role horizon::keystone_default_role is changed from
+    _member_ to member to conform with what keystone-bootstrap creates.
+    This sets the OPENSTACK_KEYSTONE_DEFAULT_ROLE configuration option in
+    local_settings.
+upgrade:
+  - |
+    The default keystone role horizon::keystone_default_role is changed from
+    _member_ to member. This sets the OPENSTACK_KEYSTONE_DEFAULT_ROLE config
+    option in local_settings, if you still require or use the _member_ role
+    as default you need to set this explicitly.

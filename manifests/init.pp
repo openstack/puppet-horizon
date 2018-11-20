@@ -62,7 +62,7 @@
 #    (optional) Full url of keystone public endpoint. (Defaults to 'http://127.0.0.1:5000')
 #
 #  [*keystone_default_role*]
-#    (optional) Default Keystone role for new users. Defaults to '_member_'.
+#    (optional) Default Keystone role for new users. Defaults to 'member'.
 #
 #  [*django_debug*]
 #    (optional) Enable or disable Django debugging. Defaults to 'False'.
@@ -466,7 +466,7 @@ class horizon(
   $manage_memcache_package             = true,
   $horizon_app_links                   = false,
   $keystone_url                        = 'http://127.0.0.1:5000',
-  $keystone_default_role               = '_member_',
+  $keystone_default_role               = 'member',
   $django_debug                        = 'False',
   $site_branding                       = undef,
   $openstack_endpoint_type             = undef,

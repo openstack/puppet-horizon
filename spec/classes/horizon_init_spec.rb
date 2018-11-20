@@ -64,7 +64,7 @@ describe 'horizon' do
           'HORIZON_CONFIG["images_panel"] = "legacy"',
           "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
           'OPENSTACK_KEYSTONE_URL = "http://127.0.0.1:5000"',
-          'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "_member_"',
+          'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "member"',
           "    'can_set_mount_point': True,",
           "    'can_set_password': False,",
           "    'enable_distributed_router': False,",
