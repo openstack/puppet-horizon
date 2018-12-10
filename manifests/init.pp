@@ -306,6 +306,10 @@
 #    (optional) The path to the location of static assets.
 #    Defaults to "${::horizon::params::static_path}/openstack-dashboard"
 #
+#  [*access_log_format*]
+#    (optional) The log format for the access log.
+#    Defaults to false
+#
 #  [*session_timeout*]
 #    (optional) The session timeout for horizon in seconds. After this many seconds of inactivity
 #    the user is logged out.
@@ -511,6 +515,7 @@ class horizon(
   $overview_days_range                 = undef,
   $root_url                            = $::horizon::params::root_url,
   $root_path                           = "${::horizon::params::static_path}/openstack-dashboard",
+  $access_log_format                   = false,
   $session_timeout                     = 1800,
   $timezone                            = 'UTC',
   $secure_cookies                      = false,
@@ -653,22 +658,23 @@ class horizon(
 
   if $configure_apache {
     class { '::horizon::wsgi::apache':
-      bind_address   => $bind_address,
-      servername     => $servername,
-      server_aliases => $server_aliases,
-      listen_ssl     => $listen_ssl,
-      http_port      => $http_port,
-      https_port     => $https_port,
-      ssl_redirect   => $ssl_redirect,
-      horizon_cert   => $horizon_cert,
-      horizon_key    => $horizon_key,
-      horizon_ca     => $horizon_ca,
-      wsgi_processes => $wsgi_processes,
-      wsgi_threads   => $wsgi_threads,
-      extra_params   => $vhost_extra_params,
-      redirect_type  => $redirect_type,
-      root_url       => $root_url,
-      root_path      => $root_path,
+      bind_address      => $bind_address,
+      servername        => $servername,
+      server_aliases    => $server_aliases,
+      listen_ssl        => $listen_ssl,
+      http_port         => $http_port,
+      https_port        => $https_port,
+      ssl_redirect      => $ssl_redirect,
+      horizon_cert      => $horizon_cert,
+      horizon_key       => $horizon_key,
+      horizon_ca        => $horizon_ca,
+      wsgi_processes    => $wsgi_processes,
+      wsgi_threads      => $wsgi_threads,
+      extra_params      => $vhost_extra_params,
+      redirect_type     => $redirect_type,
+      root_url          => $root_url,
+      root_path         => $root_path,
+      access_log_format => $access_log_format,
     }
   }
 
