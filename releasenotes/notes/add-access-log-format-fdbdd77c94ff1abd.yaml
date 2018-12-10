@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Added horizon::access_log_format and horizon::wsgi::apache::access_log_format
+    that can be used to set the log format for the access log.

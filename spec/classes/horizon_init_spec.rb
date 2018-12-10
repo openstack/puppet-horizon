@@ -43,12 +43,13 @@ describe 'horizon' do
 
       it 'configures apache' do
         is_expected.to contain_class('horizon::wsgi::apache').with({
-          :servername     => 'some.host.tld',
-          :listen_ssl     => false,
-          :wsgi_processes => facts[:os_workers],
-          :wsgi_threads   => '1',
-          :extra_params   => {},
-          :redirect_type  => 'permanent',
+          :servername        => 'some.host.tld',
+          :listen_ssl        => false,
+          :wsgi_processes    => facts[:os_workers],
+          :wsgi_threads      => '1',
+          :extra_params      => {},
+          :redirect_type     => 'permanent',
+          :access_log_format => false,
         })
       end
 
@@ -291,13 +292,15 @@ describe 'horizon' do
 
     context 'with custom wsgi options' do
       before do
-        params.merge!( :wsgi_processes => '30',
-                       :wsgi_threads   => '5' )
+        params.merge!( :wsgi_processes    => '30',
+                       :wsgi_threads      => '5',
+                       :access_log_format => 'common' )
       end
 
       it { should contain_class('horizon::wsgi::apache').with(
-        :wsgi_processes => '30',
-        :wsgi_threads   => '5',
+        :wsgi_processes    => '30',
+        :wsgi_threads      => '5',
+        :access_log_format => 'common',
       )}
     end
 

@@ -87,6 +87,10 @@
 #    (optional) The path to the location of static assets.
 #    Defaults to "${::horizon::params::static_path}/openstack-dashboard"
 #
+#  [*access_log_format*]
+#    (optional) The log format to use to the access log.
+#    Defaults to false
+#
 class horizon::wsgi::apache (
   $bind_address                = undef,
   $servername                  = $::fqdn,
@@ -108,6 +112,7 @@ class horizon::wsgi::apache (
   $redirect_type               = 'permanent',
   $root_url                    = $::horizon::params::root_url,
   $root_path                   = "${::horizon::params::static_path}/openstack-dashboard",
+  $access_log_format           = false,
 ) inherits horizon::params {
 
   include ::horizon::deps
@@ -220,6 +225,7 @@ class horizon::wsgi::apache (
     serveraliases               => os_any2array($server_aliases),
     docroot                     => '/var/www/',
     access_log_file             => 'horizon_access.log',
+    access_log_format           => $access_log_format,
     error_log_file              => 'horizon_error.log',
     priority                    => $priority,
     aliases                     => [{
