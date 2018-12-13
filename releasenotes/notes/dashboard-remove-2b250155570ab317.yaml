@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Added ``ensure`` parameter to ``horizon::dashboard`` resource which defaults
+    to ``present``. You can now set this to absent if you want to remove a horizon
+    dashboard package.
