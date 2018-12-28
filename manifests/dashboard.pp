@@ -20,12 +20,20 @@
 # This resource installs additional horizon dashboard which is not
 # shipped with the horizon packages, but as additional packages.
 #
+# == Parameters:
+#
+# [*ensure*]
+#   (Optional) The ensure state of the dashboard package.
+#   Defaults to present
+#
 # == Example:
 #
 # This will install the correct heat-dashboard package for your deployment.
 # horizon::dashboard { 'heat': }
 #
-define horizon::dashboard {
+define horizon::dashboard (
+  $ensure = 'present',
+) {
 
   $dashboard = downcase($name)
 
@@ -45,7 +53,7 @@ define horizon::dashboard {
   }
 
   ensure_packages($dashboard_package_name, {
-    'ensure'  => present,
+    'ensure'  => $ensure,
     'tag'     => ['horizon-dashboard-package']
   })
 }

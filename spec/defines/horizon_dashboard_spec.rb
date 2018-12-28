@@ -24,11 +24,23 @@ describe 'horizon::dashboard' do
 
   shared_examples 'horizon::dashboard' do
     context 'with default' do
-      it {
-        is_expected.to contain_package(platform_params[:heat_dashboard_package_name]).with(
+      it { should contain_package(platform_params[:heat_dashboard_package_name]).with(
           :ensure => 'present',
-          :tag    => ['horizon-dashboard-package'])
-      }
+          :tag    => ['horizon-dashboard-package']
+      )}
+    end
+
+    context 'with absent' do
+      let :params do
+        {
+          :ensure => 'absent',
+        }
+      end
+
+      it { should contain_package(platform_params[:heat_dashboard_package_name]).with(
+        :ensure => 'absent',
+        :tag    => ['horizon-dashboard-package']
+      )}
     end
   end
 
@@ -38,21 +50,19 @@ describe 'horizon::dashboard' do
     end
 
     context 'with default' do
-      it {
-        is_expected.to contain_package('python3-heat-dashboard').with(
-          :ensure => 'present',
-          :tag    => ['horizon-dashboard-package'])
-      }
+      it { should contain_package('python3-heat-dashboard').with(
+        :ensure => 'present',
+        :tag    => ['horizon-dashboard-package']
+      )}
     end
   end
 
   shared_examples 'horizon::dashboard on Ubuntu' do
     context 'with default' do
-      it {
-        is_expected.to contain_package('python-heat-dashboard').with(
+      it { should contain_package('python-heat-dashboard').with(
           :ensure => 'present',
-          :tag    => ['horizon-dashboard-package'])
-      }
+          :tag    => ['horizon-dashboard-package']
+      )}
     end
   end
 
