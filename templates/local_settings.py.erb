@@ -308,7 +308,7 @@ OPENSTACK_KEYSTONE_DEFAULT_ROLE = "<%= @keystone_default_role %>"
 #    "acme_saml2": ("acme", "saml2")
 #}
 <% if @websso_enabled -%>
-WEBSSO_ENABLED = <%= @websso_enabled %>
+WEBSSO_ENABLED = True
 <% end -%>
 <% if @websso_initial_choice -%>
 WEBSSO_INITIAL_CHOICE = "<%= @websso_initial_choice %>"
