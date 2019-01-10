@@ -54,5 +54,5 @@
     ],
     "source": "git://github.com/openstack/puppet-horizon.git",
     "summary": "Puppet module for OpenStack Horizon",
-    "version": "14.1.0"
+    "version": "14.2.0"
 }
