@@ -2,6 +2,7 @@
 # should be considered to be constant
 class horizon::params {
   include ::openstacklib::defaults
+  $pyvers = $::openstacklib::defaults::pyvers
 
   $logdir                 = '/var/log/horizon'
   $django_wsgi            = '/usr/share/openstack-dashboard/openstack_dashboard/wsgi.py'
@@ -22,7 +23,7 @@ class horizon::params {
       $apache_group                = 'apache'
       $wsgi_user                   = 'apache'
       $wsgi_group                  = 'apache'
-      $memcache_package            = 'python-memcached'
+      $memcache_package            = "python${pyvers}-memcached"
     }
     'Debian': {
       $http_service                = 'apache2'
@@ -34,16 +35,15 @@ class horizon::params {
       $apache_group                = 'www-data'
       $wsgi_user                   = 'horizon'
       $wsgi_group                  = 'horizon'
+      $memcache_package            = "python${pyvers}-memcache"
       case $::os_package_type {
         'debian': {
             $package_name          = 'openstack-dashboard-apache'
             $httpd_config_file     = '/etc/apache2/sites-available/openstack-dashboard-alias-only.conf'
-            $memcache_package      = 'python3-memcache'
         }
         default: {
             $package_name          = 'openstack-dashboard'
             $httpd_config_file     = '/etc/apache2/conf-available/openstack-dashboard.conf'
-            $memcache_package      = 'python-memcache'
         }
       }
     }

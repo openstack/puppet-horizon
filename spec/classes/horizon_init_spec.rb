@@ -740,7 +740,7 @@ describe 'horizon' do
               :package_name     => 'openstack-dashboard',
               :root_url         => '/horizon',
               :root_path        => '/var/lib/openstack-dashboard',
-              :memcache_package => 'python-memcache',
+              :memcache_package => 'python3-memcache',
             }
           end
         when 'RedHat'
