@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Added new horizon::dropdown_max_items parameter that configures the
+    DROPDOWN_MAX_ITEMS config option in local_settings.py. Default value
+    is set to 30 like the Horizon default is.

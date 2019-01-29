@@ -84,6 +84,10 @@
 #    (optional) Maximum number of Swift containers/objects to display
 #    on a single page. Defaults to 1000.
 #
+#  [*dropdown_max_items*]
+#    (optional) Specify a maximum number of items to display in a dropdown.
+#    Defaults to 30
+#
 #  [*log_handler*]
 #    (optional) Log handler. Defaults to 'file'
 #
@@ -480,6 +484,7 @@ class horizon(
   $secondary_endpoint_type             = undef,
   $available_regions                   = undef,
   $api_result_limit                    = 1000,
+  $dropdown_max_items                  = 30,
   $log_handler                         = 'file',
   $log_level                           = 'INFO',
   $help_url                            = 'http://docs.openstack.org',
