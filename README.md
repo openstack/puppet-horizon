@@ -37,7 +37,7 @@ Setup
 
 **What the horizon module affects**
 
-* [Horizon](https://wiki.openstack.org/wiki/Horizon), the dashboard service for OpenStack.
+* [Horizon](https://docs.openstack.org/horizon/latest/), the dashboard service for OpenStack.
 
 ### Installing horizon
 
