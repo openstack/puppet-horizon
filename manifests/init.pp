@@ -607,10 +607,11 @@ class horizon(
   $keystone_options_real   = merge($keystone_defaults, $keystone_options)
   $neutron_options_real    = merge($neutron_defaults,$neutron_options)
   $instance_options_real   = merge($instance_defaults,$instance_options)
-  validate_hash($api_versions)
-  validate_re($password_autocomplete, ['^on$', '^off$'])
-  validate_re($images_panel, ['^legacy$', '^angular$'])
-  validate_absolute_path($root_path)
+
+  validate_legacy(Hash, 'validate_hash', $api_versions)
+  validate_legacy(Enum['on', 'off'], 'validate_re', $password_autocomplete, [['^on$', '^off$']])
+  validate_legacy(Enum['legacy', 'angular'], 'validate_re', $images_panel, [['^legacy$', '^angular$']])
+  validate_legacy(Stdlib::Absolutepath, 'validate_absolute_path', $root_path)
 
   if $manage_memcache_package and $cache_backend =~ /MemcachedCache/ {
     ensure_resources('package', { 'python-memcache' =>
