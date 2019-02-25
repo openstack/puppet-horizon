@@ -257,8 +257,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # For multiple regions uncomment this configuration, and add (endpoint, title).
 #AVAILABLE_REGIONS = [
-#    ('http://cluster1.example.com:5000/v2.0', 'cluster1'),
-#    ('http://cluster2.example.com:5000/v2.0', 'cluster2'),
+#    ('http://cluster1.example.com:5000/v3', 'cluster1'),
+#    ('http://cluster2.example.com:5000/v3', 'cluster2'),
 #]
 <% if @available_regions.kind_of?(Array) %>
 AVAILABLE_REGIONS = [
@@ -269,7 +269,7 @@ AVAILABLE_REGIONS = [
 <% end -%>
 
 #OPENSTACK_HOST = "127.0.0.1"
-#OPENSTACK_KEYSTONE_URL = "http://%s:5000/v2.0" % OPENSTACK_HOST
+#OPENSTACK_KEYSTONE_URL = "http://%s:5000/v3" % OPENSTACK_HOST
 #OPENSTACK_KEYSTONE_DEFAULT_ROLE = "member"
 OPENSTACK_KEYSTONE_URL = "<%= @keystone_url %>"
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "<%= @keystone_default_role %>"
