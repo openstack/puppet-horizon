@@ -110,4 +110,4 @@ Contributors
 Repository
 ----------
 
-* https://git.openstack.org/cgit/openstack/puppet-horizon
+* https://opendev.org/openstack/puppet-horizon
