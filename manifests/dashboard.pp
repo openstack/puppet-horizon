@@ -39,10 +39,7 @@ define horizon::dashboard (
 
   case $::osfamily {
     'Debian': {
-        $dashboard_package_name = $::os_package_type ? {
-          'debian' => "python3-${dashboard}-dashboard",
-          default  => "python-${dashboard}-dashboard"
-        }
+      $dashboard_package_name = "python3-${dashboard}-dashboard"
     }
     'RedHat': {
       $dashboard_package_name = "openstack-${dashboard}-ui"
