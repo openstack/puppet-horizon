@@ -59,7 +59,7 @@ describe 'horizon::dashboard' do
 
   shared_examples 'horizon::dashboard on Ubuntu' do
     context 'with default' do
-      it { should contain_package('python-heat-dashboard').with(
+      it { should contain_package('python3-heat-dashboard').with(
           :ensure => 'present',
           :tag    => ['horizon-dashboard-package']
       )}
@@ -77,12 +77,7 @@ describe 'horizon::dashboard' do
       let(:platform_params) do
         case facts[:osfamily]
         when 'Debian'
-          if facts[:os_package_type] == 'debian'
-            pkg = 'python3-heat-dashboard'
-          else
-            pkg = 'python-heat-dashboard'
-          end
-          { :heat_dashboard_package_name => pkg }
+          { :heat_dashboard_package_name => 'python3-heat-dashboard' }
         when 'RedHat'
           { :heat_dashboard_package_name => 'openstack-heat-ui' }
         end
