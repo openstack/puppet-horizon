@@ -19,8 +19,9 @@
       TripleO standalone Job running Horizon specific Tempest tests.
     vars:
       featureset_override:
-        run_tempest: true
-        tempest_whitelist:
+        run_tempest: false
+        tempest_services:
+          - horizon
+        tempest_test_whitelist:
           - 'horizon'
-        tempest_plugins:
-          - 'python-horizon-tests-tempest'
+        use_os_tempest: true
