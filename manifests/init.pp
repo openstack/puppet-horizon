@@ -135,8 +135,6 @@
 #  [*neutron_options*]
 #    (optional) A hash of parameters to enable features specific to
 #    Neutron.  These include:
-#    'enable_lb': Boolean to enable or disable Neutron's LBaaS feature.
-#      Defaults to False.
 #    'enable_firewall': Boolean to enable or disable Neutron's FWaaS feature.
 #      Defaults to False.
 #    'enable_quotas': Boolean to enable or disable Neutron quotas.
