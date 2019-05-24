@@ -249,6 +249,23 @@ describe 'horizon' do
       it { is_expected.to contain_exec('refresh_horizon_django_compress') }
     end
 
+    context 'with overridden parameters and IPv6 cache_server_ip array' do
+      before do
+        params.merge!({
+          :cache_server_ip => ['fd12:3456:789a:1::1','fd12:3456:789a:1::2'],
+        })
+      end
+
+      it 'generates local_settings.py' do
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+          "        'LOCATION': [ 'inet6:[fd12:3456:789a:1::1]:11211','inet6:[fd12:3456:789a:1::2]:11211', ],",
+        ])
+      end
+
+      it { is_expected.to contain_exec('refresh_horizon_django_cache') }
+      it { is_expected.to contain_exec('refresh_horizon_django_compress') }
+    end
+
     context 'with overridden parameters and cache_server_url' do
       before do
         params.merge!({
