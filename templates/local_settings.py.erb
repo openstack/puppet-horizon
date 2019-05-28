@@ -226,11 +226,11 @@ CACHES = {
     <% end -%>
     'BACKEND': '<%= @cache_backend %>',
     <% if @cache_server_ip %>
-          <% if @cache_server_ip.kind_of?(Array) %>
+          <% if @cache_server_ip_real.kind_of?(Array) %>
             <%  split = ":" + @cache_server_port + "','" %>
-        'LOCATION': [ <% @cache_server_ip.each do |ip| -%>'<%= ip -%>:<%= @cache_server_port -%>',<% end -%> ],
+        'LOCATION': [ <% @cache_server_ip_real.each do |ip| -%>'<%= ip -%>:<%= @cache_server_port -%>',<% end -%> ],
           <% else %>
-        'LOCATION': '<%= @cache_server_ip %>:<%= @cache_server_port %>',
+        'LOCATION': '<%= @cache_server_ip_real %>:<%= @cache_server_port %>',
           <% end %>
     <% end %>
     <% if @cache_server_url %>

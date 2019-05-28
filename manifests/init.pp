@@ -551,6 +551,10 @@ class horizon(
     fail('Only one of cache_server_url or cache_server_ip can be set.')
   }
 
+  if $cache_server_ip {
+    $cache_server_ip_real = inet6_prefix($cache_server_ip)
+  }
+
   $hypervisor_defaults = {
     'can_set_mount_point' => true,
     'can_set_password'    => false,

@@ -12,6 +12,10 @@
         {
             "name": "saz/memcached",
             "version_requirement": ">=2.0.2 <3.0.0"
+        },
+        {
+            "name": "openstack/openstacklib",
+            "version_requirement": ">=15.0.0 <16.0.0"
         }
     ],
     "description": "Installs and configures OpenStack Horizon (Dashboard).",
