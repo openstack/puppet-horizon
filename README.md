@@ -57,7 +57,7 @@ class { 'memcached':
   udp_port  => '11211',
 }
 
-class { '::horizon':
+class { 'horizon':
   cache_server_ip       => '127.0.0.1',
   cache_server_port     => '11211',
   secret_key            => '12345',

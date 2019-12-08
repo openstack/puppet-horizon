@@ -6,10 +6,10 @@ describe 'horizon class' do
 
     it 'should work with no errors' do
       pp= <<-EOS
-      include ::openstack_integration
-      include ::openstack_integration::repos
+      include openstack_integration
+      include openstack_integration::repos
 
-      class { '::horizon':
+      class { 'horizon':
         secret_key       => 'big_secret',
         # need to disable offline compression due to
         # https://bugs.launchpad.net/ubuntu/+source/horizon/+bug/1424042
@@ -47,10 +47,10 @@ describe 'horizon class' do
 
     it 'should work with no errors' do
       pp= <<-EOS
-      include ::openstack_integration
-      include ::openstack_integration::repos
+      include openstack_integration
+      include openstack_integration::repos
 
-      class { '::horizon':
+      class { 'horizon':
         secret_key       => 'big_secret',
         # need to disable offline compression due to
         # https://bugs.launchpad.net/ubuntu/+source/horizon/+bug/1424042

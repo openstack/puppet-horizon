@@ -545,7 +545,7 @@ class horizon(
   $horizon_upload_mode                 = undef,
 ) inherits ::horizon::params {
 
-  include ::horizon::deps
+  include horizon::deps
 
   if $cache_server_url and $cache_server_ip {
     fail('Only one of cache_server_url or cache_server_ip can be set.')
@@ -665,7 +665,7 @@ class horizon(
   }
 
   if $configure_apache {
-    class { '::horizon::wsgi::apache':
+    class { 'horizon::wsgi::apache':
       bind_address      => $bind_address,
       servername        => $servername,
       server_aliases    => $server_aliases,
