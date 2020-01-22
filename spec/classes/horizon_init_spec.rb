@@ -154,6 +154,7 @@ describe 'horizon' do
           "SECURE_PROXY_ADDR_HEADER = 'HTTP_X_FORWARDED_FOR'",
           'CSRF_COOKIE_SECURE = True',
           'SESSION_COOKIE_SECURE = True',
+          'SESSION_COOKIE_HTTPONLY = True',
           "  'identity': 2.0,",
           "OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True",
           "OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = 'domain.tld'",
