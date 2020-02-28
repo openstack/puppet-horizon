@@ -267,6 +267,7 @@ class horizon::wsgi::apache (
   ensure_resource('apache::vhost', $vhost_conf_name, merge ($default_vhost_conf, $extra_params, {
     redirectmatch_regexp => $redirectmatch_regexp_real,
     redirectmatch_dest   => $redirectmatch_url_real,
+    options              => ['-Indexes', '+FollowSymLinks','+MultiViews'],
   }))
   ensure_resource('apache::vhost', $vhost_ssl_conf_name, merge ($default_vhost_conf, $extra_params, {
     access_log_file      => 'horizon_ssl_access.log',
@@ -279,6 +280,7 @@ class horizon::wsgi::apache (
     wsgi_process_group   => 'horizon-ssl',
     redirectmatch_regexp => $root_url ? { '' => undef, '/' => undef, default => '^/$' },
     redirectmatch_dest   => $root_url ? { '' => undef, '/' => undef, default => $root_url },
+    options              => ['-Indexes', '+FollowSymLinks','+MultiViews'],
   }))
 
 }
