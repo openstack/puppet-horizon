@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    This module now requires a puppetlabs-apache version >= 5.0.0
