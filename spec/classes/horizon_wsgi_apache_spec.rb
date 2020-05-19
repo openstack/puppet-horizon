@@ -42,15 +42,15 @@ describe 'horizon::wsgi::apache' do
         :redirectmatch_dest          => platforms_params[:root_url],
         :wsgi_script_aliases         => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi.py' },
         :wsgi_process_group          => platforms_params[:wsgi_group],
-        :wsgi_daemon_process         => platforms_params[:wsgi_group],
+        :wsgi_daemon_process         => {
+          platforms_params[:wsgi_group] => {
+            'processes'    => facts[:os_workers],
+            'threads'      => '1',
+            'user'         => platforms_params[:unix_user],
+            'group'        => platforms_params[:unix_group],
+            'display-name' => 'horizon'
+          }},
         :wsgi_application_group      => '%{GLOBAL}',
-        :wsgi_daemon_process_options => {
-          'processes'    => facts[:os_workers],
-          'threads'      => '1',
-          'user'         => platforms_params[:unix_user],
-          'group'        => platforms_params[:unix_group],
-          'display-name' => 'horizon'
-        }
       )}
     end
 
@@ -88,15 +88,15 @@ describe 'horizon::wsgi::apache' do
         :redirectmatch_dest          => platforms_params[:root_url],
         :wsgi_script_aliases         => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi.py' },
         :wsgi_process_group          => platforms_params[:wsgi_group],
-        :wsgi_daemon_process         => platforms_params[:wsgi_group],
+        :wsgi_daemon_process         => {
+          platforms_params[:wsgi_group] => {
+            'processes'    => '13',
+            'threads'      => '3',
+            'user'         => platforms_params[:unix_user],
+            'group'        => platforms_params[:unix_group],
+            'display-name' => 'horizon'
+          }},
         :wsgi_application_group      => '%{GLOBAL}',
-        :wsgi_daemon_process_options => {
-          'processes'    => '13',
-          'threads'      => '3',
-          'user'         => platforms_params[:unix_user],
-          'group'        => platforms_params[:unix_group],
-          'display-name' => 'horizon'
-        }
       )}
     end
 
@@ -111,14 +111,15 @@ describe 'horizon::wsgi::apache' do
       end
 
       it { should contain_apache__vhost('horizon_vhost').with(
-        :wsgi_daemon_process_options => {
-          'processes'    => facts[:os_workers],
-          'threads'      => '1',
-          'user'         => 'myuser',
-          'group'        => platforms_params[:unix_group],
-          'display-name' => 'horizon',
-          'python_path'  => '/my/python/admin/path'
-        }
+        :wsgi_daemon_process         => {
+          platforms_params[:wsgi_group] => {
+            'processes'    => facts[:os_workers],
+            'threads'      => '1',
+            'user'         => 'myuser',
+            'group'        => platforms_params[:unix_group],
+            'display-name' => 'horizon',
+            'python_path'  => '/my/python/admin/path'
+          }}
       )}
     end
 
@@ -152,7 +153,14 @@ describe 'horizon::wsgi::apache' do
         :redirectmatch_regexp   => '^/$',
         :redirectmatch_dest     => platforms_params[:root_url],
         :wsgi_process_group     => 'horizon-ssl',
-        :wsgi_daemon_process    => 'horizon-ssl',
+        :wsgi_daemon_process    => {
+          'horizon-ssl' => {
+            'processes'    => facts[:os_workers],
+            'threads'      => '1',
+            'user'         => platforms_params[:unix_user],
+            'group'        => platforms_params[:unix_group],
+            'display-name' => 'horizon'
+          }},
         :wsgi_application_group => '%{GLOBAL}',
         :wsgi_script_aliases    => {
           platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi.py'
@@ -173,7 +181,14 @@ describe 'horizon::wsgi::apache' do
         :redirectmatch_regexp   => '(.*)',
         :redirectmatch_dest     => 'https://some.host.tld',
         :wsgi_process_group     => platforms_params[:wsgi_group],
-        :wsgi_daemon_process    => platforms_params[:wsgi_group],
+        :wsgi_daemon_process    => {
+          platforms_params[:wsgi_group] => {
+            'processes'    => facts[:os_workers],
+            'threads'      => '1',
+            'user'         => platforms_params[:unix_user],
+            'group'        => platforms_params[:unix_group],
+            'display-name' => 'horizon'
+          }},
         :wsgi_application_group => '%{GLOBAL}',
         :wsgi_script_aliases    => {
           platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi.py'

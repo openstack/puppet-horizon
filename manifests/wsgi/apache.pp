@@ -237,8 +237,6 @@ class horizon::wsgi::apache (
     ssl_key                     => $horizon_key,
     ssl_ca                      => $horizon_ca,
     wsgi_script_aliases         => hash([$script_url, $::horizon::params::django_wsgi]),
-    wsgi_daemon_process         => $::horizon::params::wsgi_group,
-    wsgi_daemon_process_options => $wsgi_daemon_process_options,
     wsgi_import_script          => $::horizon::params::django_wsgi,
     wsgi_process_group          => $::horizon::params::wsgi_group,
     wsgi_application_group      => $::horizon::params::wsgi_application_group,
@@ -266,18 +264,21 @@ class horizon::wsgi::apache (
   }
 
   ensure_resource('apache::vhost', $vhost_conf_name, merge ($default_vhost_conf, $extra_params, {
+    wsgi_daemon_process => hash([$::horizon::params::wsgi_group, $wsgi_daemon_process_options])
+    }, {
     redirectmatch_regexp => $redirectmatch_regexp_real,
     redirectmatch_dest   => $redirectmatch_url_real,
     options              => ['-Indexes', '+FollowSymLinks','+MultiViews'],
   }))
   ensure_resource('apache::vhost', $vhost_ssl_conf_name, merge ($default_vhost_conf, $extra_params, {
+    wsgi_daemon_process => hash(['horizon-ssl', $wsgi_daemon_process_options]),
+    }, {
     access_log_file      => 'horizon_ssl_access.log',
     error_log_file       => 'horizon_ssl_error.log',
     priority             => $priority,
     ssl                  => true,
     port                 => $https_port,
     ensure               => $ensure_ssl_vhost,
-    wsgi_daemon_process  => 'horizon-ssl',
     wsgi_process_group   => 'horizon-ssl',
     redirectmatch_regexp => $root_url_real ? { '' => undef, '/' => undef, default => '^/$' },
     redirectmatch_dest   => $root_url_real ? { '' => undef, '/' => undef, default => $root_url_real },
