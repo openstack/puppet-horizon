@@ -661,7 +661,6 @@ POLICY_FILES_PATH = '/etc/openstack-dashboard'
 #    'image': 'glance_policy.json',
 #    'orchestration': 'heat_policy.json',
 #    'network': 'neutron_policy.json',
-#    'telemetry': 'ceilometer_policy.json',
 #}
 <% if @policy_files.kind_of?(Hash) %>
 POLICY_FILES = {
@@ -793,13 +792,6 @@ LOGGING = {
             'propagate': False,
         },
         'heatclient': {
-            # 'handlers': ['console'],
-            'handlers': ['<%= @log_handler %>'],
-            # 'level': 'DEBUG',
-            'level': '<%= @log_level %>',
-            'propagate': False,
-        },
-        'ceilometerclient': {
             # 'handlers': ['console'],
             'handlers': ['<%= @log_handler %>'],
             # 'level': 'DEBUG',
