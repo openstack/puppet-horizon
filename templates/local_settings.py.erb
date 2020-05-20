@@ -713,7 +713,7 @@ LOGGING = {
         },
         'console': {
             # Set the level to "DEBUG" for verbose output logging.
-            'level': 'INFO',
+            'level': '<%= @log_level %>',
             'class': 'logging.StreamHandler',
         },
         'file': {
