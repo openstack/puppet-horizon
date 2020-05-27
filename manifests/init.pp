@@ -92,8 +92,8 @@
 #    (optional) Specify a maximum number of items to display in a dropdown.
 #    Defaults to 30
 #
-#  [*log_handler*]
-#    (optional) Log handler. Defaults to 'file'
+#  [*log_handlers*]
+#    (optional) Log handlers. Defaults to ['file']
 #
 #  [*log_level*]
 #    (optional) Log level. Defaults to 'INFO'. WARNING: Setting this to
@@ -450,6 +450,11 @@
 #     will disable the function in Horizon, direct will allow the user agent to directly
 #     talk to the glance-api.
 #
+# DEPRECATED PARAMETERS
+#
+#  [*log_handler*]
+#    (optional) Log handler. Defaults to 'file'
+#
 # === Examples
 #
 #  class { 'horizon':
@@ -480,7 +485,7 @@ class horizon(
   $available_regions                   = undef,
   $api_result_limit                    = 1000,
   $dropdown_max_items                  = 30,
-  $log_handler                         = 'file',
+  $log_handlers                        = ['file'],
   $log_level                           = 'INFO',
   $help_url                            = 'http://docs.openstack.org',
   $local_settings_template             = 'horizon/local_settings.py.erb',
@@ -543,9 +548,20 @@ class horizon(
   $enable_user_pass                    = true,
   $customization_module                = undef,
   $horizon_upload_mode                 = undef,
+  # DEPRECATED PARAMETERS
+  $log_handler                         = undef,
 ) inherits ::horizon::params {
 
   include horizon::deps
+
+  if $log_handler != undef {
+    warning('log_handler parameter was deprecated and will be removed in a future \
+release. Use log_handlers instead')
+    $log_handlers_real = [$log_handler]
+  } else {
+    validate_legacy(Array, 'validate_array', $log_handlers)
+    $log_handlers_real = $log_handlers
+  }
 
   if $cache_server_url and $cache_server_ip {
     fail('Only one of cache_server_url or cache_server_ip can be set.')

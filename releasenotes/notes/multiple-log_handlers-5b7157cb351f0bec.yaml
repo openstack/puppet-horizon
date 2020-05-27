@@ -1,0 +1,11 @@
+---
+features:
+  - |
+    The new ``horizon::log_handlers`` parameter was added to specify multiple
+    log handlers.
+
+deprecations:
+  - |
+    The ``horizon::log_handler`` parameter has been deprecated in favor of
+    the ``horizon::log_handlers`` parameter and will be removed in a future
+    release.
