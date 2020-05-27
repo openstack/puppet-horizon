@@ -297,7 +297,7 @@ describe 'horizon' do
 
       it {
         is_expected.to contain_package('python-memcache').with(
-          :tag    => ['openstack', 'horizon-package'],
+          :tag    => ['openstack'],
           :name   => platforms_params[:memcache_package],
          )
       }
