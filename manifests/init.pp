@@ -621,9 +621,10 @@ class horizon(
   validate_legacy(Stdlib::Absolutepath, 'validate_absolute_path', $root_path)
 
   if $manage_memcache_package and $cache_backend =~ /MemcachedCache/ {
-    ensure_resources('package', { 'python-memcache' =>
-      { name   => $::horizon::params::memcache_package,
-        tag    => ['openstack', 'horizon-package']}})
+    ensure_packages('python-memcache', {
+      name => $::horizon::params::memcache_package,
+      tag  => ['openstack'],
+    })
   }
 
   package { 'horizon':
