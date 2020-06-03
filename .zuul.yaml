@@ -24,4 +24,5 @@
           - horizon
         tempest_test_whitelist:
           - 'horizon'
+          - 'tempest.scenario.test_network_basic_ops.TestNetworkBasicOps'
         use_os_tempest: true
