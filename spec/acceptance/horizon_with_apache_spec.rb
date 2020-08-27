@@ -8,6 +8,7 @@ describe 'horizon class' do
       pp= <<-EOS
       include openstack_integration
       include openstack_integration::repos
+      include openstack_integration::apache
 
       class { 'horizon':
         secret_key       => 'big_secret',
@@ -49,6 +50,7 @@ describe 'horizon class' do
       pp= <<-EOS
       include openstack_integration
       include openstack_integration::repos
+      include openstack_integration::apache
 
       class { 'horizon':
         secret_key       => 'big_secret',
