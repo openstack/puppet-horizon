@@ -15,11 +15,10 @@ horizon
 3. [Setup - The basics of getting started with horizon](#setup)
 4. [Implementation - An under-the-hood peek at what the module is doing](#implementation)
 5. [Limitations - OS compatibility, etc.](#limitations)
-6. [Beaker-Rspec - Beaker-rspec tests for the project](#beaker-rspec)
-7. [Development - Guide for contributing to the module](#development)
-8. [Release Notes - Release notes for the project](#release-notes)
-9. [Contributors - Those with commits](#contributors)
-10. [Repository - The project source code repository](#repository)
+6. [Development - Guide for contributing to the module](#development)
+7. [Release Notes - Release notes for the project](#release-notes)
+8. [Contributors - Those with commits](#contributors)
+9. [Repository - The project source code repository](#repository)
 
 Overview
 --------
@@ -77,18 +76,6 @@ Limitations
 -----------
 
 * Only supports Apache using mod_wsgi.
-
-Beaker-Rspec
-------------
-
-This module has beaker-rspec tests
-
-To run:
-
-```shell
-bundle install
-bundle exec rspec spec/acceptance
-```
 
 Development
 -----------
