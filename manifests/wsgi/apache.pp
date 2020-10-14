@@ -38,6 +38,10 @@
 # [*horizon_ca*]
 #   (required with listen_ssl) CA certificate to use for SSL support.
 #
+# [*ssl_verify_client*]
+#   Set the Certificate verification level for Client Authentication.
+#   Defaults to undef
+#
 # [*wsgi_processes*]
 #   (optional) Number of Horizon processes to spawn
 #   Defaults to $::os_workers
@@ -102,6 +106,7 @@ class horizon::wsgi::apache (
   $horizon_cert                = undef,
   $horizon_key                 = undef,
   $horizon_ca                  = undef,
+  $ssl_verify_client           = undef,
   $wsgi_processes              = $::os_workers,
   $wsgi_threads                = '1',
   $custom_wsgi_process_options = {},
@@ -236,6 +241,7 @@ class horizon::wsgi::apache (
     ssl_cert                    => $horizon_cert,
     ssl_key                     => $horizon_key,
     ssl_ca                      => $horizon_ca,
+    ssl_verify_client           => $ssl_verify_client,
     wsgi_script_aliases         => hash([$script_url, $::horizon::params::django_wsgi]),
     wsgi_daemon_process         => $::horizon::params::wsgi_group,
     wsgi_daemon_process_options => $wsgi_daemon_process_options,
