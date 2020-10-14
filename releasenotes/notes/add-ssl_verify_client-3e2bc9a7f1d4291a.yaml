@@ -1,0 +1,10 @@
+---
+features:
+  - |
+    Added the ssl_verify_client parameter to init class and horizon::wsgi::apache
+    that is passed down to the created apache::vhost resource.
+upgrade:
+  - |
+    The puppetlabs-apache module 2.1.0 introduced a change where ssl_verify_client
+    is required otherwise the SSL CA certificate passed to the horizon module using
+    the horizon_ca parameter is ignored.
