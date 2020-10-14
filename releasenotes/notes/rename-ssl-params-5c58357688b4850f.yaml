@@ -1,0 +1,18 @@
+---
+features:
+  - |
+    Added ssl_cert, ssl_key and ssl_ca parameter to init class and the
+    horizon::wsgi::apache class.
+upgrade:
+  - |
+    You should now set the ssl_cert, ssl_key and ssl_ca parameters instead of
+    the horizon_cert, horizon_key and horizon_ca parameters in the init and
+    horizon::wsgi::apache class.
+  - |
+    When setting ssl_ca (or the deprecated horizon_ca) end users must now set
+    the ssl_verify_client parameter or the puppetlabs-apache module will not
+    set SSLCACertificate in the vhost configuration.
+deprecations:
+  - |
+    The horizon_cert, horizon_key and horizon_ca parameters is deprecated.
+    Please use ssl_cert, ssl_key and ssl_ca.

@@ -128,9 +128,9 @@ describe 'horizon::wsgi::apache' do
         params.merge!({
           :listen_ssl        => true,
           :ssl_redirect      => true,
-          :horizon_cert      => '/etc/pki/tls/certs/httpd.crt',
-          :horizon_key       => '/etc/pki/tls/private/httpd.key',
-          :horizon_ca        => '/etc/pki/tls/certs/ca.crt',
+          :ssl_cert          => '/etc/pki/tls/certs/httpd.crt',
+          :ssl_key           => '/etc/pki/tls/private/httpd.key',
+          :ssl_ca            => '/etc/pki/tls/certs/ca.crt',
           :ssl_verify_client => 'optional',
         })
       end
@@ -198,21 +198,32 @@ describe 'horizon::wsgi::apache' do
       )}
     end
 
-    context 'without horizon_cert parameter' do
+    context 'without ssl_cert parameter' do
       before do
         params.merge!( :listen_ssl => true )
       end
 
-      it { should raise_error(Puppet::Error, /The horizon_cert parameter is required when listen_ssl is true/) }
+      it { should raise_error(Puppet::Error, /The ssl_cert parameter is required when listen_ssl is true/) }
     end
 
-    context 'without horizon_key parameter' do
+    context 'without ssl_key parameter' do
       before do
-        params.merge!( :listen_ssl   => true,
-                       :horizon_cert => '/etc/pki/tls/certs/httpd.crt' )
+        params.merge!( :listen_ssl => true,
+                       :ssl_cert   => '/etc/pki/tls/certs/httpd.crt' )
       end
 
-      it { should raise_error(Puppet::Error, /The horizon_key parameter is required when listen_ssl is true/) }
+      it { should raise_error(Puppet::Error, /The ssl_key parameter is required when listen_ssl is true/) }
+    end
+
+    context 'without ssl_verify_client' do
+      before do
+        params.merge!( :listen_ssl => true,
+                       :ssl_cert   => '/etc/pki/tls/certs/httpd.crt',
+                       :ssl_key    => '/etc/pki/tls/certs/httpd.key',
+                       :ssl_ca     => '/etc/pki/tls/certs/httpd.ca' )
+      end
+
+      it { should raise_error(Puppet::Error, /The ssl_verify_client parameter is required when setting ssl_ca/) }
     end
 
     context 'with extra parameters' do
@@ -308,11 +319,12 @@ describe 'horizon::wsgi::apache' do
     context 'with listen_ssl and ssl_redirect set to true' do
       before do
         params.merge!({
-          :listen_ssl   => true,
-          :ssl_redirect => true,
-          :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
-          :horizon_key  => '/etc/pki/tls/private/httpd.key',
-          :horizon_ca   => '/etc/pki/tls/certs/ca.crt',
+          :listen_ssl        => true,
+          :ssl_redirect      => true,
+          :ssl_cert          => '/etc/pki/tls/certs/httpd.crt',
+          :ssl_key           => '/etc/pki/tls/private/httpd.key',
+          :ssl_ca            => '/etc/pki/tls/certs/ca.crt',
+          :ssl_verify_client => 'optional',
         })
       end
 
@@ -330,12 +342,13 @@ describe 'horizon::wsgi::apache' do
     context 'with listen_ssl and ssl_redirect with a slash root_url' do
       before do
         params.merge!({
-          :listen_ssl   => true,
-          :ssl_redirect => true,
-          :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
-          :horizon_key  => '/etc/pki/tls/private/httpd.key',
-          :horizon_ca   => '/etc/pki/tls/certs/ca.crt',
-          :root_url     => '/',
+          :listen_ssl        => true,
+          :ssl_redirect      => true,
+          :ssl_cert          => '/etc/pki/tls/certs/httpd.crt',
+          :ssl_key           => '/etc/pki/tls/private/httpd.key',
+          :ssl_ca            => '/etc/pki/tls/certs/ca.crt',
+          :ssl_verify_client => 'optional',
+          :root_url          => '/',
         })
       end
 
@@ -353,12 +366,13 @@ describe 'horizon::wsgi::apache' do
     context 'with listen_ssl and ssl_redirect with a empty root_url' do
       before do
         params.merge!({
-          :listen_ssl   => true,
-          :ssl_redirect => true,
-          :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
-          :horizon_key  => '/etc/pki/tls/private/httpd.key',
-          :horizon_ca   => '/etc/pki/tls/certs/ca.crt',
-          :root_url     => '',
+          :listen_ssl        => true,
+          :ssl_redirect      => true,
+          :ssl_cert          => '/etc/pki/tls/certs/httpd.crt',
+          :ssl_key           => '/etc/pki/tls/private/httpd.key',
+          :ssl_ca            => '/etc/pki/tls/certs/ca.crt',
+          :ssl_verify_client => 'optional',
+          :root_url          => '',
         })
       end
 
@@ -376,11 +390,12 @@ describe 'horizon::wsgi::apache' do
     context 'with listen_ssl and ssl_redirect disabled' do
       before do
         params.merge!({
-          :listen_ssl   => true,
-          :ssl_redirect => false,
-          :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
-          :horizon_key  => '/etc/pki/tls/private/httpd.key',
-          :horizon_ca   => '/etc/pki/tls/certs/ca.crt',
+          :listen_ssl        => true,
+          :ssl_redirect      => false,
+          :ssl_cert          => '/etc/pki/tls/certs/httpd.crt',
+          :ssl_key           => '/etc/pki/tls/private/httpd.key',
+          :ssl_ca            => '/etc/pki/tls/certs/ca.crt',
+          :ssl_verify_client => 'optional',
         })
       end
 
@@ -398,12 +413,13 @@ describe 'horizon::wsgi::apache' do
     context 'with listen_ssl and ssl_redirect disabled with custom root_url' do
       before do
         params.merge!({
-          :listen_ssl   => true,
-          :ssl_redirect => false,
-          :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
-          :horizon_key  => '/etc/pki/tls/private/httpd.key',
-          :horizon_ca   => '/etc/pki/tls/certs/ca.crt',
-          :root_url     => '/custom',
+          :listen_ssl        => true,
+          :ssl_redirect      => false,
+          :ssl_cert          => '/etc/pki/tls/certs/httpd.crt',
+          :ssl_key           => '/etc/pki/tls/private/httpd.key',
+          :ssl_ca            => '/etc/pki/tls/certs/ca.crt',
+          :ssl_verify_client => 'optional',
+          :root_url          => '/custom',
         })
       end
 

@@ -208,13 +208,13 @@
 #    (optional) Whether to redirect http to https
 #    Defaults to True
 #
-#  [*horizon_cert*]
+#  [*ssl_cert*]
 #    (required with listen_ssl) Certificate to use for SSL support.
 #
-#  [*horizon_key*]
+#  [*ssl_key*]
 #    (required with listen_ssl) Private key to use for SSL support.
 #
-#  [*horizon_ca*]
+#  [*ssl_ca*]
 #    (required with listen_ssl) CA certificate to use for SSL support.
 #
 # [*ssl_verify_client*]
@@ -459,6 +459,15 @@
 #  [*log_handler*]
 #    (optional) Log handler. Defaults to 'file'
 #
+#  [*horizon_cert*]
+#    (required with listen_ssl) Certificate to use for SSL support.
+#
+#  [*horizon_key*]
+#    (required with listen_ssl) Private key to use for SSL support.
+#
+#  [*horizon_ca*]
+#    (required with listen_ssl) CA certificate to use for SSL support.
+#
 # === Examples
 #
 #  class { 'horizon':
@@ -504,9 +513,9 @@ class horizon(
   $ssl_no_verify                       = false,
   $openstack_ssl_cacert                = '',
   $ssl_redirect                        = true,
-  $horizon_cert                        = undef,
-  $horizon_key                         = undef,
-  $horizon_ca                          = undef,
+  $ssl_cert                            = undef,
+  $ssl_key                             = undef,
+  $ssl_ca                              = undef,
   $ssl_verify_client                   = undef,
   $wsgi_processes                      = $::os_workers,
   $wsgi_threads                        = '1',
@@ -555,6 +564,9 @@ class horizon(
   $horizon_upload_mode                 = undef,
   # DEPRECATED PARAMETERS
   $log_handler                         = undef,
+  $horizon_cert                        = undef,
+  $horizon_key                         = undef,
+  $horizon_ca                          = undef,
 ) inherits ::horizon::params {
 
   include horizon::deps
@@ -687,6 +699,14 @@ release. Use log_handlers instead')
   }
 
   if $configure_apache {
+    if ($horizon_cert or $horizon_key or $horizon_ca) {
+      warning('horizon::horizon_cert, horizon::horizon_key and horizon::horizon_ca parameter is deprecated')
+    }
+
+    $ssl_cert_real = $horizon_cert.lest || { $ssl_cert }
+    $ssl_key_real = $horizon_key.lest || { $ssl_key }
+    $ssl_ca_real = $horizon_ca.lest || { $ssl_ca }
+
     class { 'horizon::wsgi::apache':
       bind_address      => $bind_address,
       servername        => $servername,
@@ -695,9 +715,9 @@ release. Use log_handlers instead')
       http_port         => $http_port,
       https_port        => $https_port,
       ssl_redirect      => $ssl_redirect,
-      horizon_cert      => $horizon_cert,
-      horizon_key       => $horizon_key,
-      horizon_ca        => $horizon_ca,
+      ssl_cert          => $ssl_cert_real,
+      ssl_key           => $ssl_key_real,
+      ssl_ca            => $ssl_ca_real,
       ssl_verify_client => $ssl_verify_client,
       wsgi_processes    => $wsgi_processes,
       wsgi_threads      => $wsgi_threads,
