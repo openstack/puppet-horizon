@@ -217,6 +217,10 @@
 #  [*horizon_ca*]
 #    (required with listen_ssl) CA certificate to use for SSL support.
 #
+# [*ssl_verify_client*]
+#   Set the Certificate verification level for Client Authentication.
+#   Defaults to undef
+#
 #  [*wsgi_processes*]
 #    (optional) Number of Horizon processes to spawn
 #    Defaults to $::os_workers
@@ -498,6 +502,7 @@ class horizon(
   $horizon_cert                        = undef,
   $horizon_key                         = undef,
   $horizon_ca                          = undef,
+  $ssl_verify_client                   = undef,
   $wsgi_processes                      = $::os_workers,
   $wsgi_threads                        = '1',
   $compress_offline                    = true,
@@ -677,6 +682,7 @@ class horizon(
       horizon_cert      => $horizon_cert,
       horizon_key       => $horizon_key,
       horizon_ca        => $horizon_ca,
+      ssl_verify_client => $ssl_verify_client,
       wsgi_processes    => $wsgi_processes,
       wsgi_threads      => $wsgi_threads,
       extra_params      => $vhost_extra_params,

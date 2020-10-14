@@ -125,11 +125,12 @@ describe 'horizon::wsgi::apache' do
     context 'with ssl enabled' do
       before do
         params.merge!({
-          :listen_ssl   => true,
-          :ssl_redirect => true,
-          :horizon_cert => '/etc/pki/tls/certs/httpd.crt',
-          :horizon_key  => '/etc/pki/tls/private/httpd.key',
-          :horizon_ca   => '/etc/pki/tls/certs/ca.crt',
+          :listen_ssl        => true,
+          :ssl_redirect      => true,
+          :horizon_cert      => '/etc/pki/tls/certs/httpd.crt',
+          :horizon_key       => '/etc/pki/tls/private/httpd.key',
+          :horizon_ca        => '/etc/pki/tls/certs/ca.crt',
+          :ssl_verify_client => 'optional',
         })
       end
 
@@ -148,6 +149,7 @@ describe 'horizon::wsgi::apache' do
         :ssl_cert               => '/etc/pki/tls/certs/httpd.crt',
         :ssl_key                => '/etc/pki/tls/private/httpd.key',
         :ssl_ca                 => '/etc/pki/tls/certs/ca.crt',
+        :ssl_verify_client      => 'optional',
         :redirectmatch_status   => 'permanent',
         :redirectmatch_regexp   => '^/$',
         :redirectmatch_dest     => platforms_params[:root_url],
