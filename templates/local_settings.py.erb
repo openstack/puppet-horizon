@@ -240,6 +240,27 @@ CACHES = {
     }
 }
 
+<% if @cache_tls_enabled %>
+
+## START TLS context configuration
+import ssl
+
+tls_context = ssl.create_default_context(<% if @cache_tls_cafile %>cafile='<%= @cache_tls_cafile %>'<% end %>)
+<% if @cache_tls_certfile and @cache_tls_keyfile %>
+tls_context.load_cert_chain('<%= @cache_tls_certfile %>', '<%= @cache_tls_keyfile %>')
+<% end %>
+<% if @cache_tls_certfile and not @cache_tls_keyfile %>
+tls_context.load_cert_chain('<%= @cache_tls_certfile %>')
+<% end %>
+<% if @cache_allowed_ciphers %>
+tls_context.set_ciphers('<%= @cache_tls_allowed_ciphers %>')
+<% end %>
+
+CACHES['default'].setdefault('OPTIONS', {})['tls_context'] = tls_context
+
+## END TLS context configuration
+<% end %>
+
 <% if @django_session_engine %>
 SESSION_ENGINE = "<%= @django_session_engine %>"
 <% end %>
