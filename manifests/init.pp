@@ -381,6 +381,15 @@
 #    recommended if you're running horizon behind a proxy.
 #    Defaults to false
 #
+#  [*secure_proxy_addr_header*]
+#    (optional) Enables the SECURE_PROXY_ADDR_HEADER option.
+#    This setting specifies the name of the header with remote IP address.
+#    The commom value for this setting
+#    is HTTP_X_REAL_IP or HTTP_X_FORWARDED_FOR. Note that this is only
+#    recommended if you're running horizon behind a proxy.
+#    If not present, then REMOTE_ADDR header is used
+#    Defaults to undef
+#
 #  [*disallow_iframe_embed*]
 #    (optional)DISALLOW_IFRAME_EMBED can be used to prevent Horizon from being embedded
 #    within an iframe. Legacy browsers are still vulnerable to a Cross-Frame
@@ -543,6 +552,7 @@ class horizon(
   $disable_password_reveal             = false,
   $enforce_password_check              = false,
   $enable_secure_proxy_ssl_header      = false,
+  $secure_proxy_addr_header            = undef,
   $disallow_iframe_embed               = true,
   $websso_enabled                      = false,
   $websso_initial_choice               = undef,
