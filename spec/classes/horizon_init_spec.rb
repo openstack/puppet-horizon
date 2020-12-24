@@ -142,6 +142,7 @@ describe 'horizon' do
           :create_image_defaults          => {'image_visibility' => 'private'},
           :password_retrieve              => true,
           :enable_secure_proxy_ssl_header => true,
+          :secure_proxy_addr_header       => 'HTTP_X_FORWARDED_FOR',
         })
       end
 
@@ -151,6 +152,7 @@ describe 'horizon' do
           "SITE_BRANDING = 'mysite'",
           "ALLOWED_HOSTS = ['some.host.tld', ]",
           "SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')",
+          "SECURE_PROXY_ADDR_HEADER = 'HTTP_X_FORWARDED_FOR'",
           'CSRF_COOKIE_SECURE = True',
           'SESSION_COOKIE_SECURE = True',
           'SESSION_COOKIE_HTTPONLY = True',

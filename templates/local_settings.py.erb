@@ -59,6 +59,12 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 #SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 <% end %>
 
+# This setting specifies the name of the header with remote IP address
+#SECURE_PROXY_ADDR_HEADER = False
+<% if @secure_proxy_addr_header %>
+SECURE_PROXY_ADDR_HEADER = '<%= @secure_proxy_addr_header %>'
+<% end %>
+
 # If Horizon is being served through SSL, then uncomment the following two
 # settings to better secure the cookies from security exploits
 <% if @secure_cookies %>
