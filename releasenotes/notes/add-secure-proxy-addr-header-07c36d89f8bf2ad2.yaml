@@ -1,0 +1,7 @@
+---
+features:
+  - Support was added to set the SECURE_PROXY_ADDR_HEADER option.
+    If horizon is behind a proxy server and the proxy is configured,
+    the IP address from request is passed using header variables
+    inside the request.
+    This setting specifies the name of the header with remote IP address.
