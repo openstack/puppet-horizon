@@ -148,9 +148,6 @@
 #      Defaults to False.
 #    'enable_ha_router': Enable or disable HA (High Availability) mode in
 #      Neutron virtual router in the Router panel.  Defaults to False.
-#    'profile_support':  A string indiciating which plugin-specific
-#      profiles to enable.  Defaults to 'None', other options include
-#      'cisco'.
 #
 #  [*instance_options*]
 #    (optional) A hash of parameters to enable or disable instance options
@@ -626,7 +623,6 @@ release. Use log_handlers instead')
     'enable_security_group'     => true,
     'enable_distributed_router' => false,
     'enable_ha_router'          => false,
-    'profile_support'           => 'None',
   }
 
   # Default options for the LAUNCH_INSTANCE_DEFAULTS section.  These will
