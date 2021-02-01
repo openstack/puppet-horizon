@@ -47,6 +47,35 @@
 #  [*cache_server_port*]
 #    (optional) Memcached port. Defaults to '11211'.
 #
+#  [*cache_tls_enabled*]
+#    (optional) Global toggle for TLS usage when comunicating with
+#    the caching servers. Defaults to false.
+#
+#  [*cache_tls_cafile*]
+#    (optional) Path to a file of concatenated CA certificates in PEM
+#    format necessary to establish the caching server's authenticity.
+#    If tls_enabled is False, this option is ignored.
+#    Defaults to undef.
+#
+#  [*cache_tls_certfile*]
+#    (optional) Path to a single file in PEM format containing the
+#    client's certificate as well as any number of CA certificates
+#    needed to establish the certificate's authenticity. This file
+#    is only required when client side authentication is necessary.
+#    If tls_enabled is False, this option is ignored. Defaults to undef.
+#
+#  [*cache_tls_keyfile*]
+#    (optional) Path to a single file containing the client's private
+#    key in. Otherwhise the private key will be taken from the file
+#    specified in tls_certfile. If tls_enabled is False, this option
+#    is ignored. Defaults to undef.
+#
+#  [*cache_tls_allowed_ciphers*]
+#    (optional) Set the available ciphers for sockets created with
+#    the TLS context. It should be a string in the OpenSSL cipher
+#    list format. If not specified, all OpenSSL enabled ciphers will
+#    be available. Defaults to undef.
+#
 #  [*manage_memcache_package*]
 #    (optional) Boolean if we should manage the memcache package.
 #    Defaults to true
@@ -489,6 +518,11 @@ class horizon(
   $cache_server_url                    = undef,
   $cache_server_ip                     = undef,
   $cache_server_port                   = '11211',
+  $cache_tls_enabled                   = false,
+  $cache_tls_cafile                    = undef,
+  $cache_tls_certfile                  = undef,
+  $cache_tls_keyfile                   = undef,
+  $cache_tls_allowed_ciphers           = undef,
   $manage_memcache_package             = true,
   $horizon_app_links                   = false,
   $keystone_url                        = 'http://127.0.0.1:5000',
