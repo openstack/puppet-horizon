@@ -467,6 +467,7 @@
 #
 #  [*enable_user_pass*]
 #    (optional) Enable the password field while launching a Heat stack.
+#    Set this parameter to undef if horizon::dashboards::heat is used.
 #    Defaults to true
 #
 #  [*customization_module*]
@@ -691,12 +692,21 @@ class horizon(
     owner   => $::horizon::params::wsgi_user,
     group   => $::horizon::params::wsgi_group,
     require => Anchor['horizon::config::begin'],
+    tag     => ['django-config'],
   }
 
   concat::fragment { 'local_settings.py':
     target  => $::horizon::params::config_file,
     content => template($local_settings_template),
     order   => '50',
+  }
+
+  file { $::horizon::params::conf_d_dir:
+    ensure  => 'directory',
+    mode    => '0755',
+    owner   => $::horizon::params::wsgi_user,
+    group   => $::horizon::params::wsgi_group,
+    require => Anchor['horizon::config::begin'],
   }
 
   exec { 'refresh_horizon_django_cache':
@@ -712,9 +722,9 @@ class horizon(
   }
 
   if $compress_offline {
-    Concat[$::horizon::params::config_file] ~> Exec['refresh_horizon_django_compress']
+    Concat<| tag == 'django-config' |> ~> Exec['refresh_horizon_django_compress']
     if $::os_package_type == 'rpm' {
-      Concat[$::horizon::params::config_file] ~> Exec['refresh_horizon_django_cache'] -> Exec['refresh_horizon_django_compress']
+      Concat<| tag == 'django-config' |> ~> Exec['refresh_horizon_django_cache'] -> Exec['refresh_horizon_django_compress']
     }
   }
 
