@@ -1,0 +1,38 @@
+from django.conf import settings
+
+
+OPENSTACK_HEAT_STACK = {
+    'enable_user_pass': <%= @enable_user_pass_real.to_s.capitalize %>,
+}
+
+settings.POLICY_FILES.update({
+    'orchestration': '<%= @policy_file_real %>',
+})
+
+settings.DEFAULT_POLICY_FILES.update({
+    'orchestration': 'default_policies/heat.yaml',
+})
+
+# Sample
+# settings.LOGGING['loggers'].update({
+#     'heatclient': {
+#         'handlers': ['console'],
+#         'level': 'DEBUG',
+#         'propagate': False,
+#     }
+# })
+settings.LOGGING['loggers'].update({
+    'heatclient': {
+        # 'handlers': ['console'],
+        'handlers': ['<%= @log_handlers.join("', '") %>']
+        # level': 'DEBUG',
+        'level': '<%= @log_level %>',
+        'propagate': False,
+    }
+})
+
+# Template Generator retrieve options API TIMEOUT
+HEAT_TEMPLATE_GENERATOR_API_TIMEOUT = 60
+
+# Template Generator retrieve options API PARALLEL LEVEL
+HEAT_TEMPLATE_GENERATOR_API_PARALLEL = 2
