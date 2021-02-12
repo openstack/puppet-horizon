@@ -219,6 +219,7 @@ describe 'horizon' do
         ])
       end
 
+      it { is_expected.to contain_file(platforms_params[:conf_d_dir]).with_ensure('directory') }
       it { is_expected.not_to contain_file(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]') }
       it { is_expected.not_to contain_file(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_compress]') }
 
@@ -755,6 +756,7 @@ describe 'horizon' do
         when 'Debian'
           if facts[:os_package_type] == 'debian'
             { :config_file      => '/etc/openstack-dashboard/local_settings.py',
+              :conf_d_dir       => '/etc/openstack-dashboard/local_settings.d',
               :package_name     => 'openstack-dashboard-apache',
               :root_url         => '/horizon',
               :root_path        => '/var/lib/openstack-dashboard',
@@ -762,6 +764,7 @@ describe 'horizon' do
             }
           else
             { :config_file      => '/etc/openstack-dashboard/local_settings.py',
+              :conf_d_dir       => '/etc/openstack-dashboard/local_settings.d',
               :package_name     => 'openstack-dashboard',
               :root_url         => '/horizon',
               :root_path        => '/var/lib/openstack-dashboard',
@@ -771,6 +774,7 @@ describe 'horizon' do
         when 'RedHat'
           if facts[:operatingsystem] == 'Fedora'
             { :config_file      => '/etc/openstack-dashboard/local_settings',
+              :conf_d_dir       => '/etc/openstack-dashboard/local_settings.d',
               :package_name     => 'openstack-dashboard',
               :root_url         => '/dashboard',
               :root_path        => '/usr/share/openstack-dashboard',
@@ -779,6 +783,7 @@ describe 'horizon' do
           else
             if facts[:operatingsystemmajrelease] > '7'
               { :config_file      => '/etc/openstack-dashboard/local_settings',
+                :conf_d_dir       => '/etc/openstack-dashboard/local_settings.d',
                 :package_name     => 'openstack-dashboard',
                 :root_url         => '/dashboard',
                 :root_path        => '/usr/share/openstack-dashboard',
@@ -786,6 +791,7 @@ describe 'horizon' do
               }
             else
               { :config_file      => '/etc/openstack-dashboard/local_settings',
+                :conf_d_dir       => '/etc/openstack-dashboard/local_settings.d',
                 :package_name     => 'openstack-dashboard',
                 :root_url         => '/dashboard',
                 :root_path        => '/usr/share/openstack-dashboard',
