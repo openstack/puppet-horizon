@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    The deprecated ``horizon::log_handler`` parameter has been removed.

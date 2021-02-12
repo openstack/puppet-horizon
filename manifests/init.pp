@@ -487,9 +487,6 @@
 #
 # DEPRECATED PARAMETERS
 #
-#  [*log_handler*]
-#    (optional) Log handler. Defaults to 'file'
-#
 #  [*horizon_cert*]
 #    (required with listen_ssl) Certificate to use for SSL support.
 #
@@ -600,22 +597,12 @@ class horizon(
   $customization_module                = undef,
   $horizon_upload_mode                 = undef,
   # DEPRECATED PARAMETERS
-  $log_handler                         = undef,
   $horizon_cert                        = undef,
   $horizon_key                         = undef,
   $horizon_ca                          = undef,
 ) inherits ::horizon::params {
 
   include horizon::deps
-
-  if $log_handler != undef {
-    warning('log_handler parameter was deprecated and will be removed in a future \
-release. Use log_handlers instead')
-    $log_handlers_real = [$log_handler]
-  } else {
-    validate_legacy(Array, 'validate_array', $log_handlers)
-    $log_handlers_real = $log_handlers
-  }
 
   if $cache_server_url and $cache_server_ip {
     fail('Only one of cache_server_url or cache_server_ip can be set.')
