@@ -14,6 +14,8 @@ class horizon::params {
       $http_service                = 'httpd'
       $http_modwsgi                = 'mod_wsgi'
       $package_name                = 'openstack-dashboard'
+      $config_dir                  = '/etc/openstack-dashboard'
+      $conf_d_dir                  = '/etc/openstack-dashboard/local_settings.d'
       $config_file                 = '/etc/openstack-dashboard/local_settings'
       $httpd_config_file           = '/etc/httpd/conf.d/openstack-dashboard.conf'
       $httpd_listen_config_file    = '/etc/httpd/conf/httpd.conf'
@@ -24,9 +26,12 @@ class horizon::params {
       $wsgi_user                   = 'apache'
       $wsgi_group                  = 'apache'
       $memcache_package            = "python${pyvers}-memcached"
+      $heat_dashboard_package_name = 'openstack-heat-ui'
     }
     'Debian': {
       $http_service                = 'apache2'
+      $config_dir                  = '/etc/openstack-dashboard'
+      $conf_d_dir                  = '/etc/openstack-dashboard/local_settings.d'
       $config_file                 = '/etc/openstack-dashboard/local_settings.py'
       $httpd_listen_config_file    = '/etc/apache2/ports.conf'
       $root_url                    = '/horizon'
@@ -36,6 +41,7 @@ class horizon::params {
       $wsgi_user                   = 'horizon'
       $wsgi_group                  = 'horizon'
       $memcache_package            = "python${pyvers}-memcache"
+      $heat_dashboard_package_name = "python${pyvers}-heat-dashboard"
       case $::os_package_type {
         'debian': {
             $package_name          = 'openstack-dashboard-apache'
