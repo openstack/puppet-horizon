@@ -673,12 +673,11 @@ POLICY_FILES_PATH = '/etc/openstack-dashboard'
 # Having matching policy files on the Horizon and Keystone servers is essential
 # for normal operation. This holds true for all services and their policy files.
 #POLICY_FILES = {
-#    'identity': 'keystone_policy.json',
-#    'compute': 'nova_policy.json',
-#    'volume': 'cinder_policy.json',
-#    'image': 'glance_policy.json',
-#    'orchestration': 'heat_policy.json',
-#    'network': 'neutron_policy.json',
+#    'identity': 'keystone_policy.yaml',
+#    'compute': 'nova_policy.yaml',
+#    'volume': 'cinder_policy.yaml',
+#    'image': 'glance_policy.yaml',
+#    'network': 'neutron_policy.yaml',
 #}
 <% if @policy_files.kind_of?(Hash) %>
 POLICY_FILES = {
@@ -687,6 +686,21 @@ POLICY_FILES = {
 <% end -%>
 } # POLICY_FILES
 <% end -%>
+
+# Services for which horizon has extra policies are defined
+# in POLICY_DIRS by default.
+#POLICY_DIRS = {
+#    'compute': ['nova_policy.d'],
+#    'volume': ['cinder_policy.d'],
+#}
+
+#DEFAULT_POLICY_FILES = {
+#    'identity': 'default_policies/keystone.yaml',
+#    'compute': 'default_policies/nova.yaml',
+#    'volume': 'default_policies/cinder.yaml',
+#    'image': 'default_policies/glance.yaml',
+#    'network': 'default_policies/neutron.yaml',
+#}
 
 # TODO: (david-lyle) remove when plugins support adding settings.
 # Note: Only used when trove-dashboard plugin is configured to be used by
