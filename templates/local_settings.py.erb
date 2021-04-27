@@ -356,6 +356,33 @@ WEBSSO_IDP_MAPPING = {
 }
 <% end -%>
 
+# Enables redirection on login to the identity provider defined on
+# WEBSSO_DEFAULT_REDIRECT_PROTOCOL and WEBSSO_DEFAULT_REDIRECT_REGION
+#WEBSSO_DEFAULT_REDIRECT = False
+<% if @websso_default_redirect -%>
+WEBSSO_DEFAULT_REDIRECT = True
+<% end -%>
+
+# Specifies the protocol to use for default redirection on login
+#WEBSSO_DEFAULT_REDIRECT_PROTOCOL = None
+<% if @websso_default_redirect_protocol -%>
+WEBSSO_DEFAULT_REDIRECT_PROTOCOL = "<%= @websso_default_redirect_protocol %>"
+<% end -%>
+
+# Specifies the region to which the connection will be established on login
+#WEBSSO_DEFAULT_REDIRECT_REGION = OPENSTACK_KEYSTONE_URL
+<% if @websso_default_redirect_region -%>
+WEBSSO_DEFAULT_REDIRECT_REGION = "<%= @websso_default_redirect_region %>"
+<% end -%>
+
+# Enables redirection on logout to the method specified on the identity
+# provider. Once logout the client will be redirected to the address specified
+# in this variable.
+#WEBSSO_DEFAULT_REDIRECT_LOGOUT = None
+<% if @websso_default_redirect_logout -%>
+WEBSSO_DEFAULT_REDIRECT_LOGOUT = "<%= @websso_default_redirect_logout %>"
+<% end -%>
+
 # Disable SSL certificate checks (useful for self-signed certificates):
 #OPENSTACK_SSL_NO_VERIFY = True
 <% if @ssl_no_verify %>

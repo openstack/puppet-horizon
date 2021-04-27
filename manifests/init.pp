@@ -456,6 +456,25 @@
 #        'acme_saml2' => ['acme', 'saml2'],
 #      }
 #
+#  [*websso_default_redirect*]
+#    (optional) Enables redirection on login to the identity proider defined on
+#    WEBSSO_DEFAULT_REDIRECT_PROTOCOL and WEBSSO_DEFAULT_REDIRECT_REGIO.
+#    Defaults to undef
+#
+#  [*websso_default_redirect_protocol*]
+#    (optional) Specifies the protocol to use fo default redirection on login.
+#    Defaults to undef
+#
+#  [*websso_default_redirect_region*]
+#    (optional) Specifies the region to which the connection will be established
+#    on login.
+#    Defaults to undef
+#
+#  [*websso_default_redirect_logout*]
+#    (optional) Enables redirection on logout to the method specified on
+#    the identity provider.
+#    Defaults to undef
+#
 #  [*password_validator*]
 #    (optional) Horizon provides a password validation check, which OpenStack cloud
 #    operators can use to enforce password complexity checks for users within horizon.
@@ -591,6 +610,10 @@ class horizon(
   $websso_initial_choice               = undef,
   $websso_choices                      = undef,
   $websso_idp_mapping                  = undef,
+  $websso_default_redirect             = false,
+  $websso_default_redirect_protocol    = undef,
+  $websso_default_redirect_region      = undef,
+  $websso_default_redirect_logout      = undef,
   $password_validator                  = undef,
   $password_validator_help             = undef,
   $enable_user_pass                    = true,

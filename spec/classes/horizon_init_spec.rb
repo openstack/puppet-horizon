@@ -589,32 +589,51 @@ describe 'horizon' do
     context 'with websso enabled' do
       before do
         params.merge!({
-                        :websso_enabled => 'True',
-                        :websso_initial_choice => 'acme',
-                        :websso_choices => [
-                          ['oidc', 'OpenID Connect'],
-                          ['saml2', 'Security Assertion Markup Language'],
-                        ],
-                        :websso_idp_mapping => {
-                          'acme_oidc'  => ['acme', 'oidc'],
-                          'acme_saml2' => ['acme', 'saml2'],
-                        }
-                      })
+            :websso_enabled => 'True',
+            :websso_initial_choice => 'acme',
+            :websso_choices => [
+              ['oidc', 'OpenID Connect'],
+              ['saml2', 'Security Assertion Markup Language'],
+            ],
+            :websso_idp_mapping => {
+              'acme_oidc'  => ['acme', 'oidc'],
+              'acme_saml2' => ['acme', 'saml2'],
+            }
+          })
       end
       it 'configures websso options' do
         verify_concat_fragment_contents(catalogue, 'local_settings.py', [
-                                          'WEBSSO_ENABLED = True',
-                                          'WEBSSO_INITIAL_CHOICE = "acme"',
-                                          'WEBSSO_CHOICES = (',
-                                          '    ("credentials", _("Keystone Credentials")),',
-                                          '    ("oidc", _("OpenID Connect")),',
-                                          '    ("saml2", _("Security Assertion Markup Language")),',
-                                          ')',
-                                          'WEBSSO_IDP_MAPPING = {',
-                                          '    "acme_oidc": ("acme", "oidc"),',
-                                          '    "acme_saml2": ("acme", "saml2"),',
-                                          '}',
-                                        ])
+          'WEBSSO_ENABLED = True',
+          'WEBSSO_INITIAL_CHOICE = "acme"',
+          'WEBSSO_CHOICES = (',
+          '    ("credentials", _("Keystone Credentials")),',
+          '    ("oidc", _("OpenID Connect")),',
+          '    ("saml2", _("Security Assertion Markup Language")),',
+          ')',
+          'WEBSSO_IDP_MAPPING = {',
+          '    "acme_oidc": ("acme", "oidc"),',
+          '    "acme_saml2": ("acme", "saml2"),',
+          '}',
+          ])
+      end
+    end
+
+    context 'with websso redirect enabled' do
+      before do
+        params.merge!({
+          :websso_default_redirect          => true,
+          :websso_default_redirect_protocol => 'oidc',
+          :websso_default_redirect_region   => 'http://127.0.0.1:5000',
+          :websso_default_redirect_logout   => 'http://idptest/logout'
+        })
+      end
+      it 'configures websso redirect options' do
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+          'WEBSSO_DEFAULT_REDIRECT = True',
+          'WEBSSO_DEFAULT_REDIRECT_PROTOCOL = "oidc"',
+          'WEBSSO_DEFAULT_REDIRECT_REGION = "http://127.0.0.1:5000"',
+          'WEBSSO_DEFAULT_REDIRECT_LOGOUT = "http://idptest/logout"'
+          ])
       end
     end
 
