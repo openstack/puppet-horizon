@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``horizon::dashboards::octavia`` class has been added. This class
+    can be used to manage parameters for octavia-dashboard.
