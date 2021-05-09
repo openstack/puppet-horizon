@@ -1,0 +1,50 @@
+from django.conf import settings
+
+
+settings.POLICY_FILES.update({
+    'share': '<%= @policy_file_real %>',
+})
+
+# Sample
+# settings.LOGGING['loggers'].update({
+#     'manilaclient': {
+#         'handlers': ['console'],
+#         'level': 'DEBUG',
+#         'propagate': False,
+#     }
+# })
+settings.LOGGING['loggers'].update({
+    'manilaclient': {
+        # 'handlers': ['console'],
+        'handlers': ['<%= @log_handler %>']
+        # level': 'DEBUG',
+        'level': '<%= @log_level %>',
+        'propagate': False,
+    }
+})
+
+# The OPENSTACK_MANILA_FEATURES settings can be used to enable or disable
+# the UI for the various services provided by Manila.
+#OPENSTACK_MANILA_FEATURES = {
+#    'enable_share_groups': True,
+#    'enable_replication': True,
+#    'enable_migration': True,
+#    'enable_public_share_type_creation': True,
+#    'enable_public_share_group_type_creation': True,
+#    'enable_public_shares': True,
+#    'enabled_share_protocols': ['NFS', 'CIFS', 'GlusterFS', 'HDFS', 'CephFS',
+#                                'MapRFS'],
+#}
+<%- if ! (@manila_options_real.empty?) -%>
+OPENSTACK_MANILA_FEATURES = {
+<%- @manila_options_real.sort.each do |opt_name,opt_val| -%>
+  <%- if opt_val == true or opt_val == false -%>
+    '<%= opt_name -%>': <%= opt_val.to_s.capitalize -%>,
+  <%- elsif opt_val.kind_of?(Array) -%>
+    '<%= opt_name -%>': ['<%= opt_val.join("', '") %>'],
+  <%- else -%>
+    '<%= opt_name -%>': '<%= opt_val -%>',
+  <%-end-%>
+<%-end-%>
+}
+<%-end-%>
