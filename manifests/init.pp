@@ -623,7 +623,7 @@ class horizon(
   $horizon_cert                        = undef,
   $horizon_key                         = undef,
   $horizon_ca                          = undef,
-) inherits ::horizon::params {
+) inherits horizon::params {
 
   include horizon::deps
 
