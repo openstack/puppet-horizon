@@ -729,16 +729,6 @@ POLICY_FILES = {
 #    'network': 'default_policies/neutron.yaml',
 #}
 
-# TODO: (david-lyle) remove when plugins support adding settings.
-# Note: Only used when trove-dashboard plugin is configured to be used by
-# Horizon.
-# Trove user and database extension support. By default support for
-# creating users and databases on database instances is turned on.
-# To disable these extensions set the permission here to something
-# unusable such as ["!"].
-#TROVE_ADD_USER_PERMS = []
-#TROVE_ADD_DATABASE_PERMS = []
-
 # Change this patch to the appropriate static directory containing
 # two files: _variables.scss and _styles.scss
 #CUSTOM_THEME_PATH = 'themes/default'
@@ -846,13 +836,6 @@ LOGGING = {
             'propagate': False,
         },
         'heatclient': {
-            # 'handlers': ['console'],
-            'handlers': ['<%= @log_handlers.join("', '") %>'],
-            # 'level': 'DEBUG',
-            'level': '<%= @log_level %>',
-            'propagate': False,
-        },
-        'troveclient': {
             # 'handlers': ['console'],
             'handlers': ['<%= @log_handlers.join("', '") %>'],
             # 'level': 'DEBUG',
