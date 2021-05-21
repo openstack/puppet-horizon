@@ -781,30 +781,12 @@ describe 'horizon' do
             }
           end
         when 'RedHat'
-          if facts[:operatingsystem] == 'Fedora'
-            { :config_file      => '/etc/openstack-dashboard/local_settings',
-              :package_name     => 'openstack-dashboard',
-              :root_url         => '/dashboard',
-              :root_path        => '/usr/share/openstack-dashboard',
-              :memcache_package => 'python3-memcached',
-            }
-          else
-            if facts[:operatingsystemmajrelease] > '7'
-              { :config_file      => '/etc/openstack-dashboard/local_settings',
-                :package_name     => 'openstack-dashboard',
-                :root_url         => '/dashboard',
-                :root_path        => '/usr/share/openstack-dashboard',
-                :memcache_package => 'python3-memcached',
-              }
-            else
-              { :config_file      => '/etc/openstack-dashboard/local_settings',
-                :package_name     => 'openstack-dashboard',
-                :root_url         => '/dashboard',
-                :root_path        => '/usr/share/openstack-dashboard',
-                :memcache_package => 'python-memcached',
-              }
-            end
-          end
+          { :config_file      => '/etc/openstack-dashboard/local_settings',
+            :package_name     => 'openstack-dashboard',
+            :root_url         => '/dashboard',
+            :root_path        => '/usr/share/openstack-dashboard',
+            :memcache_package => 'python3-memcached',
+          }
         end
       end
 
