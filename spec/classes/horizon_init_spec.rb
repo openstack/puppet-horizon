@@ -78,9 +78,6 @@ describe 'horizon' do
           "            'handlers': ['file'],",
           'COMPRESS_OFFLINE = True',
           "FILE_UPLOAD_TEMP_DIR = '/tmp'",
-          "OPENSTACK_HEAT_STACK = {",
-          "    'enable_user_pass': True",
-          "}",
         ])
 
         # From internals of verify_contents, get the contents to check for absence of a line
@@ -212,23 +209,11 @@ describe 'horizon' do
         ])
       end
 
+      it { is_expected.to contain_file(platforms_params[:conf_d_dir]).with_ensure('directory') }
       it { is_expected.not_to contain_file(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]') }
       it { is_expected.not_to contain_file(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_compress]') }
 
       it { is_expected.to contain_file(params[:file_upload_temp_dir]) }
-    end
-
-    context 'with enable_user_pass disabled' do
-      before do
-        params.merge!({ :enable_user_pass => false })
-      end
-      it {
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
-          "OPENSTACK_HEAT_STACK = {",
-          "    'enable_user_pass': False",
-          "}",
-        ])
-      }
     end
 
     context 'with overridden parameters and cache_server_ip array' do
@@ -767,6 +752,7 @@ describe 'horizon' do
         when 'Debian'
           if facts[:os_package_type] == 'debian'
             { :config_file      => '/etc/openstack-dashboard/local_settings.py',
+              :conf_d_dir       => '/etc/openstack-dashboard/local_settings.d',
               :package_name     => 'openstack-dashboard-apache',
               :root_url         => '/horizon',
               :root_path        => '/var/lib/openstack-dashboard',
@@ -774,6 +760,7 @@ describe 'horizon' do
             }
           else
             { :config_file      => '/etc/openstack-dashboard/local_settings.py',
+              :conf_d_dir       => '/etc/openstack-dashboard/local_settings.d',
               :package_name     => 'openstack-dashboard',
               :root_url         => '/horizon',
               :root_path        => '/var/lib/openstack-dashboard',
@@ -782,6 +769,7 @@ describe 'horizon' do
           end
         when 'RedHat'
           { :config_file      => '/etc/openstack-dashboard/local_settings',
+            :conf_d_dir       => '/etc/openstack-dashboard/local_settings.d',
             :package_name     => 'openstack-dashboard',
             :root_url         => '/dashboard',
             :root_path        => '/usr/share/openstack-dashboard',

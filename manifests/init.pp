@@ -484,10 +484,6 @@
 #  [*password_validator_help*]
 #    (optional) Help text to display when password validation fails in horizon.
 #
-#  [*enable_user_pass*]
-#    (optional) Enable the password field while launching a Heat stack.
-#    Defaults to true
-#
 #  [*customization_module*]
 #    (optional) Horizon has a global override mechanism available to perform
 #    customizations. This adds a key - customization_module - to HORIZON_CONFIG
@@ -514,6 +510,10 @@
 #
 #  [*horizon_ca*]
 #    (required with listen_ssl) CA certificate to use for SSL support.
+#
+#  [*enable_user_pass*]
+#    (optional) Enable the password field while launching a Heat stack.
+#    Defaults to undef
 #
 # === Examples
 #
@@ -616,16 +616,21 @@ class horizon(
   $websso_default_redirect_logout      = undef,
   $password_validator                  = undef,
   $password_validator_help             = undef,
-  $enable_user_pass                    = true,
   $customization_module                = undef,
   $horizon_upload_mode                 = undef,
   # DEPRECATED PARAMETERS
   $horizon_cert                        = undef,
   $horizon_key                         = undef,
   $horizon_ca                          = undef,
+  $enable_user_pass                    = undef,
 ) inherits horizon::params {
 
   include horizon::deps
+
+  if $enable_user_pass != undef {
+    warning('The enable_user_pass parameter is deprecated. Use the horizon::dashboards::heat class')
+    include horizon::dashboards::heat
+  }
 
   if $cache_server_url and $cache_server_ip {
     fail('Only one of cache_server_url or cache_server_ip can be set.')
@@ -714,12 +719,21 @@ class horizon(
     owner   => $::horizon::params::wsgi_user,
     group   => $::horizon::params::wsgi_group,
     require => Anchor['horizon::config::begin'],
+    tag     => ['django-config'],
   }
 
   concat::fragment { 'local_settings.py':
     target  => $::horizon::params::config_file,
     content => template($local_settings_template),
     order   => '50',
+  }
+
+  file { $::horizon::params::conf_d_dir:
+    ensure  => 'directory',
+    mode    => '0755',
+    owner   => $::horizon::params::wsgi_user,
+    group   => $::horizon::params::wsgi_group,
+    require => Anchor['horizon::config::begin'],
   }
 
   exec { 'refresh_horizon_django_cache':
@@ -735,9 +749,9 @@ class horizon(
   }
 
   if $compress_offline {
-    Concat[$::horizon::params::config_file] ~> Exec['refresh_horizon_django_compress']
+    Concat<| tag == 'django-config' |> ~> Exec['refresh_horizon_django_compress']
     if $::os_package_type == 'rpm' {
-      Concat[$::horizon::params::config_file] ~> Exec['refresh_horizon_django_cache'] -> Exec['refresh_horizon_django_compress']
+      Concat<| tag == 'django-config' |> ~> Exec['refresh_horizon_django_cache'] -> Exec['refresh_horizon_django_compress']
     }
   }
 

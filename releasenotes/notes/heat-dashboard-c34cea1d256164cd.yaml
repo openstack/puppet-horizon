@@ -1,0 +1,10 @@
+---
+features:
+  - |
+    The new ``horizon::dashboards::heat`` class has been added. This class can
+    be used to manage parameters for heat-dashboard.
+
+deprecations:
+  - |
+    The ``horizon::enable_user_pass`` parameter has been deprecated. Use
+    the ``horizon::dashboards::heat`` class instead.
