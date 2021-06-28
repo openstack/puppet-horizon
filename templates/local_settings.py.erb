@@ -801,6 +801,13 @@ LOGGING = {
             'level': '<%= @log_level %>',
             'propagate': False,
         },
+        'keystoneauth': {
+            # 'handlers': ['console'],
+            'handlers': ['<%= @log_handlers.join("', '") %>'],
+            # 'level': 'DEBUG',
+            'level': '<%= @log_level %>',
+            'propagate': False,
+        },
         'keystoneclient': {
             # 'handlers': ['console'],
             'handlers': ['<%= @log_handlers.join("', '") %>'],
