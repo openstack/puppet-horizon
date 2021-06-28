@@ -836,13 +836,6 @@ LOGGING = {
             'level': '<%= @log_level %>',
             'propagate': False,
         },
-        'nose.plugins.manager': {
-            # 'handlers': ['console'],
-            'handlers': ['<%= @log_handlers.join("', '") %>'],
-            # 'level': 'DEBUG',
-            'level': '<%= @log_level %>',
-            'propagate': False,
-        },
         'django': {
             # 'handlers': ['console'],
             'handlers': ['<%= @log_handlers.join("', '") %>'],
