@@ -28,7 +28,7 @@ eos
       it 'generates _1699_orchestration_settings.py' do
         verify_concat_fragment_contents(catalogue, '_1699_orchestration_settings.py', [
           "settings.POLICY_FILES.update({",
-          "    'orchestration': 'heat_policy.yaml',",
+          "    'orchestration': 'heat_policy.json',",
           "})"
         ])
         verify_concat_fragment_contents(catalogue, '_1699_orchestration_settings.py', [

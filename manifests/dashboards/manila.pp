@@ -19,7 +19,7 @@
 #
 #  [*policy_file*]
 #    (optional) Local copy of service policy files.
-#    Defaults to 'manila_policy.yaml'
+#    Defaults to 'manila_policy.json'
 #
 #  [*manila_options*]
 #    (optional) A hash of parameters to enable features specific to Manila.
@@ -33,7 +33,7 @@
 #    'enabled_share_protocols': Array
 #
 class horizon::dashboards::manila(
-  $policy_file    = 'manila_policy.yaml',
+  $policy_file    = 'manila_policy.json',
   $manila_options = {}
 ) {
 

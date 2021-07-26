@@ -23,11 +23,11 @@
 #
 #  [*policy_file*]
 #    (optional) Local copy of service policy files.
-#    Defaults to 'heat_policy.yaml'
+#    Defaults to 'heat_policy.json'
 #
 class horizon::dashboards::heat(
   $enable_user_pass = true,
-  $policy_file      = 'heat_policy.yaml',
+  $policy_file      = 'heat_policy.json',
 ) {
 
   include horizon::deps

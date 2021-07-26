@@ -19,10 +19,10 @@
 #
 #  [*policy_file*]
 #    (optional) Local copy of service policy files.
-#    Defaults to 'octavia_policy.yaml'
+#    Defaults to 'octavia_policy.json'
 #
 class horizon::dashboards::octavia(
-  $policy_file = 'octavia_policy.yaml',
+  $policy_file = 'octavia_policy.json',
 ) {
 
   include horizon::deps

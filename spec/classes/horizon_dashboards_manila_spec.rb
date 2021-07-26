@@ -28,7 +28,7 @@ eos
       it 'generates _90_manila_shares.py' do
         verify_concat_fragment_contents(catalogue, '_90_manila_shares.py', [
           "settings.POLICY_FILES.update({",
-          "    'share': 'manila_policy.yaml',",
+          "    'share': 'manila_policy.json',",
           "})"
         ])
         verify_concat_fragment_contents(catalogue, '_90_manila_shares.py', [
