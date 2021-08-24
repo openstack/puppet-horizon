@@ -805,6 +805,13 @@ LOGGING = {
             'level': '<%= @log_level %>',
             'propagate': False,
         },
+        'oslo_policy': {
+            # 'handlers': ['console'],
+            'handlers': ['<%= @log_handlers.join("', '") %>'],
+            # 'level': 'DEBUG',
+            'level': '<%= @log_level %>',
+            'propagate': False,
+        },
         'glanceclient': {
             # 'handlers': ['console'],
             'handlers': ['<%= @log_handlers.join("', '") %>'],
