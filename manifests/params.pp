@@ -10,8 +10,6 @@ class horizon::params {
 
   case $::osfamily {
     'RedHat': {
-      $http_service                   = 'httpd'
-      $http_modwsgi                   = 'mod_wsgi'
       $package_name                   = 'openstack-dashboard'
       $config_dir                     = '/etc/openstack-dashboard'
       $conf_d_dir                     = '/etc/openstack-dashboard/local_settings.d'
@@ -20,8 +18,6 @@ class horizon::params {
       $httpd_listen_config_file       = '/etc/httpd/conf/httpd.conf'
       $root_url                       = '/dashboard'
       $static_path                    = '/usr/share'
-      $apache_user                    = 'apache'
-      $apache_group                   = 'apache'
       $wsgi_user                      = 'apache'
       $wsgi_group                     = 'apache'
       $memcache_package               = 'python3-memcached'
@@ -30,15 +26,12 @@ class horizon::params {
       $octavia_dashboard_package_name = 'openstack-octavia-ui'
     }
     'Debian': {
-      $http_service                   = 'apache2'
       $config_dir                     = '/etc/openstack-dashboard'
       $conf_d_dir                     = '/etc/openstack-dashboard/local_settings.d'
       $config_file                    = '/etc/openstack-dashboard/local_settings.py'
       $httpd_listen_config_file       = '/etc/apache2/ports.conf'
       $root_url                       = '/horizon'
       $static_path                    = '/var/lib'
-      $apache_user                    = 'www-data'
-      $apache_group                   = 'www-data'
       $wsgi_user                      = 'horizon'
       $wsgi_group                     = 'horizon'
       $memcache_package               = 'python3-memcache'
