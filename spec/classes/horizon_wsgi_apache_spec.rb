@@ -22,8 +22,6 @@ describe 'horizon::wsgi::apache' do
       it { should contain_class('horizon::params') }
       it { should contain_class('apache') }
       it { should contain_class('apache::mod::wsgi') }
-      it { should contain_service('httpd').with_name(platforms_params[:http_service]) }
-      it { should contain_package('httpd').with_name(platforms_params[:http_service]) }
       it { should contain_file(platforms_params[:httpd_config_file]) }
       it { should contain_package('horizon').with_ensure('present') }
 
@@ -46,8 +44,8 @@ describe 'horizon::wsgi::apache' do
           platforms_params[:wsgi_group] => {
             'processes'    => facts[:os_workers],
             'threads'      => '1',
-            'user'         => platforms_params[:unix_user],
-            'group'        => platforms_params[:unix_group],
+            'user'         => platforms_params[:wsgi_user],
+            'group'        => platforms_params[:wsgi_group],
             'display-name' => 'horizon'
           }},
         :wsgi_application_group      => '%{GLOBAL}',
@@ -68,8 +66,6 @@ describe 'horizon::wsgi::apache' do
       it { should contain_class('horizon::params') }
       it { should contain_class('apache') }
       it { should contain_class('apache::mod::wsgi') }
-      it { should contain_service('httpd').with_name(platforms_params[:http_service]) }
-      it { should contain_package('httpd').with_name(platforms_params[:http_service]) }
       it { should contain_file(platforms_params[:httpd_config_file]) }
       it { should contain_package('horizon').with_ensure('present') }
 
@@ -92,8 +88,8 @@ describe 'horizon::wsgi::apache' do
           platforms_params[:wsgi_group] => {
             'processes'    => '13',
             'threads'      => '3',
-            'user'         => platforms_params[:unix_user],
-            'group'        => platforms_params[:unix_group],
+            'user'         => platforms_params[:wsgi_user],
+            'group'        => platforms_params[:wsgi_group],
             'display-name' => 'horizon'
           }},
         :wsgi_application_group      => '%{GLOBAL}',
@@ -116,7 +112,7 @@ describe 'horizon::wsgi::apache' do
             'processes'    => facts[:os_workers],
             'threads'      => '1',
             'user'         => 'myuser',
-            'group'        => platforms_params[:unix_group],
+            'group'        => platforms_params[:wsgi_group],
             'display-name' => 'horizon',
             'python_path'  => '/my/python/admin/path'
           }}
@@ -159,8 +155,8 @@ describe 'horizon::wsgi::apache' do
           'horizon-ssl' => {
             'processes'    => facts[:os_workers],
             'threads'      => '1',
-            'user'         => platforms_params[:unix_user],
-            'group'        => platforms_params[:unix_group],
+            'user'         => platforms_params[:wsgi_user],
+            'group'        => platforms_params[:wsgi_group],
             'display-name' => 'horizon'
           }},
         :wsgi_application_group => '%{GLOBAL}',
@@ -187,8 +183,8 @@ describe 'horizon::wsgi::apache' do
           platforms_params[:wsgi_group] => {
             'processes'    => facts[:os_workers],
             'threads'      => '1',
-            'user'         => platforms_params[:unix_user],
-            'group'        => platforms_params[:unix_group],
+            'user'         => platforms_params[:wsgi_user],
+            'group'        => platforms_params[:wsgi_group],
             'display-name' => 'horizon'
           }},
         :wsgi_application_group => '%{GLOBAL}',
@@ -540,30 +536,21 @@ describe 'horizon::wsgi::apache' do
         when 'Debian'
           case facts[:operatingsystem]
           when 'Debian'
-            { :http_service      => 'apache2',
-              :httpd_config_file => '/etc/apache2/sites-available/openstack-dashboard-alias-only.conf',
+            { :httpd_config_file => '/etc/apache2/sites-available/openstack-dashboard-alias-only.conf',
               :root_url          => '/horizon',
               :wsgi_user         => 'horizon',
-              :wsgi_group        => 'horizon',
-              :unix_user         => 'horizon',
-              :unix_group        => 'horizon' }
+              :wsgi_group        => 'horizon' }
           when 'Ubuntu'
-            { :http_service      => 'apache2',
-              :httpd_config_file => '/etc/apache2/conf-available/openstack-dashboard.conf',
+            { :httpd_config_file => '/etc/apache2/conf-available/openstack-dashboard.conf',
               :root_url          => '/horizon',
               :wsgi_user         => 'horizon',
-              :wsgi_group        => 'horizon',
-              :unix_user         => 'horizon',
-              :unix_group        => 'horizon' }
+              :wsgi_group        => 'horizon' }
           end
         when 'RedHat'
-          { :http_service      => 'httpd',
-            :httpd_config_file => '/etc/httpd/conf.d/openstack-dashboard.conf',
+          { :httpd_config_file => '/etc/httpd/conf.d/openstack-dashboard.conf',
             :root_url          => '/dashboard',
             :wsgi_user         => 'apache',
-            :wsgi_group        => 'apache',
-            :unix_user         => 'apache',
-            :unix_group        => 'apache' }
+            :wsgi_group        => 'apache' }
         end
       end
 
