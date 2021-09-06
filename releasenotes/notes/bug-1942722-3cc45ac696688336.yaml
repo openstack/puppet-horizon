@@ -1,0 +1,4 @@
+---
+fixes:
+  - |
+    Fixed wrong usage of the ``DISALLOW_IFRAME_EMBED`` option.

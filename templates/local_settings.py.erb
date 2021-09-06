@@ -1004,9 +1004,7 @@ REST_API_REQUIRED_SETTINGS = ['OPENSTACK_HYPERVISOR_FEATURES',
 # For more information see:
 # http://tinyurl.com/anticlickjack
 #DISALLOW_IFRAME_EMBED = True
-<% if @disallow_iframe_embed == true %>
-HORIZON_CONFIG["disallow_iframe_embed"] = True
-<% end %>
+DISALLOW_IFRAME_EMBED = <%= @disallow_iframe_embed.to_s.capitalize %>
 
 <% if @horizon_upload_mode %>
 HORIZON_IMAGES_UPLOAD_MODE = <%= @horizon_upload_mode %>
