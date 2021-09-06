@@ -206,6 +206,7 @@ describe 'horizon' do
           'COMPRESS_OFFLINE = False',
           "FILE_UPLOAD_TEMP_DIR = '/var/spool/horizon'",
           "OVERVIEW_DAYS_RANGE = 1",
+          'DISALLOW_IFRAME_EMBED = True',
         ])
       end
 
@@ -557,16 +558,16 @@ describe 'horizon' do
       end
     end
 
-    context 'with disallow iframe embed enabled' do
+    context 'with disallow iframe embed disabled' do
       before do
         params.merge!({
-                        :disallow_iframe_embed => true
+                        :disallow_iframe_embed => false
                       })
       end
 
       it 'disallow_iframe_embed is configured' do
         verify_concat_fragment_contents(catalogue, 'local_settings.py', [
-                                          'HORIZON_CONFIG["disallow_iframe_embed"] = True',
+                                          'DISALLOW_IFRAME_EMBED = False',
                                         ])
       end
     end
