@@ -1038,6 +1038,6 @@ REST_API_REQUIRED_SETTINGS = ['OPENSTACK_HYPERVISOR_FEATURES',
 #DISALLOW_IFRAME_EMBED = True
 DISALLOW_IFRAME_EMBED = <%= @disallow_iframe_embed.to_s.capitalize %>
 
-<% if @horizon_upload_mode %>
-HORIZON_IMAGES_UPLOAD_MODE = <%= @horizon_upload_mode %>
+<% if @horizon_upload_mode_real %>
+HORIZON_IMAGES_UPLOAD_MODE = "<%= @horizon_upload_mode_real %>"
 <% end %>
