@@ -694,7 +694,20 @@ describe 'horizon' do
       end
       it 'sets HORIZON_IMAGES_UPLOAD_MODE in local_settings.py' do
         verify_concat_fragment_contents(catalogue, 'local_settings.py', [
-	  'HORIZON_IMAGES_UPLOAD_MODE = direct',
+          'HORIZON_IMAGES_UPLOAD_MODE = "direct"',
+        ])
+      end
+    end
+
+    context 'with upload mode with quotes' do
+      before do
+        params.merge!({
+          :horizon_upload_mode  => '"direct"',
+        })
+      end
+      it 'sets HORIZON_IMAGES_UPLOAD_MODE in local_settings.py' do
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+          'HORIZON_IMAGES_UPLOAD_MODE = "direct"',
         ])
       end
     end

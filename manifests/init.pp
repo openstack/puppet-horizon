@@ -632,6 +632,12 @@ class horizon(
     include horizon::dashboards::heat
   }
 
+  if $horizon_upload_mode != undef {
+    $horizon_upload_mode_real = regsubst($horizon_upload_mode, "('|\")", '', 'G')
+  } else {
+    $horizon_upload_mode_real = undef
+  }
+
   if $cache_server_url and $cache_server_ip {
     fail('Only one of cache_server_url or cache_server_ip can be set.')
   }
