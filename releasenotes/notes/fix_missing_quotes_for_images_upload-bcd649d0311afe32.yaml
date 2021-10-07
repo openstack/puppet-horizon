@@ -1,0 +1,5 @@
+---
+fixes:
+  - |
+    Fix HORIZON_IMAGES_UPLOAD_MODE in template file because the value must be
+    encapsulated with quotes or it will be treated as an expression by horizon.
