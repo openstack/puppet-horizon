@@ -445,7 +445,8 @@
 #
 #  [*enable_user_pass*]
 #    (optional) Enable the password field while launching a Heat stack.
-#    Set this parameter to undef if horizon::dashboards::heat is used.
+#    Set this parameter to undef or 'UNSET' if horizon::dashboards::heat is
+#    used.
 #    Defaults to true
 #
 #  [*customization_module*]
