@@ -48,11 +48,13 @@ class horizon::dashboards::heat(
     $policy_file_real = $policy_file
   }
 
-  if $::horizon::enable_user_pass != undef {
+  if $::horizon::enable_user_pass == undef or $::horizon::enable_user_pass == 'UNSET' {
+    $enable_user_pass_real = $enable_user_pass
+  } else {
     warning('The horizon::dashboards::heat::enable_user_pass parameter is ignored \
 because horizon::enable_user_pass parameter is set.')
+    $enable_user_pass_real = $enable_user_pass
   }
-  $enable_user_pass_real = pick($::horizon::enable_user_pass, $enable_user_pass)
 
   $config_file = "${::horizon::params::conf_d_dir}/_1699_orchestration_settings.py"
 
