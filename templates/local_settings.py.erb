@@ -502,7 +502,7 @@ OPENSTACK_NEUTRON_NETWORK = {
 }
 <%-end-%>
 
-<%- if ! (@enable_user_pass.nil?) -%>
+<%- if ! (@enable_user_pass.nil? or @enable_user_pass == 'UNSET') -%>
 # The OPENSTACK_HEAT_STACK settings can be used to disable password
 # field required while launching the stack.
 #OPENSTACK_HEAT_STACK = {
