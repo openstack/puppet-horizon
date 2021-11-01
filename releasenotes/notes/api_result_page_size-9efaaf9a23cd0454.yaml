@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``horizon::api_result_page_size`` parameter has been added, to
+    support the ``API_RESULT_PAGE_SIZE`` parameter.

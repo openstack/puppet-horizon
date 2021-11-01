@@ -114,8 +114,13 @@
 #    Defaults to undef.
 #
 #  [*api_result_limit*]
-#    (optional) Maximum number of Swift containers/objects to display
-#    on a single page. Defaults to 1000.
+#    (optional) Maximum number of objects (Swift containers/objects or images)
+#    to display on a single page.
+#    Defaults to 1000.
+#
+#  [*api_result_page_size*]
+#    (optional) Maximum number of objects retrieved by a single request.
+#    Defaults to 20.
 #
 #  [*dropdown_max_items*]
 #    (optional) Specify a maximum number of items to display in a dropdown.
@@ -549,6 +554,7 @@ class horizon(
   $secondary_endpoint_type             = undef,
   $available_regions                   = undef,
   $api_result_limit                    = 1000,
+  $api_result_page_size                = 20,
   $dropdown_max_items                  = 30,
   $log_handlers                        = ['file'],
   $log_level                           = 'INFO',
