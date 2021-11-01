@@ -25,9 +25,19 @@
 #    (optional) Local copy of service policy files.
 #    Defaults to 'heat_policy.yaml'
 #
+#  [*template_generator_api_timeout*]
+#    (optional) API timeout to retrieve response from template generator.
+#    Defaults to 60
+#
+#  [*template_generator_api_parallel*]
+#    (optional) Concurrency to retrieve response from template generator.
+#    Defualts to 2
+#
 class horizon::dashboards::heat(
-  $enable_user_pass = true,
-  $policy_file      = 'heat_policy.yaml',
+  $enable_user_pass                = true,
+  $policy_file                     = 'heat_policy.yaml',
+  $template_generator_api_timeout  = 60,
+  $template_generator_api_parallel = 2,
 ) {
 
   include horizon::deps

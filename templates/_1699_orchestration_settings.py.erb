@@ -32,7 +32,7 @@ settings.LOGGING['loggers'].update({
 })
 
 # Template Generator retrieve options API TIMEOUT
-HEAT_TEMPLATE_GENERATOR_API_TIMEOUT = 60
+HEAT_TEMPLATE_GENERATOR_API_TIMEOUT = <%= @template_generator_api_timeout.to_s %>
 
 # Template Generator retrieve options API PARALLEL LEVEL
-HEAT_TEMPLATE_GENERATOR_API_PARALLEL = 2
+HEAT_TEMPLATE_GENERATOR_API_PARALLEL = <%= @template_generator_api_parallel.to_s %>

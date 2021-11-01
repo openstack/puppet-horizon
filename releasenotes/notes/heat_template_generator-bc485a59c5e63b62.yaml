@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    The ``heat::dashboards::heat`` class now supports the following two
+    parameters.
+
+    - ``template_generator_api_timeout``
+    - ``template_generator_api_parallel``
