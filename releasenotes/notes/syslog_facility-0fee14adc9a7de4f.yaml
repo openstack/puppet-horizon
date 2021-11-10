@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``horizon::syslog_facility`` parameter has been added.

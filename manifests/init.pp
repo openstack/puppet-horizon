@@ -133,6 +133,10 @@
 #    (optional) Log level. Defaults to 'INFO'. WARNING: Setting this to
 #    DEBUG will let plaintext passwords be logged in the Horizon log file.
 #
+#  [*syslog_facility*]
+#    (optional) Syslog facility used when syslog log hander is enabled.
+#    Defaults to 'local1'.
+#
 #  [*local_settings_template*]
 #    (optional) Location of template to use for local_settings.py generation.
 #    Defaults to 'horizon/local_settings.py.erb'.
@@ -558,6 +562,7 @@ class horizon(
   $dropdown_max_items                  = 30,
   $log_handlers                        = ['file'],
   $log_level                           = 'INFO',
+  $syslog_facility                     = 'local1',
   $help_url                            = 'http://docs.openstack.org',
   $local_settings_template             = 'horizon/local_settings.py.erb',
   $configure_apache                    = true,

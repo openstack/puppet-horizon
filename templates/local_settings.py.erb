@@ -755,7 +755,7 @@ LOGGING = {
     <%- if @log_handlers.include?('syslog') -%>
         'syslog': {
             'level': '<%= @log_level %>',
-            'facility': 'local1',
+            'facility': '<%= @syslog_facility %>',
             'class': 'logging.handlers.SysLogHandler',
             'address': '/dev/log',
             'formatter': 'normal',
