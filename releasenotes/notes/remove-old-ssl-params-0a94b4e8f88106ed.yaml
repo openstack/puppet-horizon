@@ -1,0 +1,12 @@
+---
+upgrade:
+  - |
+    The following parameters have been removed. Please use the new ``ssl_*``
+    parameters instead.
+
+    - ``horizon::horizon_cert``
+    - ``horizon::horizon_key``
+    - ``horizon::horizon_ca``
+    - ``horizon::wsgi::apache::horizon_cert``
+    - ``horizon::wsgi::apache::horizon_key``
+    - ``horizon::wsgi::apache::horizon_ca``

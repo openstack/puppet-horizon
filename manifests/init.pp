@@ -511,15 +511,6 @@
 #
 # DEPRECATED PARAMETERS
 #
-#  [*horizon_cert*]
-#    (required with listen_ssl) Certificate to use for SSL support.
-#
-#  [*horizon_key*]
-#    (required with listen_ssl) Private key to use for SSL support.
-#
-#  [*horizon_ca*]
-#    (required with listen_ssl) CA certificate to use for SSL support.
-#
 #  [*enable_user_pass*]
 #    (optional) Enable the password field while launching a Heat stack.
 #    Defaults to undef
@@ -630,9 +621,6 @@ class horizon(
   $customization_module                = undef,
   $horizon_upload_mode                 = undef,
   # DEPRECATED PARAMETERS
-  $horizon_cert                        = undef,
-  $horizon_key                         = undef,
-  $horizon_ca                          = undef,
   $enable_user_pass                    = undef,
 ) inherits horizon::params {
 
@@ -778,14 +766,6 @@ and usage of a quoted value is deprecated.')
   }
 
   if $configure_apache {
-    if ($horizon_cert or $horizon_key or $horizon_ca) {
-      warning('horizon::horizon_cert, horizon::horizon_key and horizon::horizon_ca parameter is deprecated')
-    }
-
-    $ssl_cert_real = $horizon_cert.lest || { $ssl_cert }
-    $ssl_key_real = $horizon_key.lest || { $ssl_key }
-    $ssl_ca_real = $horizon_ca.lest || { $ssl_ca }
-
     class { 'horizon::wsgi::apache':
       bind_address      => $bind_address,
       servername        => $servername,
@@ -794,9 +774,9 @@ and usage of a quoted value is deprecated.')
       http_port         => $http_port,
       https_port        => $https_port,
       ssl_redirect      => $ssl_redirect,
-      ssl_cert          => $ssl_cert_real,
-      ssl_key           => $ssl_key_real,
-      ssl_ca            => $ssl_ca_real,
+      ssl_cert          => $ssl_cert,
+      ssl_key           => $ssl_key,
+      ssl_ca            => $ssl_ca,
       ssl_verify_client => $ssl_verify_client,
       wsgi_processes    => $wsgi_processes,
       wsgi_threads      => $wsgi_threads,

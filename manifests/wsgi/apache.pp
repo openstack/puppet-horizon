@@ -96,17 +96,6 @@
 #    (optional) The log format to use to the access log.
 #    Defaults to false
 #
-# == DEPRECATED PARAMETERS
-#
-# [*horizon_cert*]
-#   (required with listen_ssl) Certificate to use for SSL support.
-#
-# [*horizon_key*]
-#   (required with listen_ssl) Private key to use for SSL support.
-#
-# [*horizon_ca*]
-#   (required with listen_ssl) CA certificate to use for SSL support.
-#
 class horizon::wsgi::apache (
   $bind_address                = undef,
   $servername                  = $::fqdn,
@@ -130,10 +119,6 @@ class horizon::wsgi::apache (
   $root_url                    = $::horizon::params::root_url,
   $root_path                   = "${::horizon::params::static_path}/openstack-dashboard",
   $access_log_format           = false,
-  # DEPRECATED PARAMETERS
-  $horizon_cert                = undef,
-  $horizon_key                 = undef,
-  $horizon_ca                  = undef,
 ) inherits horizon::params {
 
   include horizon::deps
@@ -163,27 +148,19 @@ class horizon::wsgi::apache (
     $root_url_real = $root_url
   }
 
-  $ssl_cert_real = $horizon_cert.lest || { $ssl_cert }
-  $ssl_key_real = $horizon_key.lest || { $ssl_key }
-  $ssl_ca_real = $horizon_ca.lest || { $ssl_ca }
-
   if $listen_ssl {
     include apache::mod::ssl
     $ensure_ssl_vhost = 'present'
 
-    if ($horizon_cert or $horizon_key or $horizon_ca) {
-      warning('The horizon_cert, horizon_key and horizon_ca parameters is deprecated, please use ssl_cert, ssl_key and ssl_ca')
-    }
-
-    if $ssl_cert_real == undef {
+    if $ssl_cert == undef {
       fail('The ssl_cert parameter is required when listen_ssl is true')
     }
 
-    if $ssl_key_real == undef {
+    if $ssl_key == undef {
       fail('The ssl_key parameter is required when listen_ssl is true')
     }
 
-    if ($ssl_ca_real != undef and $ssl_verify_client == undef) {
+    if ($ssl_ca != undef and $ssl_verify_client == undef) {
       fail('The ssl_verify_client parameter is required when setting ssl_ca')
     }
 
@@ -266,9 +243,9 @@ class horizon::wsgi::apache (
       path  => "${root_path}/static",
     }],
     port                        => $http_port,
-    ssl_cert                    => $ssl_cert_real,
-    ssl_key                     => $ssl_key_real,
-    ssl_ca                      => $ssl_ca_real,
+    ssl_cert                    => $ssl_cert,
+    ssl_key                     => $ssl_key,
+    ssl_ca                      => $ssl_ca,
     ssl_verify_client           => $ssl_verify_client,
     wsgi_script_aliases         => hash([$script_url, $::horizon::params::django_wsgi]),
     wsgi_import_script          => $::horizon::params::django_wsgi,
