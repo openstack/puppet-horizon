@@ -83,11 +83,12 @@ SESSION_COOKIE_HTTPONLY = True
 # NOTE: The version should be formatted as it appears in the URL for the
 # service API. For example, The identity service APIs have inconsistent
 # use of the decimal point, so valid options would be 2.0 or 3.
+# Minimum compute version to get the instance locked status is 2.9.
 #OPENSTACK_API_VERSIONS = {
-#    "data-processing": 1.1,
 #    "identity": 3,
-#    "volume": 2,
-#    "compute": 2
+#    "image": 2,
+#    "volume": 3,
+#    "compute": 2,
 #}
 <% if ! (@api_versions.empty?) and  @api_versions.kind_of?(Hash) %>
 OPENSTACK_API_VERSIONS = {
