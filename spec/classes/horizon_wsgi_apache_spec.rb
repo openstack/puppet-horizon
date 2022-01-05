@@ -520,10 +520,6 @@ describe 'horizon::wsgi::apache' do
   }).each do |os,facts|
     context "on #{os}" do
       let (:facts) do
-        if facts[:operatingsystem] == 'Debian'
-          facts.merge!( :os_package_type => 'debian' )
-        end
-
         facts.merge!(OSDefaults.get_facts({
           :fqdn           => 'some.host.tld',
           :concat_basedir => '/var/lib/puppet/concat',

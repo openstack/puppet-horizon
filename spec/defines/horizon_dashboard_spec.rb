@@ -45,10 +45,6 @@ describe 'horizon::dashboard' do
   end
 
   shared_examples 'horizon::dashboard on Debian' do
-    before do
-      facts.merge!({:os_package_type => 'debian'})
-    end
-
     context 'with default' do
       it { should contain_package('python3-heat-dashboard').with(
         :ensure => 'installed',

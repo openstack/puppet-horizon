@@ -38,8 +38,8 @@ class horizon::params {
       $heat_dashboard_package_name    = 'python3-heat-dashboard'
       $manila_dashboard_package_name  = 'python3-manila-dashboard'
       $octavia_dashboard_package_name = 'python3-octavia-dashboard'
-      case $::os_package_type {
-        'debian': {
+      case $::operatingsystem {
+        'Debian': {
           $package_name      = 'openstack-dashboard-apache'
           $httpd_config_file = '/etc/apache2/sites-available/openstack-dashboard-alias-only.conf'
         }
