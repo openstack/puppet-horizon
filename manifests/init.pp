@@ -706,6 +706,13 @@ and usage of a quoted value is deprecated.')
   $neutron_options_real    = merge($neutron_defaults,$neutron_options)
   $instance_options_real   = merge($instance_defaults,$instance_options)
 
+  if $policy_files_path != undef {
+    validate_legacy(String, 'validate_string', $policy_files_path)
+    $policy_files_path_real = $policy_files_path
+  } else {
+    $policy_files_path_real = $::horizon::params::policy_dir
+  }
+
   validate_legacy(Hash, 'validate_hash', $api_versions)
   validate_legacy(Enum['on', 'off'], 'validate_re', $password_autocomplete, [['^on$', '^off$']])
   validate_legacy(Enum['legacy', 'angular'], 'validate_re', $images_panel, [['^legacy$', '^angular$']])
