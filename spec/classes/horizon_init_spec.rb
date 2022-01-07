@@ -32,7 +32,7 @@ describe 'horizon' do
           :refreshonly => true,
       })}
       it {
-        if facts[:os_package_type] == 'rpm'
+        if facts[:osfamily] == 'RedHat'
           is_expected.to contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]')
           is_expected.to contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_compress]')
         else
@@ -767,7 +767,7 @@ describe 'horizon' do
       let(:platforms_params) do
         case facts[:osfamily]
         when 'Debian'
-          if facts[:os_package_type] == 'debian'
+          if facts[:operatingsystem] == 'Debian'
             { :config_file      => '/etc/openstack-dashboard/local_settings.py',
               :conf_d_dir       => '/etc/openstack-dashboard/local_settings.d',
               :package_name     => 'openstack-dashboard-apache',
