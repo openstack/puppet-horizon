@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The new ``horizon::use_simple_tenant_usage`` parameter has been added.
+    This parameter controls value of the ``OPENSTACK_USE_SIMPLE_TENANT_USAGE``
+    parameter.
