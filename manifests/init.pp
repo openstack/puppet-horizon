@@ -210,6 +210,10 @@
 #        Defaults to False.
 #      'enable_scheduler_hints': Boolean to allow scheduler hints to be provided.
 #        Defaults to True.
+#      'default_availaility_zone': THe default availbility zone for a new server
+#        creation. If 'Any' is specified, the default availability zone is decided
+#        by the nova scheduler.
+#        Defaults to 'Any'
 #
 #  [*configure_apache*]
 #    (optional) Configure Apache for Horizon. (Defaults to true)
@@ -696,6 +700,7 @@ and usage of a quoted value is deprecated.')
     'disable_volume'            => false,
     'disable_volume_snapshot'   => false,
     'enable_scheduler_hints'    => true,
+    'default_availability_zone' => 'Any',
   }
 
   Service <| title == 'memcached' |> -> Class['horizon']
