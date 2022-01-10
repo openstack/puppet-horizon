@@ -1,0 +1,6 @@
+---
+fixes:
+  - |
+    `Bug #1956904 <https://bugs.launchpad.net/puppet-horizon/+bug/1956904>`_:
+    The hard-coded ``REST_API_REQUIRED_SETTINGS`` parameter was removed, to use
+    the default value defined in Horizon itself.
