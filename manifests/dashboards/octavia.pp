@@ -21,8 +21,13 @@
 #    (optional) Local copy of service policy files.
 #    Defaults to 'octavia_policy.yaml'
 #
+#  [*policies*]
+#    (optional) Set of policies to configure.
+#    Defaults to undef
+#
 class horizon::dashboards::octavia(
   $policy_file = 'octavia_policy.yaml',
+  $policies    = undef,
 ) {
 
   include horizon::deps
@@ -64,5 +69,20 @@ class horizon::dashboards::octavia(
     target  => $config_file,
     content => template('horizon/_1499_load_balancer_settings.py.erb'),
     order   => '50',
+  }
+
+  if $policies != undef {
+    # The horizon::policy class should be included so that some common
+    # parameters about policy management can be picked here
+    if !defined(Class[horizon::policy]){
+      fail('The horizon::policy class should be include in advance to customize policies')
+    }
+
+    horizon::policy::base { $policy_file_real:
+      policies     => $policies,
+      file_mode    => $::horizon::policy::file_mode,
+      file_format  => $::horizon::policy::file_format,
+      purge_config => $::horizon::policy::purge_config,
+    }
   }
 }

@@ -32,9 +32,14 @@
 #    'enable_public_shares': Boolean
 #    'enabled_share_protocols': Array
 #
+#  [*policies*]
+#    (optional) Set of policies to configure.
+#    Defaults to undef
+#
 class horizon::dashboards::manila(
   $policy_file    = 'manila_policy.yaml',
-  $manila_options = {}
+  $manila_options = {},
+  $policies       = undef,
 ) {
 
   include horizon::deps
@@ -89,5 +94,20 @@ class horizon::dashboards::manila(
     target  => $config_file,
     content => template('horizon/_90_manila_shares.py.erb'),
     order   => '50',
+  }
+
+  if $policies != undef {
+    # The horizon::policy class should be included so that some common
+    # parameters about policy management can be picked here
+    if !defined(Class[horizon::policy]){
+      fail('The horizon::policy class should be include in advance to customize policies')
+    }
+
+    horizon::policy::base { $policy_file_real:
+      policies     => $policies,
+      file_mode    => $::horizon::policy::file_mode,
+      file_format  => $::horizon::policy::file_format,
+      purge_config => $::horizon::policy::purge_config,
+    }
   }
 }

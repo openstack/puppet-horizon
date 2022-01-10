@@ -1,0 +1,19 @@
+---
+features:
+  - |
+    The new ``horizon::policy`` class has been added. This class can be used
+    to manage policy rules for the following services.
+
+    - ``cinder``
+    - ``glance``
+    - ``keystone``
+    - ``neutron``
+    - ``nova``
+
+  - |
+    The new ``policies`` parameter has been added to the following classes,
+    to allow customizing policiy rules for additional services.
+
+    - ``horizon::dashboards::heat``
+    - ``horizon::dashboards::octavia``
+    - ``horizon::dashboards::manila``

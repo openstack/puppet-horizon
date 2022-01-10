@@ -672,10 +672,8 @@ DEFAULT_THEME = '<%= @default_theme %>'
 
 # Path to directory containing policy.json files
 #POLICY_FILES_PATH = os.path.join(ROOT_PATH, "conf")
-<% if !(@policy_files_path.nil?) %>
-POLICY_FILES_PATH = '<%= @policy_files_path %>'
-<% elsif @osfamily == 'RedHat' %>
-POLICY_FILES_PATH = '/etc/openstack-dashboard'
+<% if !(@policy_files_path_real.nil?) -%>
+POLICY_FILES_PATH = '<%= @policy_files_path_real %>'
 <% end -%>
 
 # Map of local copy of service policy files.
