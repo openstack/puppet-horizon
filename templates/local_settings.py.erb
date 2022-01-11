@@ -438,6 +438,15 @@ OPENSTACK_ENABLE_PASSWORD_RETRIEVE = True
 #LAUNCH_INSTANCE_LEGACY_ENABLED = False
 #LAUNCH_INSTANCE_NG_ENABLED = True
 
+# This setting controls whether SimpleTenantUsage nova API is used in the usage
+# overview. According to feedbacks to the horizon team, the usage of
+# SimpleTenantUsage can cause performance issues in the nova API in larger
+# deployments. Try to set this to ``False`` for such cases.
+#OPENSTACK_USE_SIMPLE_TENANT_USAGE = True
+<% if ! (@use_simple_tenant_usage.nil?) -%>
+OPENSTACK_USE_SIMPLE_TENANT_USAGE = <%= @use_simple_tenant_usage.to_s.capitalize %>
+<% end -%>
+
 # The Xen Hypervisor has the ability to set the mount point for volumes
 # attached to instances (other Hypervisors currently do not). Setting
 # can_set_mount_point to True will add the option to set the mount point

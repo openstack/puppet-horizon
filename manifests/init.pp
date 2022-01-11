@@ -215,6 +215,10 @@
 #        by the nova scheduler.
 #        Defaults to 'Any'
 #
+#  [*use_simple_tenant_usage*]
+#    (optional) Use SimpleTenantUsage nova API in the usage overview.
+#    (Defaults to undef)
+#
 #  [*configure_apache*]
 #    (optional) Configure Apache for Horizon. (Defaults to true)
 #
@@ -583,6 +587,7 @@ class horizon(
   $keystone_options                    = {},
   $neutron_options                     = {},
   $instance_options                    = {},
+  $use_simple_tenant_usage             = undef,
   $file_upload_temp_dir                = '/tmp',
   $policy_files_path                   = undef,
   $policy_files                        = undef,
