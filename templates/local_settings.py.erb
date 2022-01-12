@@ -233,7 +233,7 @@ CACHES = {
         <% end -%>},
     <% end -%>
     'BACKEND': '<%= @cache_backend %>',
-    <% if @cache_server_ip %>
+    <% if @cache_server_ip and !(@cache_server_ip.empty?) %>
           <% if @cache_server_ip_real.kind_of?(Array) %>
             <%  split = ":" + @cache_server_port + "','" %>
         'LOCATION': [ <% @cache_server_ip_real.each do |ip| -%>'<%= ip -%>:<%= @cache_server_port -%>',<% end -%> ],
