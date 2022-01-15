@@ -517,6 +517,11 @@
 #     will disable the function in Horizon, direct will allow the user agent to directly
 #     talk to the glance-api.
 #
+#  [*default_boot_source*]
+#    (optional) A default instance boot source. Allowed values are: "image",
+#    "snapshot", "volume" and "volume_snapshot".
+#    Defaults to undef
+#
 # DEPRECATED PARAMETERS
 #
 #  [*enable_user_pass*]
@@ -629,6 +634,7 @@ class horizon(
   $password_validator_help             = undef,
   $customization_module                = undef,
   $horizon_upload_mode                 = undef,
+  $default_boot_source                 = undef,
   # DEPRECATED PARAMETERS
   $enable_user_pass                    = undef,
 ) inherits horizon::params {

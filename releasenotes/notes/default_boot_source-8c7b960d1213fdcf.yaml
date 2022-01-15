@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``horizon::default_boot_source`` parameter has been added.
