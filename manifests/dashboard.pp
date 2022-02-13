@@ -28,14 +28,19 @@
 #
 # == Example:
 #
-# This will install the correct heat-dashboard package for your deployment.
-# horizon::dashboard { 'heat': }
+# This will install the correct cloudkitty-dashboard package for your deployment.
+# horizon::dashboard { 'cloudkitty': }
 #
 define horizon::dashboard (
   $ensure = 'present',
 ) {
 
   $dashboard = downcase($name)
+
+  if $dashboard in ['heat', 'octavia', 'manila'] {
+    warning("Use the horizon::dashboard::${dashboard} class instead. \
+The class allows more flexible customization of the ${dashboard} dashboard.")
+  }
 
   case $::osfamily {
     'Debian': {
