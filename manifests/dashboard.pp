@@ -37,7 +37,7 @@ define horizon::dashboard (
 
   $dashboard = downcase($name)
 
-  if $dashboard in ['heat', 'octavia', 'manila'] {
+  if $dashboard in ['designate', 'heat', 'octavia', 'manila'] {
     warning("Use the horizon::dashboard::${dashboard} class instead. \
 The class allows more flexible customization of the ${dashboard} dashboard.")
   }
