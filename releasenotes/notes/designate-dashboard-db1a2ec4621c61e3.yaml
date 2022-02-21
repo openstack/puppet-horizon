@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``horizon::dashboards::designate`` class has been added. This class
+    can be used to manage parameters for designate-dashboard.

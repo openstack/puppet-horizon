@@ -1,0 +1,10 @@
+from django.conf import settings
+
+
+settings.POLICY_FILES.update({
+    'dns': '<%= @policy_file_real %>',
+})
+
+settings.DEFAULT_POLICY_FILES.update({
+    'dns': 'default_policies/designate.yaml',
+})
