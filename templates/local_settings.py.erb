@@ -305,9 +305,15 @@ OPENSTACK_KEYSTONE_DEFAULT_ROLE = "<%= @keystone_default_role %>"
 
 # Enables keystone web single-sign-on if set to True.
 #WEBSSO_ENABLED = False
+<% if @websso_enabled -%>
+WEBSSO_ENABLED = True
+<% end -%>
 
 # Determines which authentication choice to show as default.
 #WEBSSO_INITIAL_CHOICE = "credentials"
+<% if @websso_initial_choice -%>
+WEBSSO_INITIAL_CHOICE = "<%= @websso_initial_choice %>"
+<% end -%>
 
 # The list of authentication mechanisms which include keystone
 # federation protocols and identity provider/federation protocol
@@ -324,6 +330,14 @@ OPENSTACK_KEYSTONE_DEFAULT_ROLE = "<%= @keystone_default_role %>"
 #    ("acme_oidc", "ACME - OpenID Connect"),
 #    ("acme_saml2", "ACME - SAML2")
 #)
+<% if @websso_choices.kind_of?(Array) -%>
+WEBSSO_CHOICES = (
+    ("credentials", _("Keystone Credentials")),
+<% @websso_choices.each do |r| -%>
+    ("<%= r[0] -%>", _("<%= r[1] -%>")),
+<% end -%>
+)
+<% end -%>
 
 # A dictionary of specific identity provider and federation protocol
 # combinations. From the selected authentication mechanism, the value
@@ -336,20 +350,6 @@ OPENSTACK_KEYSTONE_DEFAULT_ROLE = "<%= @keystone_default_role %>"
 #    "acme_oidc": ("acme", "oidc"),
 #    "acme_saml2": ("acme", "saml2")
 #}
-<% if @websso_enabled -%>
-WEBSSO_ENABLED = True
-<% end -%>
-<% if @websso_initial_choice -%>
-WEBSSO_INITIAL_CHOICE = "<%= @websso_initial_choice %>"
-<% end -%>
-<% if @websso_choices.kind_of?(Array) -%>
-WEBSSO_CHOICES = (
-    ("credentials", _("Keystone Credentials")),
-<% @websso_choices.each do |r| -%>
-    ("<%= r[0] -%>", _("<%= r[1] -%>")),
-<% end -%>
-)
-<% end -%>
 <% if @websso_idp_mapping.kind_of?(Hash) -%>
 WEBSSO_IDP_MAPPING = {
 <% @websso_idp_mapping.each do |key,r| -%>
