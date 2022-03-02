@@ -9,33 +9,33 @@ from openstack_dashboard.settings import HORIZON_CONFIG
 
 DEBUG = <%= @django_debug.to_s.capitalize %>
 
-<% if @site_branding %>
+<% if @site_branding -%>
 SITE_BRANDING = '<%= @site_branding %>'
-<% end %>
 
+<% end -%>
 # WEBROOT is the location relative to Webserver root
 # should end with a slash.
 #LOGIN_URL = WEBROOT + 'auth/login/'
 #LOGOUT_URL = WEBROOT + 'auth/logout/'
-<% if @root_url == '/' %>
+<% if @root_url == '/' -%>
 WEBROOT = '/'
 LOGIN_URL = '/auth/login/'
 LOGOUT_URL = '/auth/logout/'
-<% else %>
+<% else -%>
 WEBROOT = '<%= @root_url %>/'
 LOGIN_URL = '<%= @root_url %>/auth/login/'
 LOGOUT_URL = '<%= @root_url %>/auth/logout/'
-<% end %>
+<% end -%>
 
 # LOGIN_REDIRECT_URL can be used as an alternative for
 # HORIZON_CONFIG.user_home, if user_home is not set.
 # Do not set it to '/home/', as this will cause circular redirect loop
 #LOGIN_REDIRECT_URL = WEBROOT
-<% if @root_url == '/' %>
+<% if @root_url == '/' -%>
 LOGIN_REDIRECT_URL = '/'
-<% else %>
+<% else -%>
 LOGIN_REDIRECT_URL = '<%= @root_url %>/'
-<% end %>
+<% end -%>
 
 # Required for Django 1.5.
 # If horizon is running in production (DEBUG is False), set this
@@ -43,39 +43,40 @@ LOGIN_REDIRECT_URL = '<%= @root_url %>/'
 # For more information see:
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 #ALLOWED_HOSTS = ['horizon.example.com', ]
-<% if @allowed_hosts.kind_of?(Array) %>
+<% if @allowed_hosts.kind_of?(Array) -%>
 ALLOWED_HOSTS = ['<%= @allowed_hosts.join("', '") %>', ]
-<% else %>
+<% else -%>
 ALLOWED_HOSTS = ['<%= @allowed_hosts %>', ]
-<% end %>
+<% end -%>
+
 # Set SSL proxy settings:
 # Pass this header from the proxy after terminating the SSL,
 # and don't forget to strip it from the client's request.
 # For more information see:
 # https://docs.djangoproject.com/en/1.8/ref/settings/#secure-proxy-ssl-header
-<% if @enable_secure_proxy_ssl_header %>
+<% if @enable_secure_proxy_ssl_header -%>
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-<% else %>
+<% else -%>
 #SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-<% end %>
+<% end -%>
 
 # This setting specifies the name of the header with remote IP address
 #SECURE_PROXY_ADDR_HEADER = False
-<% if @secure_proxy_addr_header %>
+<% if @secure_proxy_addr_header -%>
 SECURE_PROXY_ADDR_HEADER = '<%= @secure_proxy_addr_header %>'
-<% end %>
+<% end -%>
 
 # If Horizon is being served through SSL, then uncomment the following two
 # settings to better secure the cookies from security exploits
-<% if @secure_cookies %>
+<% if @secure_cookies -%>
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_HTTPONLY = True
-<% else %>
+<% else -%>
 #CSRF_COOKIE_SECURE = True
 #SESSION_COOKIE_SECURE = True
 #SESSION_COOKIE_HTTPONLY = True
-<% end %>
+<% end -%>
 
 # Overrides for OpenStack API versions. Use this setting to force the
 # OpenStack dashboard to use a specific API version for a given service API.
@@ -90,22 +91,22 @@ SESSION_COOKIE_HTTPONLY = True
 #    "volume": 3,
 #    "compute": 2,
 #}
-<% if ! (@api_versions.empty?) and  @api_versions.kind_of?(Hash) %>
+<% if ! (@api_versions.empty?) and  @api_versions.kind_of?(Hash) -%>
 OPENSTACK_API_VERSIONS = {
 <% @api_versions.sort.each do |opt_name,opt_val| -%>
-  '<%= opt_name -%>': <%= opt_val -%>,
-<%end %>
+    '<%= opt_name -%>': <%= opt_val -%>,
+<% end -%>
 }
-<%end %>
+<% end -%>
 
 # Set this to True if running on multi-domain model. When this is enabled, it
 # will require user to enter the Domain name in addition to username for login.
 #OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = False
-<% if @keystone_multidomain_support %>
+<% if @keystone_multidomain_support -%>
 OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True
-<% end %>
+<% end -%>
 
-<% if @keystone_domain_choices.kind_of?(Array) %>
+<% if @keystone_domain_choices.kind_of?(Array) -%>
 OPENSTACK_KEYSTONE_DOMAIN_DROPDOWN = True
 OPENSTACK_KEYSTONE_DOMAIN_CHOICES = (
 <% @keystone_domain_choices.each do |d| -%>
@@ -117,9 +118,9 @@ OPENSTACK_KEYSTONE_DOMAIN_CHOICES = (
 # Overrides the default domain used when running on single-domain model
 # with Keystone V3. All entities will be created in the default domain.
 #OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = 'Default'
-<% if @keystone_default_domain %>
+<% if @keystone_default_domain -%>
 OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = '<%= @keystone_default_domain %>'
-<% end %>
+<% end -%>
 
 # Set Console type:
 # valid options are "AUTO"(default), "VNC", "SPICE", "RDP", "SERIAL" or None
@@ -159,7 +160,7 @@ HORIZON_CONFIG = {
 #    "regex": '.*',
 #    "help_text": _("Your password does not meet the requirements."),
 #}
-<%if @password_validator %>
+<%if @password_validator -%>
 HORIZON_CONFIG["password_validator"] = {
     "regex": '<%= @password_validator %>',
 <%- if @password_validator_help -%>
@@ -168,7 +169,7 @@ HORIZON_CONFIG["password_validator"] = {
     "help_text": _("Your password does not meet the requirements."),
 <%- end -%>
 }
-<% end %>
+<% end -%>
 
 # Turn off browser autocompletion for forms including the login form and
 # the database creation workflow if so desired.
@@ -178,17 +179,17 @@ HORIZON_CONFIG["password_autocomplete"] = "<%= @password_autocomplete %>"
 # Setting this to True will disable the reveal button for password fields,
 # including on the login form.
 #HORIZON_CONFIG["disable_password_reveal"] = False
-<% if @disable_password_reveal == true %>
+<% if @disable_password_reveal == true -%>
 HORIZON_CONFIG["disable_password_reveal"] = True
-<% end %>
+<% end -%>
 
 # Set this to True to display an 'Admin Password' field on the Change Password
 # form to verify that it is indeed the admin logged-in who wants to change the
 # password
 #HORIZON_CONFIG["enforce_password_check"] = False
-<% if @enforce_password_check == true %>
+<% if @enforce_password_check == true -%>
 HORIZON_CONFIG["enforce_password_check"] = True
-<% end %>
+<% end -%>
 
 # Configure enabled image panel. It can be legacy or angular.
 #HORIZON_CONFIG["images_panel"] = "legacy"
@@ -226,52 +227,52 @@ SECRET_KEY = '<%= @secret_key %>'
 #}
 CACHES = {
     'default': {
-    <% if @cache_options.kind_of?(Hash) %>
+    <%- if @cache_options.kind_of?(Hash) -%>
         'OPTIONS': {
-        <% @cache_options.sort.each do |opt_name,opt_val| -%>
-        '<%= opt_name -%>': <%= opt_val -%>,
-        <% end -%>},
-    <% end -%>
-    'BACKEND': '<%= @cache_backend %>',
-    <% if @cache_server_ip and !(@cache_server_ip.empty?) %>
-          <% if @cache_server_ip_real.kind_of?(Array) %>
-            <%  split = ":" + @cache_server_port + "','" %>
+        <%- @cache_options.sort.each do |opt_name,opt_val| -%>
+            '<%= opt_name -%>': <%= opt_val -%>,
+        <%- end -%>
+        },
+    <%- end -%>
+        'BACKEND': '<%= @cache_backend %>',
+    <%- if @cache_server_ip and !(@cache_server_ip.empty?) -%>
+        <%- if @cache_server_ip_real.kind_of?(Array) -%>
+            <%-  split = ":" + @cache_server_port + "','" -%>
         'LOCATION': [ <% @cache_server_ip_real.each do |ip| -%>'<%= ip -%>:<%= @cache_server_port -%>',<% end -%> ],
-          <% else %>
+        <%- else -%>
         'LOCATION': '<%= @cache_server_ip_real %>:<%= @cache_server_port %>',
-          <% end %>
-    <% end %>
-    <% if @cache_server_url %>
+        <%- end -%>
+    <%- end -%>
+    <%- if @cache_server_url -%>
         'LOCATION': '<%= @cache_server_url %>',
-    <% end %>
+    <%- end -%>
     }
 }
 
-<% if @cache_tls_enabled %>
-
+<% if @cache_tls_enabled -%>
 ## START TLS context configuration
 import ssl
 
 tls_context = ssl.create_default_context(<% if @cache_tls_cafile %>cafile='<%= @cache_tls_cafile %>'<% end %>)
-<% if @cache_tls_certfile and @cache_tls_keyfile %>
+<% if @cache_tls_certfile and @cache_tls_keyfile -%>
 tls_context.load_cert_chain('<%= @cache_tls_certfile %>', '<%= @cache_tls_keyfile %>')
-<% end %>
-<% if @cache_tls_certfile and not @cache_tls_keyfile %>
+<% end -%>
+<% if @cache_tls_certfile and not @cache_tls_keyfile -%>
 tls_context.load_cert_chain('<%= @cache_tls_certfile %>')
-<% end %>
-<% if @cache_allowed_ciphers %>
+<% end -%>
+<% if @cache_allowed_ciphers -%>
 tls_context.set_ciphers('<%= @cache_tls_allowed_ciphers %>')
-<% end %>
+<% end -%>
 
 CACHES['default'].setdefault('OPTIONS', {})['tls_context'] = tls_context
 
 ## END TLS context configuration
-<% end %>
 
-<% if @django_session_engine %>
+<% end -%>
+<% if @django_session_engine -%>
 SESSION_ENGINE = "<%= @django_session_engine %>"
-<% end %>
 
+<% end -%>
 # Send email to the console by default
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Or send them to /dev/null
@@ -288,7 +289,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 #    ('http://cluster1.example.com:5000/v3', 'cluster1'),
 #    ('http://cluster2.example.com:5000/v3', 'cluster2'),
 #]
-<% if @available_regions.kind_of?(Array) %>
+<% if @available_regions.kind_of?(Array) -%>
 AVAILABLE_REGIONS = [
 <% @available_regions.each do |r| -%>
     ('<%= r[0] -%>', '<%= r[1] -%>'),
@@ -341,7 +342,7 @@ WEBSSO_ENABLED = True
 <% if @websso_initial_choice -%>
 WEBSSO_INITIAL_CHOICE = "<%= @websso_initial_choice %>"
 <% end -%>
-<% if @websso_choices.kind_of?(Array) %>
+<% if @websso_choices.kind_of?(Array) -%>
 WEBSSO_CHOICES = (
     ("credentials", _("Keystone Credentials")),
 <% @websso_choices.each do |r| -%>
@@ -349,7 +350,7 @@ WEBSSO_CHOICES = (
 <% end -%>
 )
 <% end -%>
-<% if @websso_idp_mapping.kind_of?(Hash) %>
+<% if @websso_idp_mapping.kind_of?(Hash) -%>
 WEBSSO_IDP_MAPPING = {
 <% @websso_idp_mapping.each do |key,r| -%>
     "<%= key -%>": ("<%= r[0] -%>", "<%= r[1] -%>"),
@@ -386,7 +387,7 @@ WEBSSO_DEFAULT_REDIRECT_LOGOUT = "<%= @websso_default_redirect_logout %>"
 
 # Disable SSL certificate checks (useful for self-signed certificates):
 #OPENSTACK_SSL_NO_VERIFY = True
-<% if @ssl_no_verify %>
+<% if @ssl_no_verify -%>
 OPENSTACK_SSL_NO_VERIFY = True
 <% end -%>
 
@@ -403,7 +404,7 @@ OPENSTACK_SSL_CACERT = '<%= @openstack_ssl_cacert %>'
 # can_edit_user to False and name to 'ldap'.
 #
 # TODO(tres): Remove these once Keystone has an API to identify auth backend.
-<% if @keystone_options_real.kind_of?(Hash) %>
+<% if @keystone_options_real.kind_of?(Hash) -%>
 OPENSTACK_KEYSTONE_BACKEND = {
 <% @keystone_options_real.sort.each do |opt_name,opt_val| -%>
   <%- if opt_val == true or opt_val == false -%>
@@ -597,21 +598,21 @@ OPENSTACK_IMAGE_BACKEND = {
 #CREATE_IMAGE_DEFAULTS = {
 #    'image_visibility': "public",
 #}
-<% if @create_image_defaults %>
+<% if @create_image_defaults -%>
 CREATE_IMAGE_DEFAULTS = {
 <%- @create_image_defaults.sort.each do |opt_name,opt_val| -%>
     '<%= opt_name %>': '<%= opt_val %>',
 <%- end -%>
 }
-<% end %>
+<% end -%>
 
 # OPENSTACK_ENDPOINT_TYPE specifies the endpoint type to use for the endpoints
 # in the Keystone service catalog. Use this setting when Horizon is running
 # external to the OpenStack environment. The default is 'publicURL'.
 #OPENSTACK_ENDPOINT_TYPE = "publicURL"
-<% if @openstack_endpoint_type %>
+<% if @openstack_endpoint_type -%>
 OPENSTACK_ENDPOINT_TYPE = "<%= @openstack_endpoint_type %>"
-<% end %>
+<% end -%>
 
 # SECONDARY_ENDPOINT_TYPE specifies the fallback endpoint type to use in the
 # case that OPENSTACK_ENDPOINT_TYPE is not present in the endpoints
@@ -619,9 +620,9 @@ OPENSTACK_ENDPOINT_TYPE = "<%= @openstack_endpoint_type %>"
 # external to the OpenStack environment. The default is None.  This
 # value should differ from OPENSTACK_ENDPOINT_TYPE if used.
 #SECONDARY_ENDPOINT_TYPE = "publicURL"
-<% if @secondary_endpoint_type %>
+<% if @secondary_endpoint_type -%>
 SECONDARY_ENDPOINT_TYPE = "<%= @secondary_endpoint_type %>"
-<% end %>
+<% end -%>
 
 # The number of objects (Swift containers/objects or images) to display
 # on a single page before providing a paging element (a "more" link)
@@ -642,9 +643,9 @@ DROPDOWN_MAX_ITEMS = <%= @dropdown_max_items %>
 TIME_ZONE = "<%= @timezone %>"
 
 # If you have external monitoring links, eg:
-<% if @horizon_app_links %>
+<% if @horizon_app_links -%>
 EXTERNAL_MONITORING = <%= @horizon_app_links %>
-<% end %>
+<% end -%>
 
 # When launching an instance, the menu of available flavors is
 # sorted by RAM usage, ascending. If you would like a different sort order,
@@ -659,18 +660,18 @@ EXTERNAL_MONITORING = <%= @horizon_app_links %>
 #    'reverse': False,
 #}
 
-<% if @available_themes.kind_of?(Array) %>
+<% if @available_themes.kind_of?(Array) -%>
 AVAILABLE_THEMES = [
-<% @available_themes.each do |theme| %>
-  ('<%= theme['name'] %>', '<%= theme['label'] %>', '<%= theme['path'] %>'),
-<% end %>
+<% @available_themes.each do |theme| -%>
+    ('<%= theme['name'] %>', '<%= theme['label'] %>', '<%= theme['path'] %>'),
+<% end -%>
 ]
-<% end %>
 
-<% if @default_theme %>
+<% end -%>
+<% if @default_theme -%>
 DEFAULT_THEME = '<%= @default_theme %>'
-<% end %>
 
+<% end -%>
 # Modules that provide /auth routes that can be used to handle different types
 # of user authentication. Add auth plugins that require extra route handling to
 # this list.
@@ -706,7 +707,7 @@ POLICY_FILES_PATH = '<%= @policy_files_path_real %>'
 #    'image': 'glance_policy.yaml',
 #    'network': 'neutron_policy.yaml',
 #}
-<% if @policy_files.kind_of?(Hash) %>
+<% if @policy_files.kind_of?(Hash) -%>
 POLICY_FILES = {
 <% @policy_files.sort.each do |service_name,filename| -%>
     '<%= service_name -%>': '<%= filename -%>',
@@ -1013,9 +1014,9 @@ FILE_UPLOAD_TEMP_DIR = '<%= @file_upload_temp_dir %>'
 # until today (if set to None). This setting should be used to limit the amount
 # of data fetched by default when rendering the Overview panel.
 # OVERVIEW_DAYS_RANGE = None
-<% if @overview_days_range %>
+<% if @overview_days_range -%>
 OVERVIEW_DAYS_RANGE = <%= @overview_days_range %>
-<% end %>
+<% end -%>
 
 # Additional settings can be made available to the client side for
 # extensibility by specifying them in REST_API_ADDITIONAL_SETTINGS
