@@ -359,7 +359,7 @@ describe 'horizon::wsgi::apache' do
       )}
     end
 
-    context 'with listen_ssl and ssl_redirect with a empty root_url' do
+    context 'with listen_ssl and ssl_redirect with an empty root_url' do
       before do
         params.merge!({
           :listen_ssl        => true,
