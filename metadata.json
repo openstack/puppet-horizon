@@ -19,7 +19,7 @@
         },
         {
             "name": "openstack/openstacklib",
-            "version_requirement": ">=20.2.0 <21.0.0"
+            "version_requirement": ">=20.3.0 <21.0.0"
         }
     ],
     "description": "Installs and configures OpenStack Horizon (Dashboard).",
@@ -63,5 +63,5 @@
     ],
     "source": "https://opendev.org/openstack/puppet-horizon.git",
     "summary": "Puppet module for OpenStack Horizon",
-    "version": "20.2.0"
+    "version": "20.3.0"
 }
