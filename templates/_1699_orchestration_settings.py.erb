@@ -20,7 +20,7 @@ settings.POLICY_FILES.update({
 settings.LOGGING['loggers'].update({
     'heatclient': {
         # 'handlers': ['console'],
-        'handlers': ['<%= @log_handlers.join("', '") %>']
+        'handlers': ['<%= @log_handlers.join("', '") %>'],
         # level': 'DEBUG',
         'level': '<%= @log_level %>',
         'propagate': False,
