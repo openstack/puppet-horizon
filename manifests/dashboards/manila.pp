@@ -45,7 +45,7 @@ class horizon::dashboards::manila(
   if ! defined(Class[horizon]) {
     fail('The horizon class should be included before the horizon::dashboards::manila class')
   }
-  $log_handlers = $::horizon::log_handlers
+  $log_handlers = $::horizon::log_handlers_real
   $log_level    = $::horizon::log_level
   $policy_files = $::horizon::policy_files
 
