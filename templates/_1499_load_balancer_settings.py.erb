@@ -21,14 +21,14 @@ settings.POLICY_FILES.update({
 settings.LOGGING['loggers'].update({
     'openstack': {
         # 'handlers': ['console'],
-        'handlers': ['<%= @log_handler %>']
+        'handlers': ['<%= @log_handler %>'],
         # level': 'DEBUG',
         'level': '<%= @log_level %>',
         'propagate': False,
     }
     'barbicanclient': {
         # 'handlers': ['console'],
-        'handlers': ['<%= @log_handler %>']
+        'handlers': ['<%= @log_handler %>'],
         # level': 'DEBUG',
         'level': '<%= @log_level %>',
         'propagate': False,
