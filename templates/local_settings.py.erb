@@ -843,7 +843,7 @@ LOGGING = {
             # 'handlers': ['console'],
             'handlers': ['<%= @log_handlers.join("', '") %>'],
             # 'level': 'DEBUG',
-            'level': '<%= @log_level %>',
+            'level': '<%= @django_log_level_real %>',
             'propagate': False,
         },
         # Logging from django.db.backends is VERY verbose, send to null

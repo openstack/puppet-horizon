@@ -130,8 +130,13 @@
 #    (optional) Log handlers. Defaults to ['file']
 #
 #  [*log_level*]
-#    (optional) Log level. Defaults to 'INFO'. WARNING: Setting this to
-#    DEBUG will let plaintext passwords be logged in the Horizon log file.
+#    (optional) Log level. WARNING: Setting this to DEBUG will let plaintext
+#    passwords be logged in the Horizon log file.
+#    Defaults to 'INFO'
+#
+#  [*django_log_level*]
+#    (optional) Log level of django module. This overrides log_level.
+#    Defaults to undef
 #
 #  [*syslog_facility*]
 #    (optional) Syslog facility used when syslog log hander is enabled.
@@ -566,6 +571,7 @@ class horizon(
   $dropdown_max_items                  = 30,
   $log_handlers                        = ['file'],
   $log_level                           = 'INFO',
+  $django_log_level                    = undef,
   $syslog_facility                     = 'local1',
   $help_url                            = 'http://docs.openstack.org',
   $local_settings_template             = 'horizon/local_settings.py.erb',
@@ -740,6 +746,8 @@ and usage of a quoted value is deprecated.')
       tag  => ['openstack'],
     })
   }
+
+  $django_log_level_real = pick($django_log_level, $log_level)
 
   package { 'horizon':
     ensure => $package_ensure,

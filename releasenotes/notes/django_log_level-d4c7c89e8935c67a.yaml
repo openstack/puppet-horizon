@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The new ``horizon::django_log_level`` parameter has been added. This
+    parameter determines log level of the django module and overrides
+    the global ``log_level`` parameter.
