@@ -231,7 +231,7 @@ describe 'horizon::wsgi::apache' do
         params.merge!({
           :extra_params  => {
             'add_listen' => false,
-            'docroot' => '/tmp'
+            'docroot'    => '/tmp'
           },
         })
       end
@@ -239,6 +239,30 @@ describe 'horizon::wsgi::apache' do
       it { should contain_apache__vhost('horizon_vhost').with(
         :add_listen => false,
         :docroot    => '/tmp'
+      )}
+      it { should contain_apache__vhost('horizon_ssl_vhost').with(
+        :add_listen => false,
+        :docroot    => '/tmp'
+      )}
+    end
+
+    context 'with ssl extra parameters' do
+      before do
+        params.merge!({
+          :extra_params  => {
+            'docroot' => '/root1'
+          },
+          :ssl_extra_params  => {
+            'docroot' => '/root2'
+          },
+        })
+      end
+
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :docroot => '/root1'
+      )}
+      it { should contain_apache__vhost('horizon_ssl_vhost').with(
+        :docroot => '/root2'
       )}
     end
 
