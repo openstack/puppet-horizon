@@ -74,6 +74,11 @@
 #   (optional) A hash of extra parameters for apache::wsgi class.
 #   Defaults to {}
 #
+# [*ssl_extra_params*]
+#   (optional) A hash of extra parameters for apache::wsgi class. This is used
+#   for SSL vhost and overrides $extra_params.
+#   Defaults to undef
+#
 # [*redirect_type*]
 #   (optional) What type of redirect to use when redirecting an http request
 #   for a user. This should be either 'temp' or 'permanent'. Setting this value
@@ -114,6 +119,7 @@ class horizon::wsgi::apache (
   $vhost_conf_name             = 'horizon_vhost',
   $vhost_ssl_conf_name         = 'horizon_ssl_vhost',
   $extra_params                = {},
+  $ssl_extra_params            = undef,
   $redirect_type               = 'permanent',
   $root_url                    = $::horizon::params::root_url,
   $root_path                   = "${::horizon::params::static_path}/openstack-dashboard",
@@ -269,26 +275,39 @@ class horizon::wsgi::apache (
     $redirectmatch_url_real = $root_url_real ? { '' => undef, '/' => undef, default => $redirect_url }
   }
 
-  ensure_resource('apache::vhost', $vhost_conf_name, merge ($default_vhost_conf, $extra_params, {
-    wsgi_daemon_process => hash([$::horizon::params::wsgi_group, $wsgi_daemon_process_options])
-    }, {
-    redirectmatch_regexp => $redirectmatch_regexp_real,
-    redirectmatch_dest   => $redirectmatch_url_real,
-    options              => ['-Indexes', '+FollowSymLinks','+MultiViews'],
-  }))
-  ensure_resource('apache::vhost', $vhost_ssl_conf_name, merge ($default_vhost_conf, $extra_params, {
-    wsgi_daemon_process => hash(['horizon-ssl', $wsgi_daemon_process_options]),
-    }, {
-    access_log_file      => 'horizon_ssl_access.log',
-    error_log_file       => 'horizon_ssl_error.log',
-    priority             => $priority,
-    ssl                  => true,
-    port                 => $https_port,
-    ensure               => $ensure_ssl_vhost,
-    wsgi_process_group   => 'horizon-ssl',
-    redirectmatch_regexp => $root_url_real ? { '' => undef, '/' => undef, default => '^/$' },
-    redirectmatch_dest   => $root_url_real ? { '' => undef, '/' => undef, default => $root_url_real },
-    options              => ['-Indexes', '+FollowSymLinks','+MultiViews'],
-  }))
+  ensure_resource('apache::vhost', $vhost_conf_name, merge(
+    $default_vhost_conf,
+    $extra_params,
+    {
+      wsgi_daemon_process => hash([$::horizon::params::wsgi_group, $wsgi_daemon_process_options])
+    },
+    {
+      redirectmatch_regexp => $redirectmatch_regexp_real,
+      redirectmatch_dest   => $redirectmatch_url_real,
+      options              => ['-Indexes', '+FollowSymLinks','+MultiViews'],
+    }
+  ))
+
+
+  $ssl_extra_params_real = pick_default($ssl_extra_params, $extra_params)
+  ensure_resource('apache::vhost', $vhost_ssl_conf_name, merge(
+    $default_vhost_conf,
+    $ssl_extra_params_real,
+    {
+      wsgi_daemon_process => hash(['horizon-ssl', $wsgi_daemon_process_options]),
+    },
+    {
+      access_log_file      => 'horizon_ssl_access.log',
+      error_log_file       => 'horizon_ssl_error.log',
+      priority             => $priority,
+      ssl                  => true,
+      port                 => $https_port,
+      ensure               => $ensure_ssl_vhost,
+      wsgi_process_group   => 'horizon-ssl',
+      redirectmatch_regexp => $root_url_real ? { '' => undef, '/' => undef, default => '^/$' },
+      redirectmatch_dest   => $root_url_real ? { '' => undef, '/' => undef, default => $root_url_real },
+      options              => ['-Indexes', '+FollowSymLinks','+MultiViews'],
+    }
+  ))
 
 }
