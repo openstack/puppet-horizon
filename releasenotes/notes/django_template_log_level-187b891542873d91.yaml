@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``horizon::django_template_log_level`` parameter has been added.
+    This parameter controls log level of the ``django.template`` module.

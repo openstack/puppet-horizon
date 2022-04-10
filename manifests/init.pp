@@ -138,6 +138,10 @@
 #    (optional) Log level of django module. This overrides log_level.
 #    Defaults to undef
 #
+#  [*django_template_log_level*]
+#    (optional) Log level of django.template module.
+#    Defaults to 'INFO'
+#
 #  [*syslog_facility*]
 #    (optional) Syslog facility used when syslog log hander is enabled.
 #    Defaults to 'local1'.
@@ -572,6 +576,7 @@ class horizon(
   $log_handlers                        = ['file'],
   $log_level                           = 'INFO',
   $django_log_level                    = undef,
+  $django_template_log_level           = 'INFO',
   $syslog_facility                     = 'local1',
   $help_url                            = 'http://docs.openstack.org',
   $local_settings_template             = 'horizon/local_settings.py.erb',
