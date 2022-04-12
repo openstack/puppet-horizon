@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The new ``horizon::wsgi::apache::ssl_extra_params`` parameter has been
+    added. This parameter affects only ssl vhost and overrides
+    the ``extra_params`` parameter when set.
