@@ -318,7 +318,7 @@
 #  [*api_versions*]
 #    (optional) A hash of parameters to set specific api versions.
 #    Example: api_versions => {'identity' => 3}
-#    Default to 'identity' => 3
+#    Default to {}
 #
 #  [*keystone_multidomain_support*]
 #    (optional) Enables multi-domain in horizon. When this is enabled, it will require user to enter
@@ -608,7 +608,7 @@ class horizon(
   $policy_files_path                   = undef,
   $policy_files                        = undef,
   $redirect_type                       = 'permanent',
-  $api_versions                        = {'identity' => '3'},
+  $api_versions                        = {},
   $keystone_multidomain_support        = false,
   $keystone_default_domain             = undef,
   $keystone_domain_choices             = undef,
