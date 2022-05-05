@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``horizon::system_scope_services`` parameter has been added.
