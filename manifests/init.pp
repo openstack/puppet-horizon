@@ -535,12 +535,6 @@
 #    (optional) Enable the use of the system scope token on per-service basis.
 #    Defaults to undef
 #
-# DEPRECATED PARAMETERS
-#
-#  [*enable_user_pass*]
-#    (optional) Enable the password field while launching a Heat stack.
-#    Defaults to undef
-#
 # === Examples
 #
 #  class { 'horizon':
@@ -651,16 +645,9 @@ class horizon(
   $horizon_upload_mode                 = undef,
   $default_boot_source                 = undef,
   $system_scope_services               = undef,
-  # DEPRECATED PARAMETERS
-  $enable_user_pass                    = undef,
 ) inherits horizon::params {
 
   include horizon::deps
-
-  if $enable_user_pass != undef {
-    warning('The enable_user_pass parameter is deprecated. Use the horizon::dashboards::heat class')
-    include horizon::dashboards::heat
-  }
 
   # TODO(tkajinam): Remove this logic after Yoga cycle.
   if $horizon_upload_mode != undef {

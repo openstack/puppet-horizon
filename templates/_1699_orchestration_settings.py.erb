@@ -2,7 +2,7 @@ from django.conf import settings
 
 
 OPENSTACK_HEAT_STACK = {
-    'enable_user_pass': <%= @enable_user_pass_real.to_s.capitalize %>,
+    'enable_user_pass': <%= @enable_user_pass.to_s.capitalize %>,
 }
 
 settings.POLICY_FILES.update({
