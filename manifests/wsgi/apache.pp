@@ -101,6 +101,22 @@
 #    (optional) The log format to use to the access log.
 #    Defaults to false
 #
+#  [*access_log_file*]
+#    (optional) The log file name for the virtualhost.
+#    Defaults to 'horizon_access.log'
+#
+#  [*error_log_file*]
+#    (optional) The error log file name for the virtualhost.
+#    Defaults to 'horizon_error.log'
+#
+#  [*ssl_access_log_file*]
+#    (optional) The log file name for the ssl virtualhost.
+#    Defaults to 'horizon_ssl_access.log'
+#
+#  [*ssl_error_log_file*]
+#    (optional) The error log file name for the ssl virtualhost.
+#    Defaults to 'horizon_ssl_error.log'
+#
 class horizon::wsgi::apache (
   $bind_address                = undef,
   $servername                  = $::fqdn,
@@ -125,6 +141,10 @@ class horizon::wsgi::apache (
   $root_url                    = $::horizon::params::root_url,
   $root_path                   = "${::horizon::params::static_path}/openstack-dashboard",
   $access_log_format           = false,
+  $access_log_file             = 'horizon_access.log',
+  $error_log_file              = 'horizon_error.log',
+  $ssl_access_log_file         = 'horizon_ssl_access.log',
+  $ssl_error_log_file          = 'horizon_ssl_error.log',
 ) inherits horizon::params {
 
   include horizon::deps
@@ -240,9 +260,9 @@ class horizon::wsgi::apache (
     servername                  => $servername,
     serveraliases               => any2array($server_aliases),
     docroot                     => '/var/www/',
-    access_log_file             => 'horizon_access.log',
+    access_log_file             => $access_log_file,
     access_log_format           => $access_log_format,
-    error_log_file              => 'horizon_error.log',
+    error_log_file              => $error_log_file,
     priority                    => $priority,
     aliases                     => [{
       alias => "${root_url_real}/static",
@@ -302,8 +322,8 @@ class horizon::wsgi::apache (
       wsgi_daemon_process => hash(['horizon-ssl', $wsgi_daemon_process_options]),
     },
     {
-      access_log_file      => 'horizon_ssl_access.log',
-      error_log_file       => 'horizon_ssl_error.log',
+      access_log_file      => $ssl_access_log_file,
+      error_log_file       => $ssl_error_log_file,
       priority             => $priority,
       ssl                  => true,
       port                 => $https_port,

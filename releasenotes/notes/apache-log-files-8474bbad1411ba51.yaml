@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The ``horizon::wsgi::apache`` class now supports customizing name of vhost
+    log files.
