@@ -258,6 +258,7 @@ class horizon::wsgi::apache (
     wsgi_process_group          => $::horizon::params::wsgi_group,
     wsgi_application_group      => $::horizon::params::wsgi_application_group,
     redirectmatch_status        => $redirect_type,
+    options                     => ['-Indexes', '+FollowSymLinks','+MultiViews'],
   }
 
   # Only add the 'ip' element to the $default_vhost_conf hash if it was explicitly
@@ -289,7 +290,6 @@ class horizon::wsgi::apache (
     {
       redirectmatch_regexp => $redirectmatch_regexp_real,
       redirectmatch_dest   => $redirectmatch_url_real,
-      options              => ['-Indexes', '+FollowSymLinks','+MultiViews'],
     }
   ))
 
@@ -311,7 +311,6 @@ class horizon::wsgi::apache (
       wsgi_process_group   => 'horizon-ssl',
       redirectmatch_regexp => $root_url_real ? { '' => undef, '/' => undef, default => '^/$' },
       redirectmatch_dest   => $root_url_real ? { '' => undef, '/' => undef, default => $root_url_real },
-      options              => ['-Indexes', '+FollowSymLinks','+MultiViews'],
     }
   ))
 
