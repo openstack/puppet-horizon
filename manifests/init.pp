@@ -531,6 +531,10 @@
 #    "snapshot", "volume" and "volume_snapshot".
 #    Defaults to undef
 #
+#  [*system_scope_services*]
+#    (optional) Enable the use of the system scope token on per-service basis.
+#    Defaults to undef
+#
 # DEPRECATED PARAMETERS
 #
 #  [*enable_user_pass*]
@@ -646,6 +650,7 @@ class horizon(
   $customization_module                = undef,
   $horizon_upload_mode                 = undef,
   $default_boot_source                 = undef,
+  $system_scope_services               = undef,
   # DEPRECATED PARAMETERS
   $enable_user_pass                    = undef,
 ) inherits horizon::params {

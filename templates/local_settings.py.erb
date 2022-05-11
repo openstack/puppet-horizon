@@ -1042,3 +1042,14 @@ HORIZON_IMAGES_UPLOAD_MODE = "<%= @horizon_upload_mode_real %>"
 <% if @default_boot_source -%>
 DEFAULT_BOOT_SOURCE = "<%= @default_boot_source %>"
 <%- end -%>
+
+# Services may require a System Scope token for certain operations. This
+# settings enables the use of the system scope token on per-service basis.
+#SYSTEM_SCOPE_SERVICES = []
+<% if ! @system_scope_services.nil? -%>
+<% if @system_scope_services.kind_of?(Array) -%>
+SYSTEM_SCOPE_SERVICES = ['<%= @system_scope_services.join("', '") %>']
+<%- else -%>
+SYSTEM_SCOPE_SERVICES = ['<%= @system_scope_services %>']
+<%- end -%>
+<%- end -%>
