@@ -256,39 +256,30 @@ class horizon::wsgi::apache (
     $custom_wsgi_process_options
   )
 
-  $default_vhost_conf_no_ip = {
-    servername                  => $servername,
-    serveraliases               => any2array($server_aliases),
-    docroot                     => '/var/www/',
-    access_log_file             => $access_log_file,
-    access_log_format           => $access_log_format,
-    error_log_file              => $error_log_file,
-    priority                    => $priority,
-    aliases                     => [{
+  $default_vhost_conf = {
+    ip                     => $bind_address,
+    servername             => $servername,
+    serveraliases          => any2array($server_aliases),
+    docroot                => '/var/www/',
+    access_log_file        => $access_log_file,
+    access_log_format      => $access_log_format,
+    error_log_file         => $error_log_file,
+    priority               => $priority,
+    aliases                => [{
       alias => "${root_url_real}/static",
       path  => "${root_path}/static",
     }],
-    port                        => $http_port,
-    ssl_cert                    => $ssl_cert,
-    ssl_key                     => $ssl_key,
-    ssl_ca                      => $ssl_ca,
-    ssl_verify_client           => $ssl_verify_client,
-    wsgi_script_aliases         => hash([$script_url, $::horizon::params::django_wsgi]),
-    wsgi_import_script          => $::horizon::params::django_wsgi,
-    wsgi_process_group          => $::horizon::params::wsgi_group,
-    wsgi_application_group      => $::horizon::params::wsgi_application_group,
-    redirectmatch_status        => $redirect_type,
-    options                     => ['-Indexes', '+FollowSymLinks','+MultiViews'],
-  }
-
-  # Only add the 'ip' element to the $default_vhost_conf hash if it was explicitly
-  # specified in the instantiation of the class.  This is because ip => undef gets
-  # changed to ip => '' via the Puppet function API when ensure_resource is called.
-  # See https://bugs.launchpad.net/puppet-horizon/+bug/1371345
-  if $bind_address {
-    $default_vhost_conf = merge($default_vhost_conf_no_ip, { ip => $bind_address })
-  } else {
-    $default_vhost_conf = $default_vhost_conf_no_ip
+    port                   => $http_port,
+    ssl_cert               => $ssl_cert,
+    ssl_key                => $ssl_key,
+    ssl_ca                 => $ssl_ca,
+    ssl_verify_client      => $ssl_verify_client,
+    wsgi_script_aliases    => hash([$script_url, $::horizon::params::django_wsgi]),
+    wsgi_import_script     => $::horizon::params::django_wsgi,
+    wsgi_process_group     => $::horizon::params::wsgi_group,
+    wsgi_application_group => $::horizon::params::wsgi_application_group,
+    redirectmatch_status   => $redirect_type,
+    options                => ['-Indexes', '+FollowSymLinks','+MultiViews'],
   }
 
   if $listen_ssl and $ssl_redirect {
