@@ -63,8 +63,6 @@ class horizon::dashboards::heat(
     $policy_file_real = $policy_file
   }
 
-  $enable_user_pass_real = pick($::horizon::enable_user_pass, $enable_user_pass)
-
   $config_file = "${::horizon::params::conf_d_dir}/_1699_orchestration_settings.py"
 
   package { 'heat-dashboard':

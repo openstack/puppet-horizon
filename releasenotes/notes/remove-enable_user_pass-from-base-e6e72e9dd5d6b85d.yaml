@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    The ``horizon::enable_user_pass`` parameter has been removed. Use
+    the ``horizon::dashboards::heat::enable_user_pass`` parameter instead.
