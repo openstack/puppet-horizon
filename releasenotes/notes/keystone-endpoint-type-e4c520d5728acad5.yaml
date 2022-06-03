@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Added ``openstack_keystone_endpoint_type`` to configure the endpoint
+    type to use for Keystone when grabbing it from service catalog.

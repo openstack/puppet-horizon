@@ -108,6 +108,10 @@
 #    (optional) secondary endpoint type to use for the endpoints in the
 #    Keystone service catalog. Defaults to 'undef'.
 #
+#  [*openstack_keystone_endpoint_type*]
+#    (optional) endpoint type to use for the keystone endpoint from the
+#    service catalog. Defaults to 'undef'.
+#
 #  [*available_regions*]
 #    (optional) List of available regions. Value should be a list of tuple:
 #    [ ['urlOne', 'RegionOne'], ['urlTwo', 'RegionTwo'] ]
@@ -573,6 +577,7 @@ class horizon(
   $site_branding                       = undef,
   $openstack_endpoint_type             = undef,
   $secondary_endpoint_type             = undef,
+  $openstack_keystone_endpoint_type    = undef,
   $available_regions                   = undef,
   $api_result_limit                    = 1000,
   $api_result_page_size                = 20,

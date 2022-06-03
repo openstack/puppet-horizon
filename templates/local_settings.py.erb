@@ -614,6 +614,14 @@ OPENSTACK_ENDPOINT_TYPE = "<%= @openstack_endpoint_type %>"
 SECONDARY_ENDPOINT_TYPE = "<%= @secondary_endpoint_type %>"
 <% end -%>
 
+# OPENSTACK_KEYSTONE_ENDPOINT_TYPE specifies the endpoint type use from
+# service catalog when looking up the Keystone (identity) endpoint. This
+# parameter overrides OPENSTACK_ENDPOINT_TYPE.
+#OPENSTACK_KEYSTONE_ENDPOINT_TYPE = None
+<% if @openstack_keystone_endpoint_type -%>
+OPENSTACK_KEYSTONE_ENDPOINT_TYPE = "<%= @openstack_keystone_endpoint_type %>"
+<% end -%>
+
 # The number of objects (Swift containers/objects or images) to display
 # on a single page before providing a paging element (a "more" link)
 # to paginate results.
