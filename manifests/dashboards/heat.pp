@@ -31,7 +31,7 @@
 #
 #  [*template_generator_api_parallel*]
 #    (optional) Concurrency to retrieve response from template generator.
-#    Defualts to 2
+#    Defaults to 2
 #
 #  [*policies*]
 #    (optional) Set of policies to configure.

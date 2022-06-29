@@ -37,7 +37,7 @@
 #
 #  [*cache_server_url*]
 #    (optional) URL of a cache server.
-#    This allows arbitary strings to be set as CACHE BACKEND LOCATION.
+#    This allows arbitrary strings to be set as CACHE BACKEND LOCATION.
 #    Defaults to undef.
 #
 #  [*cache_server_ip*]
@@ -48,7 +48,7 @@
 #    (optional) Memcached port. Defaults to '11211'.
 #
 #  [*cache_tls_enabled*]
-#    (optional) Global toggle for TLS usage when comunicating with
+#    (optional) Global toggle for TLS usage when communicating with
 #    the caching servers. Defaults to false.
 #
 #  [*cache_tls_cafile*]
@@ -66,7 +66,7 @@
 #
 #  [*cache_tls_keyfile*]
 #    (optional) Path to a single file containing the client's private
-#    key in. Otherwhise the private key will be taken from the file
+#    key in. Otherwise the private key will be taken from the file
 #    specified in tls_certfile. If tls_enabled is False, this option
 #    is ignored. Defaults to undef.
 #
@@ -83,7 +83,7 @@
 #  [*horizon_app_links*]
 #    (optional) Array of arrays that can be used to add call-out links
 #    to the dashboard for other apps. There is no specific requirement
-#    for these apps to be for monitoring, that's just the defacto purpose.
+#    for these apps to be for monitoring, that's just the de-facto purpose.
 #    Each app is defined in two parts, the display name, and
 #    the URIDefaults to false. Defaults to false. (no app links)
 #
@@ -143,7 +143,7 @@
 #    Defaults to 'INFO'
 #
 #  [*syslog_facility*]
-#    (optional) Syslog facility used when syslog log hander is enabled.
+#    (optional) Syslog facility used when syslog log handler is enabled.
 #    Defaults to 'local1'.
 #
 #  [*local_settings_template*]
@@ -170,7 +170,7 @@
 #  [*cinder_options*]
 #    (optional) A hash of parameters to enable features specific to
 #    Cinder.  These include:
-#    'enable_backup': Boolean to enable or disable Cinders's backup feature.
+#    'enable_backup': Boolean to enable or disable Cinder's backup feature.
 #      Defaults to False.
 #
 #  [*keystone_options*]
@@ -219,7 +219,7 @@
 #        Defaults to False.
 #      'enable_scheduler_hints': Boolean to allow scheduler hints to be provided.
 #        Defaults to True.
-#      'default_availaility_zone': THe default availbility zone for a new server
+#      'default_availability_zone': The default availability zone for a new server
 #        creation. If 'Any' is specified, the default availability zone is decided
 #        by the nova scheduler.
 #        Defaults to 'Any'
@@ -244,7 +244,7 @@
 #    (optional) Port to use for the HTTPS virtual host. (Defaults to 443)
 #
 #  [*ssl_no_verify*]
-#    (optionsl) Disable SSL hostname verifying. Set it if you don't have
+#    (optional) Disable SSL hostname verifying. Set it if you don't have
 #    properly configured DNS which will resolve hostnames for SSL endpoints
 #    Horizon will connect to. (Defaults to false)
 #
@@ -353,7 +353,7 @@
 #    Defaults to undef.
 #
 #  [*root_url*]
-#    (optional) The base URL used to contruct horizon web addresses.
+#    (optional) The base URL used to construct horizon web addresses.
 #    Defaults to '/dashboard' or '/horizon' depending OS
 #
 #  [*root_path*]
@@ -432,7 +432,7 @@
 #  [*secure_proxy_addr_header*]
 #    (optional) Enables the SECURE_PROXY_ADDR_HEADER option.
 #    This setting specifies the name of the header with remote IP address.
-#    The commom value for this setting
+#    The common value for this setting
 #    is HTTP_X_REAL_IP or HTTP_X_FORWARDED_FOR. Note that this is only
 #    recommended if you're running horizon behind a proxy.
 #    If not present, then REMOTE_ADDR header is used
@@ -469,7 +469,7 @@
 #  [*websso_idp_mapping*]
 #    (optional)Set the WEBSSO_IDP_MAPPING option.
 #    A dictionary of specific identity provider and protocol combinations.
-#    From theselected authentication mechanism, the value will be looked up as
+#    From the selected authentication mechanism, the value will be looked up as
 #    keys in the dictionary. If a match is found, it will redirect the user to
 #    a identity provider and federation protocol specific WebSSO endpoint in
 #    keystone, otherwise it will use the value as the protocol_id when
@@ -483,7 +483,7 @@
 #      }
 #
 #  [*websso_default_redirect*]
-#    (optional) Enables redirection on login to the identity proider defined on
+#    (optional) Enables redirection on login to the identity provider defined on
 #    WEBSSO_DEFAULT_REDIRECT_PROTOCOL and WEBSSO_DEFAULT_REDIRECT_REGIO.
 #    Defaults to undef
 #

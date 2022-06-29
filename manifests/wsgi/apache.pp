@@ -52,7 +52,7 @@
 #   Defaults to '1'
 #
 # [*custom_wsgi_process_options*]
-#   (optional) gives you the oportunity to add custom process options or to
+#   (optional) gives you the opportunity to add custom process options or to
 #   overwrite the default options for the WSGI main process.
 #   eg. to use a virtual python environment for the WSGI process
 #   you could set it to:
@@ -90,7 +90,7 @@
 #   Defaults to 'permanent'
 #
 #  [*root_url*]
-#    (optional) The base URL used to contruct horizon web addresses.
+#    (optional) The base URL used to construct horizon web addresses.
 #    Defaults to '/dashboard' or '/horizon' depending OS
 #
 #  [*root_path*]
