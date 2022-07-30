@@ -668,7 +668,11 @@ and usage of a quoted value is deprecated.')
   }
 
   if $cache_server_ip {
-    $cache_server_ip_real = inet6_prefix($cache_server_ip)
+    if $cache_backend =~ /\.MemcachedCache$/ {
+      $cache_server_ip_real = inet6_prefix($cache_server_ip)
+    } else {
+      $cache_server_ip_real = normalize_ip_for_uri($cache_server_ip)
+    }
   }
 
   $hypervisor_defaults = {
@@ -740,7 +744,7 @@ and usage of a quoted value is deprecated.')
   validate_legacy(Enum['legacy', 'angular'], 'validate_re', $images_panel, [['^legacy$', '^angular$']])
   validate_legacy(Stdlib::Absolutepath, 'validate_absolute_path', $root_path)
 
-  if $manage_memcache_package and $cache_backend =~ /MemcachedCache/ {
+  if $manage_memcache_package and $cache_backend =~ /\.MemcachedCache$/ {
     ensure_packages('python-memcache', {
       name => $::horizon::params::memcache_package,
       tag  => ['openstack'],
