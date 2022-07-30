@@ -93,7 +93,7 @@ describe 'horizon' do
     context 'with overridden parameters' do
       before do
         params.merge!({
-          :cache_backend                  => 'horizon.backends.memcached.HorizonMemcached',
+          :cache_backend                  => 'django.core.cache.backends.memcached.MemcachedCache',
           :cache_options                  => {'SOCKET_TIMEOUT' => 1,'SERVER_RETRIES' => 1,'DEAD_RETRY' => 1},
           :cache_server_ip                => '10.0.0.1',
           :django_session_engine          => 'django.contrib.sessions.backends.cache',
@@ -160,7 +160,7 @@ describe 'horizon' do
           "            'DEAD_RETRY': 1,",
           "            'SERVER_RETRIES': 1,",
           "            'SOCKET_TIMEOUT': 1,",
-          "        'BACKEND': 'horizon.backends.memcached.HorizonMemcached',",
+          "        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',",
           "        'LOCATION': '10.0.0.1:11211',",
           'SESSION_ENGINE = "django.contrib.sessions.backends.cache"',
           'OPENSTACK_KEYSTONE_URL = "https://keystone.example.com:4682"',
@@ -237,16 +237,37 @@ describe 'horizon' do
       it { is_expected.to contain_exec('refresh_horizon_django_compress') }
     end
 
-    context 'with overridden parameters and IPv6 cache_server_ip array' do
+    context 'with overridden parameters, IPv6 cache_server_ip array and MemcachedCache' do
       before do
         params.merge!({
+          :cache_backend   => 'django.core.cache.backends.memcached.MemcachedCache',
           :cache_server_ip => ['fd12:3456:789a:1::1','fd12:3456:789a:1::2'],
         })
       end
 
       it 'generates local_settings.py' do
         verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+          "        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',",
           "        'LOCATION': [ 'inet6:[fd12:3456:789a:1::1]:11211','inet6:[fd12:3456:789a:1::2]:11211', ],",
+        ])
+      end
+
+      it { is_expected.to contain_exec('refresh_horizon_django_cache') }
+      it { is_expected.to contain_exec('refresh_horizon_django_compress') }
+    end
+
+    context 'with overridden parameters, IPv6 cache_server_ip array and PyMemcacheCache' do
+      before do
+        params.merge!({
+          :cache_backend   => 'django.core.cache.backends.memcached.PyMemcacheCache',
+          :cache_server_ip => ['fd12:3456:789a:1::1','fd12:3456:789a:1::2'],
+        })
+      end
+
+      it 'generates local_settings.py' do
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+          "        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',",
+          "        'LOCATION': [ '[fd12:3456:789a:1::1]:11211','[fd12:3456:789a:1::2]:11211', ],",
         ])
       end
 
