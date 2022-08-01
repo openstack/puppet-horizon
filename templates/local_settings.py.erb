@@ -243,7 +243,11 @@ CACHES = {
         <%- end -%>
     <%- end -%>
     <%- if @cache_server_url -%>
+        <%- if @cache_server_url.kind_of?(Array) -%>
+        'LOCATION': ['<%= @cache_server_url.join("','") %>'],
+        <%- else -%>
         'LOCATION': '<%= @cache_server_url %>',
+        <%- end -%>
     <%- end -%>
     }
 }
