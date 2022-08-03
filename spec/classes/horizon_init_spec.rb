@@ -472,8 +472,6 @@ describe 'horizon' do
           '# Custom local_settings.py',
           'DEBUG = True',
           "HORIZON_CONFIG = {",
-          "    'dashboards': ('project', 'admin', 'settings',),",
-          "    'default_dashboard': 'project',",
           "    'user_home': 'openstack_dashboard.views.get_user_home',",
           "    'ajax_queue_limit': 10,",
           "    'auto_fade_alerts': {",
@@ -656,8 +654,6 @@ describe 'horizon' do
         verify_concat_fragment_contents(catalogue, 'local_settings.py', [
           '# Custom local_settings.py',
           "HORIZON_CONFIG = {",
-          "    'dashboards': ('project', 'admin', 'settings',),",
-          "    'default_dashboard': 'project',",
           "    'user_home': 'openstack_dashboard.views.get_user_home',",
           "    'ajax_queue_limit': 10,",
           "    'auto_fade_alerts': {",
@@ -688,8 +684,6 @@ describe 'horizon' do
         verify_concat_fragment_contents(catalogue, 'local_settings.py', [
           '# Custom local_settings.py',
           "HORIZON_CONFIG = {",
-          "    'dashboards': ('project', 'admin', 'settings',),",
-          "    'default_dashboard': 'project',",
           "    'user_home': 'openstack_dashboard.views.get_user_home',",
           "    'ajax_queue_limit': 10,",
           "    'auto_fade_alerts': {",
