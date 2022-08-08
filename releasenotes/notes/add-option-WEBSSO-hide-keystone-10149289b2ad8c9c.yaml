@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    Added a new option ``websso_choices_hide_keystone``.  This lets you hide
+    the ability to log in with Keystone-credentials when using federation.
+    Be aware that this also requires you to set ``websso_initial_choice`` to
+    a valid value.

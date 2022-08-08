@@ -466,6 +466,12 @@
 #        ['saml2', 'Security Assertion Markup Language']
 #      ]
 #
+#  [*websso_choices_hide_keystone*]
+#    (optional)The WEBSSO_CHOICES option will by default include an entry for
+#    "Keystone Credentials".  Setting this option to true will hide it.
+#    Note that websso_initial_choice will need to be set to a valid option.
+#    Default to false
+#
 #  [*websso_idp_mapping*]
 #    (optional)Set the WEBSSO_IDP_MAPPING option.
 #    A dictionary of specific identity provider and protocol combinations.
@@ -634,6 +640,7 @@ class horizon(
   $websso_enabled                      = false,
   $websso_initial_choice               = undef,
   $websso_choices                      = undef,
+  $websso_choices_hide_keystone        = false,
   $websso_idp_mapping                  = undef,
   $websso_default_redirect             = false,
   $websso_default_redirect_protocol    = undef,
@@ -666,6 +673,10 @@ and usage of a quoted value is deprecated.')
 
   if $cache_server_ip {
     $cache_server_ip_real = inet6_prefix($cache_server_ip)
+  }
+
+  if $websso_choices_hide_keystone and !$websso_initial_choice {
+    fail('websso_initial_choice is required when websso_choices_hide_keystone is true')
   }
 
   $hypervisor_defaults = {
