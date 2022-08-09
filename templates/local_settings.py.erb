@@ -334,7 +334,9 @@ WEBSSO_INITIAL_CHOICE = "<%= @websso_initial_choice %>"
 #)
 <% if @websso_choices.kind_of?(Array) -%>
 WEBSSO_CHOICES = (
+<% if not @websso_choices_hide_keystone -%>
     ("credentials", _("Keystone Credentials")),
+<% end -%>
 <% @websso_choices.each do |r| -%>
     ("<%= r[0] -%>", _("<%= r[1] -%>")),
 <% end -%>
