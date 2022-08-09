@@ -178,7 +178,7 @@ HORIZON_CONFIG["password_autocomplete"] = "<%= @password_autocomplete %>"
 # Setting this to True will disable the reveal button for password fields,
 # including on the login form.
 #HORIZON_CONFIG["disable_password_reveal"] = False
-<% if @disable_password_reveal == true -%>
+<% if @disable_password_reveal -%>
 HORIZON_CONFIG["disable_password_reveal"] = True
 <% end -%>
 
@@ -186,7 +186,7 @@ HORIZON_CONFIG["disable_password_reveal"] = True
 # form to verify that it is indeed the admin logged-in who wants to change the
 # password
 #HORIZON_CONFIG["enforce_password_check"] = False
-<% if @enforce_password_check == true -%>
+<% if @enforce_password_check -%>
 HORIZON_CONFIG["enforce_password_check"] = True
 <% end -%>
 
