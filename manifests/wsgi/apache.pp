@@ -61,7 +61,7 @@
 #
 # [*priority*]
 #   (optional) The apache vhost priority.
-#   Defaults to '15'. To set Horizon as the primary vhost, change to '10'.
+#   Defaults to 15. To set Horizon as the primary vhost, change to 10.
 #
 # [*vhost_conf_name*]
 #   (Optional) Description
@@ -132,7 +132,7 @@ class horizon::wsgi::apache (
   $wsgi_processes              = $::os_workers,
   $wsgi_threads                = '1',
   $custom_wsgi_process_options = {},
-  $priority                    = '15',
+  $priority                    = 15,
   $vhost_conf_name             = 'horizon_vhost',
   $vhost_ssl_conf_name         = 'horizon_ssl_vhost',
   $extra_params                = {},
