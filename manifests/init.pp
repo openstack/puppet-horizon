@@ -362,7 +362,7 @@
 #
 #  [*access_log_format*]
 #    (optional) The log format for the access log.
-#    Defaults to false
+#    Defaults to undef
 #
 #  [*session_timeout*]
 #    (optional) The session timeout for horizon in seconds. After this many seconds of inactivity
@@ -620,7 +620,7 @@ class horizon(
   $overview_days_range                 = undef,
   $root_url                            = $::horizon::params::root_url,
   $root_path                           = "${::horizon::params::static_path}/openstack-dashboard",
-  $access_log_format                   = false,
+  $access_log_format                   = undef,
   $session_timeout                     = 1800,
   $timezone                            = 'UTC',
   $secure_cookies                      = false,

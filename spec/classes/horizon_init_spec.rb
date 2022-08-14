@@ -43,13 +43,12 @@ describe 'horizon' do
 
       it 'configures apache' do
         is_expected.to contain_class('horizon::wsgi::apache').with({
-          :servername        => 'some.host.tld',
-          :listen_ssl        => false,
-          :wsgi_processes    => facts[:os_workers],
-          :wsgi_threads      => '1',
-          :extra_params      => {},
-          :redirect_type     => 'permanent',
-          :access_log_format => false,
+          :servername     => 'some.host.tld',
+          :listen_ssl     => false,
+          :wsgi_processes => facts[:os_workers],
+          :wsgi_threads   => '1',
+          :extra_params   => {},
+          :redirect_type  => 'permanent',
         })
       end
 

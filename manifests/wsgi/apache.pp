@@ -99,7 +99,7 @@
 #
 #  [*access_log_format*]
 #    (optional) The log format to use to the access log.
-#    Defaults to false
+#    Defaults to undef
 #
 #  [*access_log_file*]
 #    (optional) The log file name for the virtualhost.
@@ -140,7 +140,7 @@ class horizon::wsgi::apache (
   $redirect_type               = 'permanent',
   $root_url                    = $::horizon::params::root_url,
   $root_path                   = "${::horizon::params::static_path}/openstack-dashboard",
-  $access_log_format           = false,
+  $access_log_format           = undef,
   $access_log_file             = 'horizon_access.log',
   $error_log_file              = 'horizon_error.log',
   $ssl_access_log_file         = 'horizon_ssl_access.log',
