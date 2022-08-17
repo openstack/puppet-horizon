@@ -1037,8 +1037,8 @@ DISALLOW_IFRAME_EMBED = <%= @disallow_iframe_embed.to_s.capitalize %>
 # image form. If set to 'off', there will be no file form field on the create
 # image form. See documentation for deployment considerations.
 #HORIZON_IMAGES_UPLOAD_MODE = 'legacy'
-<% if @horizon_upload_mode_real -%>
-HORIZON_IMAGES_UPLOAD_MODE = "<%= @horizon_upload_mode_real %>"
+<% if @horizon_upload_mode -%>
+HORIZON_IMAGES_UPLOAD_MODE = "<%= @horizon_upload_mode %>"
 <%- end -%>
 
 # A default instance boot source. Allowed values are: "image", "snapshot",

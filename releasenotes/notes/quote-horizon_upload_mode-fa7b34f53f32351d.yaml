@@ -1,0 +1,6 @@
+---
+upgrade:
+  - |
+    The ``horizon::horizon_upload_mode`` parameter is now always surrounded by
+    double quotes(``""``) when being rendered into the local_settings file.
+    Quotes should be removed from the parameter.

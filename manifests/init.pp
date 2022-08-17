@@ -656,17 +656,6 @@ class horizon(
 
   include horizon::deps
 
-  # TODO(tkajinam): Remove this logic after Yoga cycle.
-  if $horizon_upload_mode != undef {
-    $horizon_upload_mode_real = regsubst($horizon_upload_mode, "('|\")", '', 'G')
-    if $horizon_upload_mode != $horizon_upload_mode_real {
-      warning('The horizon_upload_mode parameter is now quoted automatically, \
-and usage of a quoted value is deprecated.')
-    }
-  } else {
-    $horizon_upload_mode_real = undef
-  }
-
   if $cache_server_url and $cache_server_ip {
     fail('Only one of cache_server_url or cache_server_ip can be set.')
   }
