@@ -457,20 +457,11 @@ describe 'horizon::wsgi::apache' do
       :wsgi_socket_prefix => '/var/run/wsgi'
     )}
 
-    if (Gem::Version.new(Puppet.version) >= Gem::Version.new('4.0'))
-      it { should contain_apache__vhost('horizon_vhost').with(
-        :aliases => [
-          { 'alias' => '/dashboard/static', 'path' => '/usr/share/openstack-dashboard/static' }
-        ],
-      )}
-    else
-      it { should contain_apache__vhost('horizon_vhost').with(
-        :aliases => [
-          ['alias', '/dashboard/static'],
-          ['path', '/usr/share/openstack-dashboard/static']
-        ],
-      )}
-    end
+    it { should contain_apache__vhost('horizon_vhost').with(
+      :aliases => [
+        { 'alias' => '/dashboard/static', 'path' => '/usr/share/openstack-dashboard/static' }
+      ],
+    )}
 
     context 'with root_path set to /tmp/horizon' do
       before do
@@ -479,38 +470,20 @@ describe 'horizon::wsgi::apache' do
         })
       end
 
-      if (Gem::Version.new(Puppet.version) >= Gem::Version.new('4.0'))
-        it { should contain_apache__vhost('horizon_vhost').with(
-          :aliases => [
-            { 'alias' => '/dashboard/static', 'path' => '/tmp/horizon/static' }
-          ],
-        )}
-      else
-        it { should contain_apache__vhost('horizon_vhost').with(
-          :aliases => [
-            ['alias', '/dashboard/static'],
-            ['path', '/tmp/horizon/static']
-          ],
-        )}
-      end
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :aliases => [
+          { 'alias' => '/dashboard/static', 'path' => '/tmp/horizon/static' }
+        ],
+      )}
     end
   end
 
   shared_examples 'horizon::wsgi::apache on Debian' do
-    if (Gem::Version.new(Puppet.version) >= Gem::Version.new('4.0'))
-      it { should contain_apache__vhost('horizon_vhost').with(
-        :aliases => [
-          { 'alias' => '/horizon/static', 'path' => '/var/lib/openstack-dashboard/static' }
-        ],
-      )}
-    else
-      it { should contain_apache__vhost('horizon_vhost').with(
-        :aliases => [
-          ['alias', '/horizon/static'],
-          ['path', '/var/lib/openstack-dashboard/static']
-        ],
-      )}
-    end
+    it { should contain_apache__vhost('horizon_vhost').with(
+      :aliases => [
+        { 'alias' => '/horizon/static', 'path' => '/var/lib/openstack-dashboard/static' }
+      ],
+    )}
 
     context 'with root_path set to /tmp/horizon' do
       before do
@@ -519,20 +492,11 @@ describe 'horizon::wsgi::apache' do
         })
       end
 
-      if (Gem::Version.new(Puppet.version) >= Gem::Version.new('4.0'))
-        it { should contain_apache__vhost('horizon_vhost').with(
-          :aliases => [
-            { 'alias' => '/horizon/static', 'path' => '/tmp/horizon/static' }
-          ],
-        )}
-      else
-        it { should contain_apache__vhost('horizon_vhost').with(
-          :aliases => [
-            ['alias', '/horizon/static'],
-            ['path', '/tmp/horizon/static']
-          ],
-        )}
-      end
+      it { should contain_apache__vhost('horizon_vhost').with(
+        :aliases => [
+          { 'alias' => '/horizon/static', 'path' => '/tmp/horizon/static' }
+        ],
+      )}
     end
   end
 
