@@ -21,7 +21,6 @@ describe 'horizon::wsgi::apache' do
     context 'with default parameters' do
       it { should contain_class('horizon::params') }
       it { should contain_class('apache') }
-      it { should contain_class('apache::mod::wsgi') }
       it { should contain_file(platforms_params[:httpd_config_file]) }
       it { should contain_package('horizon').with_ensure('present') }
 
@@ -64,7 +63,6 @@ describe 'horizon::wsgi::apache' do
 
       it { should contain_class('horizon::params') }
       it { should contain_class('apache') }
-      it { should contain_class('apache::mod::wsgi') }
       it { should contain_file(platforms_params[:httpd_config_file]) }
       it { should contain_package('horizon').with_ensure('present') }
 
@@ -129,8 +127,6 @@ describe 'horizon::wsgi::apache' do
           :ssl_verify_client => 'optional',
         })
       end
-
-      it { should contain_class('apache::mod::ssl') }
 
       it { should contain_apache__vhost('horizon_ssl_vhost').with(
         :servername             => 'some.host.tld',

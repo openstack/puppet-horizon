@@ -149,7 +149,6 @@ class horizon::wsgi::apache (
 
   include horizon::deps
   include apache
-  include apache::mod::wsgi
 
   # We already use apache::vhost to generate our own
   # configuration file, let's clean the configuration
@@ -175,7 +174,6 @@ class horizon::wsgi::apache (
   }
 
   if $listen_ssl {
-    include apache::mod::ssl
     $ensure_ssl_vhost = 'present'
 
     if $ssl_cert == undef {
