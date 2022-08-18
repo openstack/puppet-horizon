@@ -453,10 +453,6 @@ describe 'horizon::wsgi::apache' do
   end
 
   shared_examples 'horizon::wsgi::apache on RedHat' do
-    it { should contain_class('apache::mod::wsgi').with(
-      :wsgi_socket_prefix => '/var/run/wsgi'
-    )}
-
     it { should contain_apache__vhost('horizon_vhost').with(
       :aliases => [
         { 'alias' => '/dashboard/static', 'path' => '/usr/share/openstack-dashboard/static' }
