@@ -39,6 +39,13 @@ describe 'horizon' do
           is_expected.to_not contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]')
           is_expected.to contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_compress]')
         end
+
+        is_expected.to contain_concat(platforms_params[:config_file]).with(
+          :mode      => '0640',
+          :owner     => platforms_params[:wsgi_user],
+          :group     => platforms_params[:wsgi_group],
+          :show_diff => false
+        )
       }
 
       it 'configures apache' do
@@ -806,6 +813,8 @@ describe 'horizon' do
               :root_url         => '/horizon',
               :root_path        => '/var/lib/openstack-dashboard',
               :memcache_package => 'python3-memcache',
+              :wsgi_user        => 'horizon',
+              :wsgi_group       => 'horizon',
             }
           else
             { :config_file      => '/etc/openstack-dashboard/local_settings.py',
@@ -814,6 +823,8 @@ describe 'horizon' do
               :root_url         => '/horizon',
               :root_path        => '/var/lib/openstack-dashboard',
               :memcache_package => 'python3-memcache',
+              :wsgi_user        => 'horizon',
+              :wsgi_group       => 'horizon',
             }
           end
         when 'RedHat'
@@ -823,6 +834,8 @@ describe 'horizon' do
             :root_url         => '/dashboard',
             :root_path        => '/usr/share/openstack-dashboard',
             :memcache_package => 'python3-memcached',
+            :wsgi_user        => 'apache',
+            :wsgi_group       => 'apache',
           }
         end
       end
