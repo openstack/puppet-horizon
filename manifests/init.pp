@@ -757,11 +757,12 @@ class horizon(
   }
 
   concat { $::horizon::params::config_file:
-    mode    => '0640',
-    owner   => $::horizon::params::wsgi_user,
-    group   => $::horizon::params::wsgi_group,
-    require => Anchor['horizon::config::begin'],
-    tag     => ['django-config'],
+    mode      => '0640',
+    owner     => $::horizon::params::wsgi_user,
+    group     => $::horizon::params::wsgi_group,
+    show_diff => false,
+    require   => Anchor['horizon::config::begin'],
+    tag       => ['django-config'],
   }
 
   concat::fragment { 'local_settings.py':
