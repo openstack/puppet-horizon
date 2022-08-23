@@ -620,13 +620,13 @@ describe 'horizon' do
     context 'with websso enabled' do
       before do
         params.merge!({
-            :websso_enabled => 'True',
+            :websso_enabled        => true,
             :websso_initial_choice => 'acme',
-            :websso_choices => [
+            :websso_choices        => [
               ['oidc', 'OpenID Connect'],
               ['saml2', 'Security Assertion Markup Language'],
             ],
-            :websso_idp_mapping => {
+            :websso_idp_mapping    => {
               'acme_oidc'  => ['acme', 'oidc'],
               'acme_saml2' => ['acme', 'saml2'],
             }

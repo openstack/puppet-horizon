@@ -85,7 +85,7 @@
 #    to the dashboard for other apps. There is no specific requirement
 #    for these apps to be for monitoring, that's just the de-facto purpose.
 #    Each app is defined in two parts, the display name, and
-#    the URIDefaults to false. Defaults to false. (no app links)
+#    the URIDefaults to false. Defaults to undef. (no app links)
 #
 #  [*keystone_url*]
 #    (optional) Full url of keystone public endpoint. (Defaults to 'http://127.0.0.1:5000')
@@ -566,7 +566,7 @@ class horizon(
   $cache_tls_keyfile                   = undef,
   $cache_tls_allowed_ciphers           = undef,
   $manage_memcache_package             = true,
-  $horizon_app_links                   = false,
+  $horizon_app_links                   = undef,
   $keystone_url                        = 'http://127.0.0.1:5000',
   $keystone_default_role               = 'member',
   $django_debug                        = 'False',
@@ -655,6 +655,25 @@ class horizon(
 ) inherits horizon::params {
 
   include horizon::deps
+
+  # Validate boolean parameters to avoid unexpected if-statement result
+  validate_legacy(Boolean, 'validate_bool', $cache_tls_enabled)
+  validate_legacy(Boolean, 'validate_bool', $manage_memcache_package)
+  validate_legacy(Boolean, 'validate_bool', $configure_apache)
+  validate_legacy(Boolean, 'validate_bool', $listen_ssl)
+  validate_legacy(Boolean, 'validate_bool', $ssl_no_verify)
+  validate_legacy(Boolean, 'validate_bool', $ssl_redirect)
+  validate_legacy(Boolean, 'validate_bool', $compress_offline)
+  validate_legacy(Boolean, 'validate_bool', $keystone_multidomain_support)
+  validate_legacy(Boolean, 'validate_bool', $secure_cookies)
+  validate_legacy(Boolean, 'validate_bool', $password_retrieve)
+  validate_legacy(Boolean, 'validate_bool', $disable_password_reveal)
+  validate_legacy(Boolean, 'validate_bool', $enforce_password_check)
+  validate_legacy(Boolean, 'validate_bool', $enable_secure_proxy_ssl_header)
+  validate_legacy(Boolean, 'validate_bool', $disallow_iframe_embed)
+  validate_legacy(Boolean, 'validate_bool', $websso_enabled)
+  validate_legacy(Boolean, 'validate_bool', $websso_choices_hide_keystone)
+  validate_legacy(Boolean, 'validate_bool', $websso_default_redirect)
 
   if $cache_server_url and $cache_server_ip {
     fail('Only one of cache_server_url or cache_server_ip can be set.')
