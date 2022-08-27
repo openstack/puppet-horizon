@@ -225,7 +225,7 @@ class horizon::wsgi::apache (
     owner   => $unix_user,
     group   => $unix_group,
     before  => Service['httpd'],
-    mode    => '0751',
+    mode    => '0750',
     require => Anchor['horizon::config::begin'],
   }
 
