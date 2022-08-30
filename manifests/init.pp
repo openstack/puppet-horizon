@@ -744,11 +744,25 @@ and usage of a quoted value is deprecated.')
   validate_legacy(Enum['legacy', 'angular'], 'validate_re', $images_panel, [['^legacy$', '^angular$']])
   validate_legacy(Stdlib::Absolutepath, 'validate_absolute_path', $root_path)
 
-  if $manage_memcache_package and $cache_backend =~ /\.MemcachedCache$/ {
-    ensure_packages('python-memcache', {
-      name => $::horizon::params::memcache_package,
-      tag  => ['openstack'],
-    })
+  if $manage_memcache_package {
+    if $cache_backend =~ /\.MemcachedCache$/ {
+      ensure_packages('python-memcache', {
+        name => $::horizon::params::memcache_package,
+        tag  => ['openstack'],
+      })
+      Anchor['horizon::install::begin']
+        -> Package<| name == $::horizon::params::memcache_package |>
+        -> Anchor['horizon::install::end']
+
+    } elsif $cache_backend =~ /\.PyMemcacheCache$/ {
+      ensure_packages('python-pymemcache', {
+        name => $::horizon::params::pymemcache_package,
+        tag  => ['openstack'],
+      })
+      Anchor['horizon::install::begin']
+        -> Package<| name == $::horizon::params::pymemcache_package |>
+        -> Anchor['horizon::install::end']
+    }
   }
 
   $django_log_level_real = pick($django_log_level, $log_level)
