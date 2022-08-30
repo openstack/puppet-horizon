@@ -326,17 +326,45 @@ describe 'horizon' do
         is_expected.to contain_package('python-memcache').with(
           :tag    => ['openstack'],
           :name   => platforms_params[:memcache_package],
-         )
+        )
       }
     end
 
     context 'does not install python memcache when manage_memcache_package set to false' do
       before do
-        params.merge!( :cache_backend           => 'django.core.cache.backends.memcached.MemcachedCache',
-                       :manage_memcache_package => false )
+        params.merge!({
+          :cache_backend           => 'django.core.cache.backends.memcached.MemcachedCache',
+          :manage_memcache_package => false
+        })
       end
 
       it { is_expected.not_to contain_package('python-memcache') }
+    end
+
+    context 'installs python memcache library when cache_backend is set to pymemcache' do
+      before do
+        params.merge!({
+          :cache_backend => 'django.core.cache.backends.memcached.PyMemcacheCache'
+        })
+      end
+
+      it {
+        is_expected.to contain_package('python-pymemcache').with(
+          :tag    => ['openstack'],
+          :name   => platforms_params[:pymemcache_package],
+        )
+      }
+    end
+
+    context 'does not install python memcache when manage_memcache_package set to false' do
+      before do
+        params.merge!({
+          :cache_backend           => 'django.core.cache.backends.memcached.PyMemcacheCache',
+          :manage_memcache_package => false
+        })
+      end
+
+      it { is_expected.not_to contain_package('python-pymemcache') }
     end
 
     context 'with custom wsgi options' do
@@ -793,35 +821,38 @@ describe 'horizon' do
         case facts[:osfamily]
         when 'Debian'
           if facts[:operatingsystem] == 'Debian'
-            { :config_file      => '/etc/openstack-dashboard/local_settings.py',
-              :conf_d_dir       => '/etc/openstack-dashboard/local_settings.d',
-              :package_name     => 'openstack-dashboard-apache',
-              :root_url         => '/horizon',
-              :root_path        => '/var/lib/openstack-dashboard',
-              :memcache_package => 'python3-memcache',
-              :wsgi_user        => 'horizon',
-              :wsgi_group       => 'horizon',
+            { :config_file        => '/etc/openstack-dashboard/local_settings.py',
+              :conf_d_dir         => '/etc/openstack-dashboard/local_settings.d',
+              :package_name       => 'openstack-dashboard-apache',
+              :root_url           => '/horizon',
+              :root_path          => '/var/lib/openstack-dashboard',
+              :memcache_package   => 'python3-memcache',
+              :pymemcache_package => 'python3-pymemcache',
+              :wsgi_user          => 'horizon',
+              :wsgi_group         => 'horizon',
             }
           else
-            { :config_file      => '/etc/openstack-dashboard/local_settings.py',
-              :conf_d_dir       => '/etc/openstack-dashboard/local_settings.d',
-              :package_name     => 'openstack-dashboard',
-              :root_url         => '/horizon',
-              :root_path        => '/var/lib/openstack-dashboard',
-              :memcache_package => 'python3-memcache',
-              :wsgi_user        => 'horizon',
-              :wsgi_group       => 'horizon',
+            { :config_file        => '/etc/openstack-dashboard/local_settings.py',
+              :conf_d_dir         => '/etc/openstack-dashboard/local_settings.d',
+              :package_name       => 'openstack-dashboard',
+              :root_url           => '/horizon',
+              :root_path          => '/var/lib/openstack-dashboard',
+              :memcache_package   => 'python3-memcache',
+              :pymemcache_package => 'python3-pymemcache',
+              :wsgi_user          => 'horizon',
+              :wsgi_group         => 'horizon',
             }
           end
         when 'RedHat'
-          { :config_file      => '/etc/openstack-dashboard/local_settings',
-            :conf_d_dir       => '/etc/openstack-dashboard/local_settings.d',
-            :package_name     => 'openstack-dashboard',
-            :root_url         => '/dashboard',
-            :root_path        => '/usr/share/openstack-dashboard',
-            :memcache_package => 'python3-memcached',
-            :wsgi_user        => 'apache',
-            :wsgi_group       => 'apache',
+          { :config_file        => '/etc/openstack-dashboard/local_settings',
+            :conf_d_dir         => '/etc/openstack-dashboard/local_settings.d',
+            :package_name       => 'openstack-dashboard',
+            :root_url           => '/dashboard',
+            :root_path          => '/usr/share/openstack-dashboard',
+            :memcache_package   => 'python3-memcached',
+            :pymemcache_package => 'python3-pymemcache',
+            :wsgi_user          => 'apache',
+            :wsgi_group         => 'apache',
           }
         end
       end

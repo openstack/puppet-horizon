@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Now the pymemcache library is automatically installed when pymemcache
+    backend is used.
