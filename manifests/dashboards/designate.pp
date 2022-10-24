@@ -43,8 +43,8 @@ class horizon::dashboards::designate(
   $log_level    = $::horizon::log_level
   $policy_files = $::horizon::policy_files
 
-  if $policy_files and $policy_files['load-balancer'] {
-    $policy_file_real = $policy_files['load-balancer']
+  if $policy_files and $policy_files['dns'] {
+    $policy_file_real = $policy_files['dns']
   } else {
     $policy_file_real = $policy_file
   }
