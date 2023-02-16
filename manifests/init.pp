@@ -406,11 +406,6 @@
 #    Valid values are 'on' and 'off'
 #    Defaults to 'off'
 #
-#  [*images_panel*]
-#    (optional) Enabled panel for images.
-#    Valid values are 'legacy' and 'angular'
-#    Defaults to 'legacy'
-#
 #  [*create_image_defaults*]
 #    (optional) A dictionary of default settings for create image modal.
 #    Defaults to undef - will not add entry to local settings.
@@ -545,6 +540,12 @@
 #    (optional) Enable the use of the system scope token on per-service basis.
 #    Defaults to undef
 #
+# DEPRECATED PARAMETERS
+#
+#  [*images_panel*]
+#    (optional) Enabled panel for images.
+#    Defaults to undef
+#
 # === Examples
 #
 #  class { 'horizon':
@@ -634,7 +635,6 @@ class horizon(
   $available_themes                    = false,
   $default_theme                       = false,
   $password_autocomplete               = 'off',
-  $images_panel                        = 'legacy',
   $create_image_defaults               = undef,
   $password_retrieve                   = false,
   $disable_password_reveal             = false,
@@ -657,6 +657,8 @@ class horizon(
   $horizon_upload_mode                 = undef,
   $default_boot_source                 = undef,
   $system_scope_services               = undef,
+  # DEPRECATED PARAMETERS
+  $images_panel                        = undef,
 ) inherits horizon::params {
 
   include horizon::deps
@@ -679,6 +681,10 @@ class horizon(
   validate_legacy(Boolean, 'validate_bool', $websso_enabled)
   validate_legacy(Boolean, 'validate_bool', $websso_choices_hide_keystone)
   validate_legacy(Boolean, 'validate_bool', $websso_default_redirect)
+
+  if $images_panel {
+    warning('The images_panel parameter has been deprecated and has no effect.')
+  }
 
   if $cache_server_url and $cache_server_ip {
     fail('Only one of cache_server_url or cache_server_ip can be set.')
@@ -762,7 +768,6 @@ class horizon(
 
   validate_legacy(Hash, 'validate_hash', $api_versions)
   validate_legacy(Enum['on', 'off'], 'validate_re', $password_autocomplete, [['^on$', '^off$']])
-  validate_legacy(Enum['legacy', 'angular'], 'validate_re', $images_panel, [['^legacy$', '^angular$']])
   validate_legacy(Stdlib::Absolutepath, 'validate_absolute_path', $root_path)
 
   if $manage_memcache_package {
