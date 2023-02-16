@@ -525,19 +525,7 @@ describe 'horizon' do
         verify_concat_fragment_contents(catalogue, 'local_settings.py', [
           '# Custom local_settings.py',
           'DEBUG = True',
-          "HORIZON_CONFIG = {",
-          "    'user_home': 'openstack_dashboard.views.get_user_home',",
-          "    'ajax_queue_limit': 10,",
-          "    'auto_fade_alerts': {",
-          "        'delay': 3000,",
-          "        'fade_duration': 1500,",
-          "        'types': ['alert-success', 'alert-info']",
-          "    },",
-          "    'help_url': \"https://docs.openstack.org\",",
-          "    'exceptions': {'recoverable': exceptions.RECOVERABLE,",
-          "                   'not_found': exceptions.NOT_FOUND,",
-          "                   'unauthorized': exceptions.UNAUTHORIZED},",
-          "}",
+          'HORIZON_CONFIG["help_url"] = "https://docs.openstack.org"',
         ])
       end
     end
@@ -695,61 +683,18 @@ describe 'horizon' do
       end
     end
 
-    context 'with customization_module provided' do
+    context 'with help_url and customization_module provided' do
       before do
         params.merge!({
-          :help_url                => 'https://docs.openstack.org',
-          :customization_module    => 'my_project.overrides',
-          :local_settings_template => fixtures_path + '/override_local_settings.py.erb'
+          :help_url             => 'https://docs.openstack.org',
+          :customization_module => 'my_project.overrides',
         })
       end
 
-      it 'uses the custom local_settings.py template' do
+      it 'configures both options' do
         verify_concat_fragment_contents(catalogue, 'local_settings.py', [
-          '# Custom local_settings.py',
-          "HORIZON_CONFIG = {",
-          "    'user_home': 'openstack_dashboard.views.get_user_home',",
-          "    'ajax_queue_limit': 10,",
-          "    'auto_fade_alerts': {",
-          "        'delay': 3000,",
-          "        'fade_duration': 1500,",
-          "        'types': ['alert-success', 'alert-info']",
-          "    },",
-          "    'help_url': \"https://docs.openstack.org\",",
-          "    'exceptions': {'recoverable': exceptions.RECOVERABLE,",
-          "                   'not_found': exceptions.NOT_FOUND,",
-          "                   'unauthorized': exceptions.UNAUTHORIZED},",
-          "    'customization_module': 'my_project.overrides',",
-          "}",
-        ])
-      end
-    end
-
-    context 'with customization_module empty' do
-      before do
-        params.merge!({
-          :help_url                => 'https://docs.openstack.org',
-          :customization_module    => '',
-          :local_settings_template => fixtures_path + '/override_local_settings.py.erb'
-        })
-      end
-
-      it 'uses the custom local_settings.py template' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
-          '# Custom local_settings.py',
-          "HORIZON_CONFIG = {",
-          "    'user_home': 'openstack_dashboard.views.get_user_home',",
-          "    'ajax_queue_limit': 10,",
-          "    'auto_fade_alerts': {",
-          "        'delay': 3000,",
-          "        'fade_duration': 1500,",
-          "        'types': ['alert-success', 'alert-info']",
-          "    },",
-          "    'help_url': \"https://docs.openstack.org\",",
-          "    'exceptions': {'recoverable': exceptions.RECOVERABLE,",
-          "                   'not_found': exceptions.NOT_FOUND,",
-          "                   'unauthorized': exceptions.UNAUTHORIZED},",
-          "}",
+          'HORIZON_CONFIG["help_url"] = "https://docs.openstack.org"',
+          'HORIZON_CONFIG["customization_module"] = "my_project.overrides"',
         ])
       end
     end
