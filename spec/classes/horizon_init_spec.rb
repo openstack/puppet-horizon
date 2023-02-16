@@ -683,17 +683,19 @@ describe 'horizon' do
       end
     end
 
-    context 'with help_url and customization_module provided' do
+    context 'with help_url, bug_url and customization_module provided' do
       before do
         params.merge!({
           :help_url             => 'https://docs.openstack.org',
+          :bug_url              => 'https://bugs.launchpad.net',
           :customization_module => 'my_project.overrides',
         })
       end
 
-      it 'configures both options' do
+      it 'configures all options' do
         verify_concat_fragment_contents(catalogue, 'local_settings.py', [
           'HORIZON_CONFIG["help_url"] = "https://docs.openstack.org"',
+          'HORIZON_CONFIG["bug_url"] = "https://bugs.launchpad.net"',
           'HORIZON_CONFIG["customization_module"] = "my_project.overrides"',
         ])
       end

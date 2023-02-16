@@ -158,6 +158,11 @@
 #    (optional) Location where the documentation should point.
 #    Defaults to undef
 #
+#  [*bug_url*]
+#    (optional) If provided, a "Report Bug" link will be displayed in the site
+#    header which links to the value of this setting.
+#    Defaults to undef
+#
 #  [*compress_offline*]
 #    (optional) Boolean to enable offline compress of assets.
 #    Defaults to True
@@ -589,6 +594,7 @@ class horizon(
   $django_template_log_level           = 'INFO',
   $syslog_facility                     = 'local1',
   $help_url                            = undef,
+  $bug_url                             = undef,
   $local_settings_template             = 'horizon/local_settings.py.erb',
   $configure_apache                    = true,
   $bind_address                        = undef,
