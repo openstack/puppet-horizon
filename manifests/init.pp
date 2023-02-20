@@ -156,7 +156,7 @@
 #
 #  [*help_url*]
 #    (optional) Location where the documentation should point.
-#    Defaults to 'http://docs.openstack.org'.
+#    Defaults to undef
 #
 #  [*compress_offline*]
 #    (optional) Boolean to enable offline compress of assets.
@@ -588,7 +588,7 @@ class horizon(
   $django_log_level                    = undef,
   $django_template_log_level           = 'INFO',
   $syslog_facility                     = 'local1',
-  $help_url                            = 'http://docs.openstack.org',
+  $help_url                            = undef,
   $local_settings_template             = 'horizon/local_settings.py.erb',
   $configure_apache                    = true,
   $bind_address                        = undef,

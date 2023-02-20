@@ -128,7 +128,10 @@ OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = '<%= @keystone_default_domain %>'
 #CONSOLE_TYPE = "AUTO"
 
 # URL for additional help with this site.
+#HORIZON_CONFIG["help_url"] = "https://docs.openstack.org/"
+<% if @help_url -%>
 HORIZON_CONFIG["help_url"] = "<%= @help_url %>"
+<% end -%>
 
 <% if @customization_module and ! (@customization_module.empty?) -%>
 # The python module containing own modifications
