@@ -127,24 +127,14 @@ OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = '<%= @keystone_default_domain %>'
 # Set to None explicitly if you want to deactivate the console.
 #CONSOLE_TYPE = "AUTO"
 
-# Default OpenStack Dashboard configuration.
-HORIZON_CONFIG = {
-    'user_home': 'openstack_dashboard.views.get_user_home',
-    'ajax_queue_limit': 10,
-    'auto_fade_alerts': {
-        'delay': 3000,
-        'fade_duration': 1500,
-        'types': ['alert-success', 'alert-info']
-    },
-    'help_url': "<%= @help_url %>",
-    'exceptions': {'recoverable': exceptions.RECOVERABLE,
-                   'not_found': exceptions.NOT_FOUND,
-                   'unauthorized': exceptions.UNAUTHORIZED},
-<% if @customization_module and ! (@customization_module.empty?) -%>
-    'customization_module': '<%= @customization_module -%>',
-<% end -%>
-}
+# URL for additional help with this site.
+HORIZON_CONFIG["help_url"] = "<%= @help_url %>"
 
+<% if @customization_module and ! (@customization_module.empty?) -%>
+# The python module containing own modifications
+HORIZON_CONFIG["customization_module"] = "<%= @customization_module -%>"
+
+<% end -%>
 # If provided, a "Report Bug" link will be displayed in the site header
 # which links to the value of this setting (ideally a URL containing
 # information on how to report issues).
