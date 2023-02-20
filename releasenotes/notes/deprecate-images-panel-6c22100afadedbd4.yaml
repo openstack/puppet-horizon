@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    The ``horizon::images_panel`` parameter has been deprecated and has no
+    effect.
