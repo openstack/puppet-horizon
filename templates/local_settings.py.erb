@@ -142,6 +142,9 @@ HORIZON_CONFIG["customization_module"] = "<%= @customization_module -%>"
 # which links to the value of this setting (ideally a URL containing
 # information on how to report issues).
 #HORIZON_CONFIG["bug_url"] = "http://bug-report.example.com"
+<% if @bug_url -%>
+HORIZON_CONFIG["bug_url"] = "<%= @bug_url %>"
+<% end -%>
 
 # Show backdrop element outside the modal, do not close the modal
 # after clicking on backdrop.

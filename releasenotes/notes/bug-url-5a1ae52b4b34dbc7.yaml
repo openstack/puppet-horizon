@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``horizon::bug_url`` parameter has been added.
