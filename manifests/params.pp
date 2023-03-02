@@ -8,7 +8,7 @@ class horizon::params {
   $manage_py              = '/usr/share/openstack-dashboard/manage.py'
   $wsgi_application_group = '%{GLOBAL}'
 
-  case $::osfamily {
+  case $facts['os']['family'] {
     'RedHat': {
       $package_name                     = 'openstack-dashboard'
       $config_dir                       = '/etc/openstack-dashboard'
@@ -44,7 +44,7 @@ class horizon::params {
       $heat_dashboard_package_name      = 'python3-heat-dashboard'
       $manila_dashboard_package_name    = 'python3-manila-dashboard'
       $octavia_dashboard_package_name   = 'python3-octavia-dashboard'
-      case $::operatingsystem {
+      case $facts['os']['name'] {
         'Debian': {
           $package_name      = 'openstack-dashboard-apache'
           $httpd_config_file = '/etc/apache2/sites-available/openstack-dashboard-alias-only.conf'
@@ -56,8 +56,7 @@ class horizon::params {
       }
     }
     default: {
-      fail("Unsupported osfamily: ${::osfamily} operatingsystem: ${::operatingsystem}, \
-module ${module_name} only support osfamily RedHat and Debian")
+      fail("Unsupported osfamily: ${facts['os']['family']}")
     }
   }
 }

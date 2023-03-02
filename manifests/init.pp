@@ -10,19 +10,19 @@
 #
 #  [*servername*]
 #    (optional) FQDN used for the Server Name directives
-#    Defaults to ::fqdn.
+#    Defaults to facts['networking']['fqdn'].
 #
 #  [*allowed_hosts*]
 #    (optional) List of hosts which will be set as value of ALLOWED_HOSTS
 #    parameter in settings_local.py. This is used by Django for
 #    security reasons. Can be set to * in environments where security is
 #    deemed unimportant.
-#    Defaults to ::fqdn.
+#    Defaults to facts['networking']['fqdn'].
 #
 #  [*server_aliases*]
 #    (optional) List of names which should be defined as ServerAlias directives
 #    in vhost.conf.
-#    Defaults to ::fqdn.
+#    Defaults to facts['networking']['fqdn'].
 #
 #  [*package_ensure*]
 #    (optional) Package ensure state. Defaults to 'present'.
@@ -280,7 +280,7 @@
 #
 #  [*wsgi_processes*]
 #    (optional) Number of Horizon processes to spawn
-#    Defaults to $::os_workers
+#    Defaults to $facts['os_workers']
 #
 #  [*wsgi_threads*]
 #    (optional) Number of thread to run in a Horizon process
@@ -598,9 +598,9 @@ class horizon(
   $local_settings_template             = 'horizon/local_settings.py.erb',
   $configure_apache                    = true,
   $bind_address                        = undef,
-  $servername                          = $::fqdn,
-  $server_aliases                      = $::fqdn,
-  $allowed_hosts                       = $::fqdn,
+  $servername                          = $facts['networking']['fqdn'],
+  $server_aliases                      = $facts['networking']['fqdn'],
+  $allowed_hosts                       = $facts['networking']['fqdn'],
   $listen_ssl                          = false,
   $http_port                           = 80,
   $https_port                          = 443,
@@ -611,7 +611,7 @@ class horizon(
   $ssl_key                             = undef,
   $ssl_ca                              = undef,
   $ssl_verify_client                   = undef,
-  $wsgi_processes                      = $::os_workers,
+  $wsgi_processes                      = $facts['os_workers'],
   $wsgi_threads                        = '1',
   $compress_offline                    = true,
   $hypervisor_options                  = {},
@@ -842,7 +842,7 @@ class horizon(
 
   if $compress_offline {
     Concat<| tag == 'django-config' |> ~> Exec['refresh_horizon_django_compress']
-    if $::osfamily == 'RedHat' {
+    if $facts['os']['family'] == 'RedHat' {
       Concat<| tag == 'django-config' |> ~> Exec['refresh_horizon_django_cache'] -> Exec['refresh_horizon_django_compress']
     }
   }

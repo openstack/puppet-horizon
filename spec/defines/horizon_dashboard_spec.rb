@@ -71,7 +71,7 @@ describe 'horizon::dashboard' do
       end
 
       let(:platform_params) do
-        case facts[:osfamily]
+        case facts[:os]['family']
         when 'Debian'
           { :heat_dashboard_package_name => 'python3-heat-dashboard' }
         when 'RedHat'
@@ -81,8 +81,8 @@ describe 'horizon::dashboard' do
 
       it_behaves_like 'horizon::dashboard'
 
-      if facts[:osfamily] == 'Debian'
-        it_behaves_like "horizon::dashboard on #{facts[:operatingsystem]}"
+      if facts[:os]['family'] == 'Debian'
+        it_behaves_like "horizon::dashboard on #{facts[:os]['name']}"
       end
     end
   end

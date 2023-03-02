@@ -2,9 +2,7 @@ require 'spec_helper'
 
 describe 'horizon::wsgi::apache' do
   let :params do
-    {
-      :servername => 'some.host.tld',
-    }
+    {}
   end
 
   let :pre_condition do
@@ -25,11 +23,11 @@ describe 'horizon::wsgi::apache' do
       it { should contain_package('horizon').with_ensure('present') }
 
       it { should contain_apache__vhost('horizon_vhost').with(
-        :servername                  => 'some.host.tld',
+        :servername                  => 'foo.example.com',
         :access_log_file             => 'horizon_access.log',
         :error_log_file              => 'horizon_error.log',
         :priority                    => 15,
-        :serveraliases               => ['some.host.tld'],
+        :serveraliases               => ['foo.example.com'],
         :docroot                     => '/var/www/',
         :ssl                         => 'false',
         :port                        => '80',
@@ -67,12 +65,12 @@ describe 'horizon::wsgi::apache' do
       it { should contain_package('horizon').with_ensure('present') }
 
       it { should contain_apache__vhost('horizon_vhost').with(
-        :servername                  => 'some.host.tld',
+        :servername                  => 'foo.example.com',
         :access_log_file             => 'horizon_access.log',
         :access_log_format           => 'common',
         :error_log_file              => 'horizon_error.log',
         :priority                    => params[:priority],
-        :serveraliases               => ['some.host.tld'],
+        :serveraliases               => ['foo.example.com'],
         :docroot                     => '/var/www/',
         :ssl                         => 'false',
         :port                        => '80',
@@ -129,11 +127,11 @@ describe 'horizon::wsgi::apache' do
       end
 
       it { should contain_apache__vhost('horizon_ssl_vhost').with(
-        :servername             => 'some.host.tld',
+        :servername             => 'foo.example.com',
         :access_log_file        => 'horizon_ssl_access.log',
         :error_log_file         => 'horizon_ssl_error.log',
         :priority               => 15,
-        :serveraliases          => ['some.host.tld'],
+        :serveraliases          => ['foo.example.com'],
         :docroot                => '/var/www/',
         :ssl                    => 'true',
         :port                   => '443',
@@ -160,17 +158,17 @@ describe 'horizon::wsgi::apache' do
       )}
 
       it { should contain_apache__vhost('horizon_vhost').with(
-        :servername             => 'some.host.tld',
+        :servername             => 'foo.example.com',
         :access_log_file        => 'horizon_access.log',
         :error_log_file         => 'horizon_error.log',
         :priority               => 15,
-        :serveraliases          => ['some.host.tld'],
+        :serveraliases          => ['foo.example.com'],
         :docroot                => '/var/www/',
         :ssl                    => 'false',
         :port                   => '80',
         :redirectmatch_status   => 'permanent',
         :redirectmatch_regexp   => '(.*)',
-        :redirectmatch_dest     => 'https://some.host.tld',
+        :redirectmatch_dest     => 'https://foo.example.com',
         :wsgi_process_group     => platforms_params[:wsgi_group],
         :wsgi_daemon_process    => {
           platforms_params[:wsgi_group] => {
@@ -343,7 +341,7 @@ describe 'horizon::wsgi::apache' do
 
       it { should contain_apache__vhost('horizon_vhost').with(
         :redirectmatch_regexp => '(.*)',
-        :redirectmatch_dest   => 'https://some.host.tld',
+        :redirectmatch_dest   => 'https://foo.example.com',
       )}
 
       it { should contain_apache__vhost('horizon_ssl_vhost').with(
@@ -367,7 +365,7 @@ describe 'horizon::wsgi::apache' do
 
       it { should contain_apache__vhost('horizon_vhost').with(
         :redirectmatch_regexp => '(.*)',
-        :redirectmatch_dest   => 'https://some.host.tld',
+        :redirectmatch_dest   => 'https://foo.example.com',
       )}
 
       it { should contain_apache__vhost('horizon_ssl_vhost').with(
@@ -391,7 +389,7 @@ describe 'horizon::wsgi::apache' do
 
       it { should contain_apache__vhost('horizon_vhost').with(
         :redirectmatch_regexp => '(.*)',
-        :redirectmatch_dest   => 'https://some.host.tld',
+        :redirectmatch_dest   => 'https://foo.example.com',
       )}
 
       it { should contain_apache__vhost('horizon_ssl_vhost').with(
@@ -498,16 +496,14 @@ describe 'horizon::wsgi::apache' do
     context "on #{os}" do
       let (:facts) do
         facts.merge!(OSDefaults.get_facts({
-          :fqdn           => 'some.host.tld',
-          :concat_basedir => '/var/lib/puppet/concat',
-          :os_workers     => '6'
+          :os_workers => '6'
         }))
       end
 
       let(:platforms_params) do
-        case facts[:osfamily]
+        case facts[:os]['family']
         when 'Debian'
-          case facts[:operatingsystem]
+          case facts[:os]['name']
           when 'Debian'
             { :httpd_config_file => '/etc/apache2/sites-available/openstack-dashboard-alias-only.conf',
               :root_url          => '/horizon',
@@ -528,7 +524,7 @@ describe 'horizon::wsgi::apache' do
       end
 
       it_behaves_like 'horizon::wsgi::apache'
-      it_behaves_like "horizon::wsgi::apache on #{facts[:osfamily]}"
+      it_behaves_like "horizon::wsgi::apache on #{facts[:os]['family']}"
     end
   end
 

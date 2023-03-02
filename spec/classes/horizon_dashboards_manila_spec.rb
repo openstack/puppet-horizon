@@ -103,7 +103,7 @@ eos
       end
 
       let(:platform_params) do
-        case facts[:osfamily]
+        case facts[:os]['family']
         when 'Debian'
           { :manila_dashboard_package_name => 'python3-manila-dashboard' }
         when 'RedHat'

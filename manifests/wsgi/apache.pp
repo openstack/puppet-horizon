@@ -9,7 +9,7 @@
 #
 # [*servername*]
 #   (Optional) Server Name
-#   Defaults to ::fqdn.
+#   Defaults to facts['networking']['fqdn'].
 #
 # [*ssl_redirect*]
 #   (Optional) Enable SSL Redirect
@@ -18,7 +18,7 @@
 # [*server_aliases*]
 #   (optional) List of names which should be defined as ServerAlias directives
 #   in vhost.conf.
-#   Defaults to ::fqdn.
+#   Defaults to facts['networking']['fqdn'].
 #
 # [*listen_ssl*]
 #   (optional) Enable SSL support in Apache. (Defaults to false)
@@ -45,7 +45,7 @@
 #
 # [*wsgi_processes*]
 #   (optional) Number of Horizon processes to spawn
-#   Defaults to $::os_workers
+#   Defaults to $facts['os_workers']
 #
 # [*wsgi_threads*]
 #   (optional) Number of thread to run in a Horizon process
@@ -119,8 +119,8 @@
 #
 class horizon::wsgi::apache (
   $bind_address                = undef,
-  $servername                  = $::fqdn,
-  $server_aliases              = $::fqdn,
+  $servername                  = $facts['networking']['fqdn'],
+  $server_aliases              = $facts['networking']['fqdn'],
   $listen_ssl                  = false,
   $http_port                   = 80,
   $https_port                  = 443,
@@ -129,7 +129,7 @@ class horizon::wsgi::apache (
   $ssl_key                     = undef,
   $ssl_ca                      = undef,
   $ssl_verify_client           = undef,
-  $wsgi_processes              = $::os_workers,
+  $wsgi_processes              = $facts['os_workers'],
   $wsgi_threads                = '1',
   $custom_wsgi_process_options = {},
   $priority                    = 15,

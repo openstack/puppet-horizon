@@ -42,7 +42,7 @@ define horizon::dashboard (
 The class allows more flexible customization of the ${dashboard} dashboard.")
   }
 
-  case $::osfamily {
+  case $facts['os']['family'] {
     'Debian': {
       $dashboard_package_name = "python3-${dashboard}-dashboard"
     }
@@ -50,7 +50,7 @@ The class allows more flexible customization of the ${dashboard} dashboard.")
       $dashboard_package_name = "openstack-${dashboard}-ui"
     }
     default: {
-      fail("Unsupported OS family: ${::osfamily}")
+      fail("Unsupported osfamily: ${facts['os']['family']}")
     }
   }
 

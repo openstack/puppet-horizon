@@ -148,7 +148,7 @@ eos
       end
 
       let(:platform_params) do
-        case facts[:osfamily]
+        case facts[:os]['family']
         when 'Debian'
           { :heat_dashboard_package_name => 'python3-heat-dashboard' }
         when 'RedHat'

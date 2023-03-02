@@ -32,7 +32,7 @@ describe 'horizon' do
           :refreshonly => true,
       })}
       it {
-        if facts[:osfamily] == 'RedHat'
+        if facts[:os]['family'] == 'RedHat'
           is_expected.to contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]')
           is_expected.to contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_compress]')
         else
@@ -50,7 +50,7 @@ describe 'horizon' do
 
       it 'configures apache' do
         is_expected.to contain_class('horizon::wsgi::apache').with({
-          :servername     => 'some.host.tld',
+          :servername     => 'foo.example.com',
           :listen_ssl     => false,
           :wsgi_processes => facts[:os_workers],
           :wsgi_threads   => '1',
@@ -65,7 +65,7 @@ describe 'horizon' do
           "LOGIN_URL = '#{platforms_params[:root_url]}/auth/login/'",
           "LOGOUT_URL = '#{platforms_params[:root_url]}/auth/logout/'",
           "LOGIN_REDIRECT_URL = '#{platforms_params[:root_url]}/'",
-          "ALLOWED_HOSTS = ['some.host.tld', ]",
+          "ALLOWED_HOSTS = ['foo.example.com', ]",
           'HORIZON_CONFIG["password_autocomplete"] = "off"',
           "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
           'OPENSTACK_KEYSTONE_URL = "http://127.0.0.1:5000"',
@@ -149,7 +149,7 @@ describe 'horizon' do
         verify_concat_fragment_contents(catalogue, 'local_settings.py', [
           'DEBUG = True',
           "SITE_BRANDING = 'mysite'",
-          "ALLOWED_HOSTS = ['some.host.tld', ]",
+          "ALLOWED_HOSTS = ['foo.example.com', ]",
           "SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')",
           "SECURE_PROXY_ADDR_HEADER = 'HTTP_X_FORWARDED_FOR'",
           'CSRF_COOKIE_SECURE = True',
@@ -400,7 +400,7 @@ describe 'horizon' do
       before do
         params.merge!({
           :listen_ssl        => true,
-          :servername        => 'some.host.tld',
+          :servername        => 'foo.example.com',
           :ssl_cert          => '/etc/pki/tls/certs/httpd.crt',
           :ssl_key           => '/etc/pki/tls/private/httpd.key',
           :ssl_ca            => '/etc/pki/tls/certs/ca.crt',
@@ -756,17 +756,13 @@ describe 'horizon' do
   }).each do |os,facts|
     context "on #{os}" do
       let (:facts) do
-        facts.merge!(OSDefaults.get_facts({
-          :fqdn           => 'some.host.tld',
-          :concat_basedir => '/var/lib/puppet/concat',
-          :os_workers     => '6'
-        }))
+        facts.merge!(OSDefaults.get_facts())
       end
 
       let(:platforms_params) do
-        case facts[:osfamily]
+        case facts[:os]['family']
         when 'Debian'
-          if facts[:operatingsystem] == 'Debian'
+          if facts[:os]['name'] == 'Debian'
             { :config_file        => '/etc/openstack-dashboard/local_settings.py',
               :conf_d_dir         => '/etc/openstack-dashboard/local_settings.d',
               :package_name       => 'openstack-dashboard-apache',
@@ -804,7 +800,7 @@ describe 'horizon' do
       end
 
       it_behaves_like 'horizon'
-      it_behaves_like "horizon on #{facts[:osfamily]}"
+      it_behaves_like "horizon on #{facts[:os]['family']}"
     end
   end
 end
