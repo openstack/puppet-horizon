@@ -36,7 +36,7 @@ class horizon::params {
       $wsgi_group                     = 'horizon'
       $memcache_package               = 'python3-memcache'
       $heat_dashboard_package_name    = 'python3-heat-dashboard'
-      $manila_dashboard_package_name  = 'python3-manila-dashboard'
+      $manila_dashboard_package_name  = 'python3-manila-ui'
       $octavia_dashboard_package_name = 'python3-octavia-dashboard'
       case $::os_package_type {
         'debian': {
