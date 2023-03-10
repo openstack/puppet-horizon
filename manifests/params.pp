@@ -42,7 +42,7 @@ class horizon::params {
       $pymemcache_package               = 'python3-pymemcache'
       $designate_dashboard_package_name = 'python3-designate-dashboard'
       $heat_dashboard_package_name      = 'python3-heat-dashboard'
-      $manila_dashboard_package_name    = 'python3-manila-dashboard'
+      $manila_dashboard_package_name    = 'python3-manila-ui'
       $octavia_dashboard_package_name   = 'python3-octavia-dashboard'
       case $::operatingsystem {
         'Debian': {

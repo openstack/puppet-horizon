@@ -105,7 +105,7 @@ eos
       let(:platform_params) do
         case facts[:osfamily]
         when 'Debian'
-          { :manila_dashboard_package_name => 'python3-manila-dashboard' }
+          { :manila_dashboard_package_name => 'python3-manila-ui' }
         when 'RedHat'
           { :manila_dashboard_package_name => 'openstack-manila-ui' }
         end
