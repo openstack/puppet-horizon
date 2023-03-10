@@ -4,6 +4,7 @@
       - puppet-openstack-module-unit-jobs
       - puppet-openstack-integration-jobs-scenario003
       - puppet-openstack-integration-jobs-scenario004
+      - puppet-openstack-integration-jobs-scenario005
       - puppet-openstack-litmus-jobs
       - release-notes-jobs-python3
     check:
