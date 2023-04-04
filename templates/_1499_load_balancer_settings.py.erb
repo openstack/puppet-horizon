@@ -11,7 +11,7 @@ settings.POLICY_FILES.update({
 #         'handlers': ['console'],
 #         'level': 'DEBUG',
 #         'propagate': False,
-#     }
+#     },
 #     'barbicanclient': {
 #         'handlers': ['console'],
 #         'level': 'DEBUG',
@@ -25,7 +25,7 @@ settings.LOGGING['loggers'].update({
         # level': 'DEBUG',
         'level': '<%= @log_level %>',
         'propagate': False,
-    }
+    },
     'barbicanclient': {
         # 'handlers': ['console'],
         'handlers': ['<%= @log_handler %>'],
