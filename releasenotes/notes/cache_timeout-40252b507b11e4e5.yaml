@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``horizon::cache_timeout`` parameter has been added.

@@ -99,6 +99,7 @@ describe 'horizon' do
       before do
         params.merge!({
           :cache_backend                    => 'django.core.cache.backends.memcached.MemcachedCache',
+          :cache_timeout                    => 300,
           :cache_options                    => {'SOCKET_TIMEOUT' => 1,'SERVER_RETRIES' => 1,'DEAD_RETRY' => 1},
           :cache_server_ip                  => '10.0.0.1',
           :django_session_engine            => 'django.contrib.sessions.backends.cache',
@@ -166,6 +167,7 @@ describe 'horizon' do
           "            'SOCKET_TIMEOUT': 1,",
           "        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',",
           "        'LOCATION': '10.0.0.1:11211',",
+          "        'TIMEOUT': 300,",
           'SESSION_ENGINE = "django.contrib.sessions.backends.cache"',
           'OPENSTACK_KEYSTONE_URL = "https://keystone.example.com:4682"',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "SwiftOperator"',

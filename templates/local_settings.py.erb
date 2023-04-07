@@ -240,6 +240,9 @@ CACHES = {
         'LOCATION': '<%= @cache_server_url %>',
         <%- end -%>
     <%- end -%>
+    <%- if @cache_timeout -%>
+        'TIMEOUT': <%= @cache_timeout %>,
+    <%- end -%>
     }
 }
 

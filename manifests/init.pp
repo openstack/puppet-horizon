@@ -35,6 +35,10 @@
 #   (optional) A hash of parameters to enable specific cache options.
 #   Defaults to undef
 #
+#  [*cache_timeout*]
+#   (optional) The default timeout, in seconds, to use for the cache.
+#   Defaults to undef
+#
 #  [*cache_server_url*]
 #    (optional) URL of a cache server.
 #    This allows arbitrary strings to be set as CACHE BACKEND LOCATION.
@@ -567,6 +571,7 @@ class horizon(
   $package_ensure                      = 'present',
   $cache_backend                       = 'django.core.cache.backends.locmem.LocMemCache',
   $cache_options                       = undef,
+  $cache_timeout                       = undef,
   $cache_server_url                    = undef,
   $cache_server_ip                     = undef,
   $cache_server_port                   = '11211',
