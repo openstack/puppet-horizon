@@ -810,6 +810,17 @@ class horizon(
     tag    => ['openstack', 'horizon-package'],
   }
 
+  $secret_key_path = "${::horizon::params::config_dir}/.secret_key_store"
+  file { $secret_key_path:
+    mode      => '0600',
+    content   => $secret_key,
+    owner     => $::horizon::params::wsgi_user,
+    group     => $::horizon::params::wsgi_group,
+    show_diff => false,
+    require   => Anchor['horizon::config::begin'],
+    notify    => Anchor['horizon::config::end'],
+  }
+
   concat { $::horizon::params::config_file:
     mode      => '0640',
     owner     => $::horizon::params::wsgi_user,

@@ -44,7 +44,7 @@ describe 'horizon' do
           :mode      => '0640',
           :owner     => platforms_params[:wsgi_user],
           :group     => platforms_params[:wsgi_group],
-          :show_diff => false
+          :show_diff => false,
         )
       }
 
@@ -67,7 +67,7 @@ describe 'horizon' do
           "LOGIN_REDIRECT_URL = '#{platforms_params[:root_url]}/'",
           "ALLOWED_HOSTS = ['foo.example.com', ]",
           'HORIZON_CONFIG["password_autocomplete"] = "off"',
-          "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
+          "SECRET_KEY = secret_key.generate_or_read_from_file('#{platforms_params[:secret_key_file]}')",
           'OPENSTACK_KEYSTONE_URL = "http://127.0.0.1:5000"',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "member"',
           "    'can_set_mount_point': True,",
@@ -92,6 +92,15 @@ describe 'horizon' do
         expect(content).not_to match(/^SESSION_ENGINE/)
       end
 
+      it 'creates a key file' do
+        is_expected.to contain_file(platforms_params[:secret_key_file]).with(
+          :mode      => '0600',
+          :content   => 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0',
+          :owner     => platforms_params[:wsgi_user],
+          :group     => platforms_params[:wsgi_group],
+          :show_diff => false,
+        )
+      end
       it { is_expected.not_to contain_file('/tmp') }
     end
 
@@ -160,7 +169,6 @@ describe 'horizon' do
           "OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True",
           "OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = 'domain.tld'",
           'HORIZON_CONFIG["password_autocomplete"] = "on"',
-          "SECRET_KEY = 'elj1IWiLoWHgcyYxFVLj7cM5rGOOxWl0'",
           "        'OPTIONS': {",
           "            'DEAD_RETRY': 1,",
           "            'SERVER_RETRIES': 1,",
@@ -767,6 +775,7 @@ describe 'horizon' do
           if facts[:os]['name'] == 'Debian'
             { :config_file        => '/etc/openstack-dashboard/local_settings.py',
               :conf_d_dir         => '/etc/openstack-dashboard/local_settings.d',
+              :secret_key_file    => '/etc/openstack-dashboard/.secret_key_store',
               :package_name       => 'openstack-dashboard-apache',
               :root_url           => '/horizon',
               :root_path          => '/var/lib/openstack-dashboard',
@@ -778,6 +787,7 @@ describe 'horizon' do
           else
             { :config_file        => '/etc/openstack-dashboard/local_settings.py',
               :conf_d_dir         => '/etc/openstack-dashboard/local_settings.d',
+              :secret_key_file    => '/etc/openstack-dashboard/.secret_key_store',
               :package_name       => 'openstack-dashboard',
               :root_url           => '/horizon',
               :root_path          => '/var/lib/openstack-dashboard',
@@ -790,6 +800,7 @@ describe 'horizon' do
         when 'RedHat'
           { :config_file        => '/etc/openstack-dashboard/local_settings',
             :conf_d_dir         => '/etc/openstack-dashboard/local_settings.d',
+            :secret_key_file    => '/etc/openstack-dashboard/.secret_key_store',
             :package_name       => 'openstack-dashboard',
             :root_url           => '/dashboard',
             :root_path          => '/usr/share/openstack-dashboard',
