@@ -124,15 +124,15 @@
 #  [*api_result_limit*]
 #    (optional) Maximum number of objects (Swift containers/objects or images)
 #    to display on a single page.
-#    Defaults to 1000.
+#    Defaults to undef.
 #
 #  [*api_result_page_size*]
 #    (optional) Maximum number of objects retrieved by a single request.
-#    Defaults to 20.
+#    Defaults to undef.
 #
 #  [*dropdown_max_items*]
 #    (optional) Specify a maximum number of items to display in a dropdown.
-#    Defaults to 30
+#    Defaults to undef.
 #
 #  [*log_handlers*]
 #    (optional) Log handlers. Defaults to ['file']
@@ -590,9 +590,9 @@ class horizon(
   $secondary_endpoint_type             = undef,
   $openstack_keystone_endpoint_type    = undef,
   $available_regions                   = undef,
-  $api_result_limit                    = 1000,
-  $api_result_page_size                = 20,
-  $dropdown_max_items                  = 30,
+  $api_result_limit                    = undef,
+  $api_result_page_size                = undef,
+  $dropdown_max_items                  = undef,
   $log_handlers                        = ['file'],
   $log_level                           = 'INFO',
   $django_log_level                    = undef,

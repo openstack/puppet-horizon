@@ -622,14 +622,21 @@ OPENSTACK_KEYSTONE_ENDPOINT_TYPE = "<%= @openstack_keystone_endpoint_type %>"
 # to paginate results.
 #API_RESULT_LIMIT = 1000
 #API_RESULT_PAGE_SIZE = 20
+<% if !(@api_result_limit.nil?) -%>
 API_RESULT_LIMIT = <%= @api_result_limit %>
+<% end -%>
+<% if !(@api_result_page_size.nil?) -%>
 API_RESULT_PAGE_SIZE = <%= @api_result_page_size %>
+<% end -%>
 
 # The size of chunk in bytes for downloading objects from Swift
 #SWIFT_FILE_TRANSFER_CHUNK_SIZE = 512 * 1024
 
 # Specify a maximum number of items to display in a dropdown.
+#DROPDOWN_MAX_ITEMS = 30
+<% if !(@dropdown_max_items.nil?) -%>
 DROPDOWN_MAX_ITEMS = <%= @dropdown_max_items %>
+<% end -%>
 
 # The timezone of the server. This should correspond with the timezone
 # of your entire OpenStack installation, and hopefully be in UTC.
