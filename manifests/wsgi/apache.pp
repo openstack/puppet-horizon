@@ -272,7 +272,7 @@ class horizon::wsgi::apache (
     ssl_key                => $ssl_key,
     ssl_ca                 => $ssl_ca,
     ssl_verify_client      => $ssl_verify_client,
-    wsgi_script_aliases    => hash([$script_url, $::horizon::params::django_wsgi]),
+    wsgi_script_aliases    => Hash([$script_url, $::horizon::params::django_wsgi]),
     wsgi_import_script     => $::horizon::params::django_wsgi,
     wsgi_process_group     => $::horizon::params::wsgi_group,
     wsgi_application_group => $::horizon::params::wsgi_application_group,
@@ -294,7 +294,7 @@ class horizon::wsgi::apache (
     $default_vhost_conf,
     $extra_params,
     {
-      wsgi_daemon_process => hash([$::horizon::params::wsgi_group, $wsgi_daemon_process_options])
+      wsgi_daemon_process => Hash([$::horizon::params::wsgi_group, $wsgi_daemon_process_options])
     },
     {
       redirectmatch_regexp => $redirectmatch_regexp_real,
@@ -308,7 +308,7 @@ class horizon::wsgi::apache (
     $default_vhost_conf,
     $ssl_extra_params_real,
     {
-      wsgi_daemon_process => hash(['horizon-ssl', $wsgi_daemon_process_options]),
+      wsgi_daemon_process => Hash(['horizon-ssl', $wsgi_daemon_process_options]),
     },
     {
       access_log_file      => $ssl_access_log_file,
