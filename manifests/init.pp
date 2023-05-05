@@ -779,7 +779,7 @@ class horizon(
 
   validate_legacy(Hash, 'validate_hash', $api_versions)
   validate_legacy(Enum['on', 'off'], 'validate_re', $password_autocomplete, [['^on$', '^off$']])
-  validate_legacy(Stdlib::Absolutepath, 'validate_absolute_path', $root_path)
+  validate_legacy(Stdlib::Compat::Absolute_path, 'validate_absolute_path', $root_path)
 
   if $manage_memcache_package {
     if $cache_backend =~ /\.MemcachedCache$/ {
