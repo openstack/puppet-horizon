@@ -181,9 +181,9 @@ HORIZON_CONFIG["disable_password_reveal"] = True
 # Set this to True to display an 'Admin Password' field on the Change Password
 # form to verify that it is indeed the admin logged-in who wants to change the
 # password
-#HORIZON_CONFIG["enforce_password_check"] = False
+#ENFORCE_PASSWORD_CHECK = False
 <% if @enforce_password_check -%>
-HORIZON_CONFIG["enforce_password_check"] = True
+ENFORCE_PASSWORD_CHECK = True
 <% end -%>
 
 LOCAL_PATH = os.path.dirname(os.path.abspath(__file__))
