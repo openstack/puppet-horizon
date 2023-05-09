@@ -613,7 +613,7 @@ describe 'horizon' do
 
       it 'enforce_password_check is configured' do
         verify_concat_fragment_contents(catalogue, 'local_settings.py', [
-          'HORIZON_CONFIG["enforce_password_check"] = True',
+          'ENFORCE_PASSWORD_CHECK = True',
         ])
       end
     end
