@@ -39,10 +39,10 @@
 #
 class horizon::dashboards::heat(
   $enable_user_pass                = true,
-  $policy_file                     = 'heat_policy.yaml',
+  String[1] $policy_file           = 'heat_policy.yaml',
   $template_generator_api_timeout  = 60,
   $template_generator_api_parallel = 2,
-  $policies                        = undef,
+  Optional[Hash] $policies         = undef,
 ) {
 
   include horizon::deps

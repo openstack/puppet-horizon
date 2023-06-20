@@ -26,8 +26,8 @@
 #    Defaults to undef
 #
 class horizon::dashboards::octavia(
-  $policy_file = 'octavia_policy.yaml',
-  $policies    = undef,
+  String[1] $policy_file   = 'octavia_policy.yaml',
+  Optional[Hash] $policies = undef,
 ) {
 
   include horizon::deps
