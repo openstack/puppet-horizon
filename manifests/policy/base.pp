@@ -25,16 +25,14 @@
 #   Defaults to false.
 #
 define horizon::policy::base(
-  $policy_file  = $name,
-  $policies     = {},
-  $file_mode    = '0640',
-  $file_format  = 'yaml',
-  $purge_config = false,
+  String[1] $policy_file = $name,
+  Hash $policies         = {},
+  $file_mode             = '0640',
+  $file_format           = 'yaml',
+  $purge_config          = false,
 ) {
   include horizon::deps
   include horizon::params
-
-  validate_legacy(String, 'validate_string', $policy_file)
 
   if !defined(Class[horizon]){
     fail('The horizon class should be included in advance')

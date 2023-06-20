@@ -39,15 +39,15 @@
 #
 class horizon::policy(
   # common parameters
-  $file_mode            = '0640',
-  $file_format          = 'yaml',
-  $purge_config         = false,
+  $file_mode              = '0640',
+  $file_format            = 'yaml',
+  $purge_config           = false,
   # service specific parameters
-  $cinder_policies      = {},
-  $glance_policies      = {},
-  $keystone_policies    = {},
-  $neutron_policies     = {},
-  $nova_policies        = {},
+  Hash $cinder_policies   = {},
+  Hash $glance_policies   = {},
+  Hash $keystone_policies = {},
+  Hash $neutron_policies  = {},
+  Hash $nova_policies     = {},
 ) {
   include horizon::deps
 
