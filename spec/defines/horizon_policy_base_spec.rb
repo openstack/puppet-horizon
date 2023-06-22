@@ -25,6 +25,7 @@ eos
           :file_group   => platform_params[:wsgi_group],
           :file_mode    => '0640',
           :purge_config => false,
+          :tag          => 'horizon',
         )
       end
     end
@@ -53,6 +54,7 @@ eos
           :file_group   => platform_params[:wsgi_group],
           :file_mode    => '0644',
           :purge_config => true,
+          :tag          => 'horizon',
         )
       end
     end
