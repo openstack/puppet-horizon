@@ -54,6 +54,7 @@ define horizon::policy::base(
     file_group   => $::horizon::params::wsgi_group,
     file_mode    => $file_mode,
     file_format  => $file_format,
-    purge_config => $purge_config
+    purge_config => $purge_config,
+    tag          => 'horizon',
   }
 }
