@@ -549,12 +549,6 @@
 #    (optional) Enable the use of the system scope token on per-service basis.
 #    Defaults to undef
 #
-# DEPRECATED PARAMETERS
-#
-#  [*images_panel*]
-#    (optional) Enabled panel for images.
-#    Defaults to undef
-#
 # === Examples
 #
 #  class { 'horizon':
@@ -669,15 +663,9 @@ class horizon(
   $horizon_upload_mode                              = undef,
   $default_boot_source                              = undef,
   $system_scope_services                            = undef,
-  # DEPRECATED PARAMETERS
-  $images_panel                                     = undef,
 ) inherits horizon::params {
 
   include horizon::deps
-
-  if $images_panel {
-    warning('The images_panel parameter has been deprecated and has no effect.')
-  }
 
   if $cache_server_url and $cache_server_ip {
     fail('Only one of cache_server_url or cache_server_ip can be set.')
