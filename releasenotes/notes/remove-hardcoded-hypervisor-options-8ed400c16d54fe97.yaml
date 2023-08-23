@@ -1,0 +1,6 @@
+---
+upgrade:
+  - |
+    The default value of the hypervisor_options parameter has been changed
+    to an empty hash and does no longer set can_set_mount_point to true by
+    default since this does not reflect the Horizon default value.

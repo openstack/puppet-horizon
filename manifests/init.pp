@@ -173,12 +173,8 @@
 #
 #  [*hypervisor_options*]
 #    (optional) A hash of parameters to enable features specific to
-#    Hypervisors. These include:
-#    'can_set_mount_point': Boolean to enable or disable mount point setting
-#      Defaults to 'True'.
-#    'can_set_password': Boolean to enable or disable VM password setting.
-#      Works only with Xen Hypervisor.
-#      Defaults to 'False'.
+#    Hypervisors.
+#    Defaults to {}
 #
 #  [*cinder_options*]
 #    (optional) A hash of parameters to enable features specific to
@@ -683,16 +679,11 @@ class horizon(
     fail('websso_initial_choice is required when websso_choices_hide_keystone is true')
   }
 
-  $hypervisor_defaults = {
-    'can_set_mount_point' => true,
-    'can_set_password'    => false,
-  }
-
   # Default options for the OPENSTACK_CINDER_FEATURES section. These will
   # be merged with user-provided options when the local_settings.py.erb
   # template is interpolated.
   $cinder_defaults = {
-    'enable_backup'         => false,
+    'enable_backup' => false,
   }
 
   # Default options for the OPENSTACK_KEYSTONE_BACKEND section. These will
@@ -734,7 +725,6 @@ class horizon(
 
   Service <| title == 'memcached' |> -> Class['horizon']
 
-  $hypervisor_options_real = merge($hypervisor_defaults,$hypervisor_options)
   $cinder_options_real     = merge($cinder_defaults,$cinder_options)
   $keystone_options_real   = merge($keystone_defaults, $keystone_options)
   $neutron_options_real    = merge($neutron_defaults,$neutron_options)

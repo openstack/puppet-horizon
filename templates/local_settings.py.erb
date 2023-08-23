@@ -446,9 +446,9 @@ OPENSTACK_USE_SIMPLE_TENANT_USAGE = <%= @use_simple_tenant_usage.to_s.capitalize
 
 # The OPENSTACK_HYPERVISOR_FEATURES settings can be used to enable optional
 # services provided by hypervisors.
-<%- if ! (@hypervisor_options_real.empty?) -%>
+<%- if ! (@hypervisor_options.empty?) -%>
 OPENSTACK_HYPERVISOR_FEATURES = {
-<%- @hypervisor_options_real.sort.each do |opt_name,opt_val| -%>
+<%- @hypervisor_options.sort.each do |opt_name,opt_val| -%>
     '<%= opt_name -%>': <%= opt_val.to_s.capitalize -%>,
 <%-end-%>
 }
