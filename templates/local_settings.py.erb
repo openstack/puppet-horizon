@@ -385,7 +385,7 @@ WEBSSO_DEFAULT_REDIRECT_LOGOUT = "<%= @websso_default_redirect_logout %>"
 <% end -%>
 
 # Disable SSL certificate checks (useful for self-signed certificates):
-#OPENSTACK_SSL_NO_VERIFY = True
+#OPENSTACK_SSL_NO_VERIFY = False
 <% if @ssl_no_verify -%>
 OPENSTACK_SSL_NO_VERIFY = True
 <% end -%>
