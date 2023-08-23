@@ -373,6 +373,10 @@
 #   (optional) The default theme to use from list of available themes. Value should be theme_name.
 #   Defaults to false
 #
+#  [*authentication_plugins*]
+#    (optional) List of authentication plugins to be used.
+#    Defaults to []
+#
 #  [*password_autocomplete*]
 #    (optional) Whether to instruct the client browser to autofill the login form password
 #    Valid values are 'on' and 'off'
@@ -477,6 +481,10 @@
 #    (optional) Enables redirection on logout to the method specified on
 #    the identity provider.
 #    Defaults to undef
+#
+#  [*totp_enabled*]
+#    (optional) Activate TOTP support.
+#    Defaults to false
 #
 #  [*password_validator*]
 #    (optional) Horizon provides a password validation check, which OpenStack cloud
@@ -604,6 +612,7 @@ class horizon(
   $vhost_extra_params                               = undef,
   $available_themes                                 = false,
   $default_theme                                    = false,
+  Array[String[1]] $authentication_plugins          = [],
   Enum['on', 'off'] $password_autocomplete          = 'off',
   $create_image_defaults                            = undef,
   Boolean $password_retrieve                        = false,
@@ -621,6 +630,7 @@ class horizon(
   $websso_default_redirect_protocol                 = undef,
   $websso_default_redirect_region                   = undef,
   $websso_default_redirect_logout                   = undef,
+  Boolean $totp_enabled                             = false,
   $password_validator                               = undef,
   $password_validator_help                          = undef,
   $customization_module                             = undef,

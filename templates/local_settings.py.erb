@@ -358,6 +358,10 @@ WEBSSO_DEFAULT_REDIRECT_REGION = "<%= @websso_default_redirect_region %>"
 WEBSSO_DEFAULT_REDIRECT_LOGOUT = "<%= @websso_default_redirect_logout %>"
 <% end -%>
 
+<% if @totp_enabled -%>
+OPENSTACK_KEYSTONE_MFA_TOTP_ENABLED = True
+
+<% end -%>
 # Disable SSL certificate checks (useful for self-signed certificates):
 #OPENSTACK_SSL_NO_VERIFY = False
 <% if @ssl_no_verify -%>
@@ -693,6 +697,14 @@ AVAILABLE_THEMES = [
 <% end -%>
 <% if @default_theme -%>
 DEFAULT_THEME = '<%= @default_theme %>'
+
+<% end -%>
+<% if !(@authentication_plugins.empty?) -%>
+AUTHENTICATION_PLUGINS = [
+<% @authentication_plugins.each do |r| -%>
+    '<%= r -%>',
+<% end -%>
+]
 
 <% end -%>
 # Modules that provide /auth routes that can be used to handle different types

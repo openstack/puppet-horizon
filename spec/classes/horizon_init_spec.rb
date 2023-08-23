@@ -661,6 +661,28 @@ describe 'horizon' do
       end
     end
 
+    context 'with totp enabled' do
+      before do
+        params.merge!({
+          :totp_enabled           => true,
+          :authentication_plugins => [
+            'openstack_auth.plugin.totp.TotpPlugin',
+            'openstack_auth.plugin.password.PasswordPlugin',
+            'openstack_auth.plugin.token.TokenPlugin'
+          ]
+        })
+      end
+      it 'configures totp options' do
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+          'OPENSTACK_KEYSTONE_MFA_TOTP_ENABLED = True',
+          'AUTHENTICATION_PLUGINS = [',
+          "    'openstack_auth.plugin.totp.TotpPlugin',",
+          "    'openstack_auth.plugin.password.PasswordPlugin',",
+          "    'openstack_auth.plugin.token.TokenPlugin',",
+          ])
+      end
+    end
+
     context 'with help_url, bug_url and customization_module provided' do
       before do
         params.merge!({

@@ -1,0 +1,11 @@
+---
+features:
+  - |
+    The new ``horizon::totp_enabled`` parameter has been added. This parameter
+    can be used to customize the ``OPENSTACK_KEYSTONE_MFA_TOTP_ENABLED`` option
+    in Horizon to enable TOTP support.
+
+  - |
+    The ``authentication_plugins`` parameter has been added to allow
+    customizing the ``AUTHENTICATION_PLUGINS`` option, which is required to
+    enable TOTP support.
