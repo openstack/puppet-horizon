@@ -619,7 +619,7 @@ class horizon(
   Hash $keystone_options                            = {},
   Hash $neutron_options                             = {},
   Hash $instance_options                            = {},
-  $use_simple_tenant_usage                          = undef,
+  Boolean $use_simple_tenant_usage                  = false,
   Stdlib::Absolutepath $file_upload_temp_dir        = '/tmp',
   Optional[Stdlib::Absolutepath] $policy_files_path = undef,
   Optional[Hash[String, String]] $policy_files      = undef,

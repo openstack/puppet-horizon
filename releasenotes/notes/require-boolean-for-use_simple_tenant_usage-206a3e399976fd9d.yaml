@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    The ``horizon::use_simple_tenant_usage`` parameter now requires a boolean
+    value.

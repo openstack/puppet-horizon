@@ -429,8 +429,8 @@ OPENSTACK_ENABLE_PASSWORD_RETRIEVE = True
 # SimpleTenantUsage can cause performance issues in the nova API in larger
 # deployments. Try to set this to ``False`` for such cases.
 #OPENSTACK_USE_SIMPLE_TENANT_USAGE = True
-<% if ! (@use_simple_tenant_usage.nil?) -%>
-OPENSTACK_USE_SIMPLE_TENANT_USAGE = <%= @use_simple_tenant_usage.to_s.capitalize %>
+<% if ! @use_simple_tenant_usage -%>
+OPENSTACK_USE_SIMPLE_TENANT_USAGE = False
 <% end -%>
 
 # The Xen Hypervisor has the ability to set the mount point for volumes
