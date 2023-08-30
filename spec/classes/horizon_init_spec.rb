@@ -70,8 +70,6 @@ describe 'horizon' do
           "SECRET_KEY = secret_key.generate_or_read_from_file('#{platforms_params[:secret_key_file]}')",
           'OPENSTACK_KEYSTONE_URL = "http://127.0.0.1:5000"',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "member"',
-          "    'can_set_mount_point': True,",
-          "    'can_set_password': False,",
           "    'enable_distributed_router': False,",
           "    'enable_ha_router': False,",
           "    'enable_quotas': True,",
