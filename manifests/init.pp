@@ -198,7 +198,7 @@
 #
 #  [*use_simple_tenant_usage*]
 #    (optional) Use SimpleTenantUsage nova API in the usage overview.
-#    (Defaults to undef)
+#    Defaults to true.
 #
 #  [*configure_apache*]
 #    (optional) Configure Apache for Horizon. (Defaults to true)
@@ -578,7 +578,7 @@ class horizon(
   Hash $keystone_options                            = {},
   Hash $neutron_options                             = {},
   Hash $instance_options                            = {},
-  Boolean $use_simple_tenant_usage                  = false,
+  Boolean $use_simple_tenant_usage                  = true,
   Stdlib::Absolutepath $file_upload_temp_dir        = '/tmp',
   Optional[Stdlib::Absolutepath] $policy_files_path = undef,
   Optional[Hash[String, String]] $policy_files      = undef,
