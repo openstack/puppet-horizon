@@ -62,9 +62,6 @@ describe 'horizon' do
       it 'generates local_settings.py' do
         verify_concat_fragment_contents(catalogue, 'local_settings.py', [
           'DEBUG = False',
-          "LOGIN_URL = '#{platforms_params[:root_url]}/auth/login/'",
-          "LOGOUT_URL = '#{platforms_params[:root_url]}/auth/logout/'",
-          "LOGIN_REDIRECT_URL = '#{platforms_params[:root_url]}/'",
           "ALLOWED_HOSTS = ['foo.example.com', ]",
           'HORIZON_CONFIG["password_autocomplete"] = "off"',
           "SECRET_KEY = secret_key.generate_or_read_from_file('#{platforms_params[:secret_key_file]}')",
@@ -746,7 +743,7 @@ describe 'horizon' do
   shared_examples_for 'horizon on RedHat' do
     it 'sets WEBROOT in local_settings.py' do
       verify_concat_fragment_contents(catalogue, 'local_settings.py', [
-        "WEBROOT = '/dashboard/'",
+        "WEBROOT = '/dashboard'",
       ])
     end
   end
@@ -754,7 +751,7 @@ describe 'horizon' do
   shared_examples_for 'horizon on Debian' do
     it 'sets WEBROOT in local_settings.py' do
       verify_concat_fragment_contents(catalogue, 'local_settings.py', [
-        "WEBROOT = '/horizon/'",
+        "WEBROOT = '/horizon'",
       ])
     end
   end
