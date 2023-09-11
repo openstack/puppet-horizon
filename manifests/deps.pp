@@ -39,7 +39,7 @@ class horizon::deps {
   # policy config should occur in the config block
   Anchor['horizon::config::begin']
   -> Openstacklib::Policy<| tag == 'horizon' |>
-  ~> Anchor['horizon::config::end']
+  -> Anchor['horizon::config::end']
 
   # Installation or config changes will always restart services.
   Anchor['horizon::install::end'] ~> Anchor['horizon::service::begin']
