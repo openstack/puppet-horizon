@@ -72,7 +72,7 @@ describe 'horizon' do
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "member"',
           'TIME_ZONE = "UTC"',
           "            'handlers': ['file'],",
-          'SESSION_TIMEOUT = 1800',
+          'SESSION_TIMEOUT = 3600',
           'TOKEN_TIMEOUT_MARGIN = 0',
           'COMPRESS_OFFLINE = True',
           "FILE_UPLOAD_TEMP_DIR = '/tmp'",

@@ -339,7 +339,7 @@
 #  [*session_timeout*]
 #    (optional) The session timeout for horizon in seconds. After this many seconds of inactivity
 #    the user is logged out.
-#    Defaults to 1800.
+#    Defaults to 3600.
 #
 #  [*token_timeout_margin*]
 #    (optional) A time margin in seconds to subtract from the real token's validity.
@@ -596,7 +596,7 @@ class horizon(
   $root_url                                         = $::horizon::params::root_url,
   Stdlib::Absolutepath $root_path                   = "${::horizon::params::static_path}/openstack-dashboard",
   $access_log_format                                = undef,
-  $session_timeout                                  = 1800,
+  $session_timeout                                  = 3600,
   $token_timeout_margin                             = 0,
   $timezone                                         = 'UTC',
   Boolean $secure_cookies                           = false,

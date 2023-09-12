@@ -1,0 +1,6 @@
+---
+upgrade:
+  - |
+    Default value of the ``horizon::session_timeout`` parameter has been
+    changed from `1800` to `3600`, to be aligned with the default value in
+    horizon.
