@@ -341,6 +341,10 @@
 #    the user is logged out.
 #    Defaults to 1800.
 #
+#  [*token_timeout_margin*]
+#    (optional) A time margin in seconds to subtract from the real token's validity.
+#    Defaults to 0.
+#
 #  [*timezone*]
 #    (optional) The timezone of the server.
 #    Defaults to 'UTC'.
@@ -593,6 +597,7 @@ class horizon(
   Stdlib::Absolutepath $root_path                   = "${::horizon::params::static_path}/openstack-dashboard",
   $access_log_format                                = undef,
   $session_timeout                                  = 1800,
+  $token_timeout_margin                             = 0,
   $timezone                                         = 'UTC',
   Boolean $secure_cookies                           = false,
   $django_session_engine                            = undef,

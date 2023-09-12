@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``horizon::token_timeout_margin`` parameter has been added.

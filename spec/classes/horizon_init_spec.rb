@@ -72,6 +72,8 @@ describe 'horizon' do
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "member"',
           'TIME_ZONE = "UTC"',
           "            'handlers': ['file'],",
+          'SESSION_TIMEOUT = 1800',
+          'TOKEN_TIMEOUT_MARGIN = 0',
           'COMPRESS_OFFLINE = True',
           "FILE_UPLOAD_TEMP_DIR = '/tmp'",
         ])
@@ -132,6 +134,7 @@ describe 'horizon' do
           :keystone_default_domain          => 'domain.tld',
           :overview_days_range              => 1,
           :session_timeout                  => 1800,
+          :token_timeout_margin             => 60,
           :timezone                         => 'Asia/Shanghai',
           :available_themes                 => [
             { 'name' => 'default', 'label' => 'Default', 'path' => 'themes/default' },
@@ -219,6 +222,7 @@ describe 'horizon' do
           "            'level': 'DEBUG',",
           "            'handlers': ['console', 'syslog'],",
           'SESSION_TIMEOUT = 1800',
+          'TOKEN_TIMEOUT_MARGIN = 60',
           'COMPRESS_OFFLINE = False',
           "FILE_UPLOAD_TEMP_DIR = '/var/spool/horizon'",
           'OVERVIEW_DAYS_RANGE = 1',
