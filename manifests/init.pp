@@ -718,22 +718,14 @@ class horizon(
     require => Anchor['horizon::config::begin'],
   }
 
-  exec { 'refresh_horizon_django_cache':
-    command     => "${::horizon::params::manage_py} collectstatic --noinput --clear",
-    refreshonly => true,
-    tag         => ['horizon-compress'],
-  }
-
-  exec { 'refresh_horizon_django_compress':
-    command     => "${::horizon::params::manage_py} compress --force",
-    refreshonly => true,
-    tag         => ['horizon-compress'],
-  }
-
   if $compress_offline {
-    Concat<| tag == 'django-config' |> ~> Exec['refresh_horizon_django_compress']
-    if $facts['os']['family'] == 'RedHat' {
-      Concat<| tag == 'django-config' |> ~> Exec['refresh_horizon_django_cache'] -> Exec['refresh_horizon_django_compress']
+    if $facts['os']['family'] == 'Debian' {
+      exec { 'refresh_horizon_django_compress':
+        command     => "${::horizon::params::manage_py} compress --force",
+        refreshonly => true,
+        tag         => ['horizon-compress'],
+      }
+      Concat<| tag == 'django-config' |> ~> Exec['refresh_horizon_django_compress']
     }
   }
 
