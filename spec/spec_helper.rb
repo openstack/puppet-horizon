@@ -9,7 +9,6 @@ RSpec.configure do |c|
   c.alias_it_should_behave_like_to :it_raises, 'raises'
 
   c.module_path = File.join(fixture_path, 'modules')
-  c.manifest_dir = File.join(fixture_path, 'manifests')
 end
 
 def verify_concat_fragment_contents(subject, title, expected_lines)
