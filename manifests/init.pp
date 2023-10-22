@@ -352,7 +352,7 @@
 #  [*available_themes*]
 #    (optional) An array of hashes detailing available themes. Each hash must
 #    have the followings keys for themes to be made available; name, label,
-#    path. Defaults to false
+#    path. Defaults to undef
 #
 #    { 'name' => 'theme_name', 'label' => 'theme_label', 'path' => 'theme_path' }
 #
@@ -364,14 +364,15 @@
 #      ]
 #    }
 #
-#   Or in Hiera:
-#   horizon::available_themes:
-#     - { name: 'default', label: 'Default', path: 'themes/default' }
-#     - { name: 'material', label: 'Material', path: 'themes/material' }
+#    Or in Hiera:
+#     horizon::available_themes:
+#      - { name: 'default', label: 'Default', path: 'themes/default' }
+#      - { name: 'material', label: 'Material', path: 'themes/material' }
 #
 #  [*default_theme*]
-#   (optional) The default theme to use from list of available themes. Value should be theme_name.
-#   Defaults to false
+#    (optional) The default theme to use from list of available themes. Value
+#    should be theme_name.
+#    Defaults to undef
 #
 #  [*authentication_plugins*]
 #    (optional) List of authentication plugins to be used.
@@ -610,8 +611,8 @@ class horizon(
   Boolean $secure_cookies                           = false,
   $django_session_engine                            = undef,
   $vhost_extra_params                               = undef,
-  $available_themes                                 = false,
-  $default_theme                                    = false,
+  Horizon::AvailableThemes $available_themes        = undef,
+  Optional[String[1]] $default_theme                = undef,
   Array[String[1]] $authentication_plugins          = [],
   Enum['on', 'off'] $password_autocomplete          = 'off',
   $create_image_defaults                            = undef,
@@ -655,6 +656,10 @@ class horizon(
 
   if $websso_choices_hide_keystone and !$websso_initial_choice {
     fail('websso_initial_choice is required when websso_choices_hide_keystone is true')
+  }
+
+  if $available_themes {
+    validate_available_themes($available_themes)
   }
 
   Service <| title == 'memcached' |> -> Class['horizon']
