@@ -25,6 +25,7 @@ class horizon::params {
       $pymemcache_package               = 'python3-pymemcache'
       $designate_dashboard_package_name = 'openstack-designate-ui'
       $heat_dashboard_package_name      = 'openstack-heat-ui'
+      $ironic_dashboard_package_name    = 'openstack-ironic-ui'
       $manila_dashboard_package_name    = 'openstack-manila-ui'
       $octavia_dashboard_package_name   = 'openstack-octavia-ui'
     }
@@ -42,6 +43,7 @@ class horizon::params {
       $pymemcache_package               = 'python3-pymemcache'
       $designate_dashboard_package_name = 'python3-designate-dashboard'
       $heat_dashboard_package_name      = 'python3-heat-dashboard'
+      $ironic_dashboard_package_name    = 'python3-ironic-ui'
       $manila_dashboard_package_name    = 'python3-manila-ui'
       $octavia_dashboard_package_name   = 'python3-octavia-dashboard'
       case $facts['os']['name'] {
