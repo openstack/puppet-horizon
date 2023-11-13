@@ -34,7 +34,7 @@ describe 'horizon::wsgi::apache' do
         :redirectmatch_status        => 'permanent',
         :redirectmatch_regexp        => '^/$',
         :redirectmatch_dest          => platforms_params[:root_url],
-        :wsgi_script_aliases         => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi.py' },
+        :wsgi_script_aliases         => { platforms_params[:root_url] => platforms_params[:django_wsgi] },
         :wsgi_process_group          => platforms_params[:wsgi_group],
         :wsgi_daemon_process         => {
           platforms_params[:wsgi_group] => {
@@ -77,7 +77,7 @@ describe 'horizon::wsgi::apache' do
         :redirectmatch_status        => 'temp',
         :redirectmatch_regexp        => '^/$',
         :redirectmatch_dest          => platforms_params[:root_url],
-        :wsgi_script_aliases         => { platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi.py' },
+        :wsgi_script_aliases         => { platforms_params[:root_url] => platforms_params[:django_wsgi] },
         :wsgi_process_group          => platforms_params[:wsgi_group],
         :wsgi_daemon_process         => {
           platforms_params[:wsgi_group] => {
@@ -153,7 +153,7 @@ describe 'horizon::wsgi::apache' do
           }},
         :wsgi_application_group => '%{GLOBAL}',
         :wsgi_script_aliases    => {
-          platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi.py'
+          platforms_params[:root_url] => platforms_params[:django_wsgi]
         }
       )}
 
@@ -180,7 +180,7 @@ describe 'horizon::wsgi::apache' do
           }},
         :wsgi_application_group => '%{GLOBAL}',
         :wsgi_script_aliases    => {
-          platforms_params[:root_url] => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi.py'
+          platforms_params[:root_url] => platforms_params[:django_wsgi]
         }
       )}
     end
@@ -266,7 +266,7 @@ describe 'horizon::wsgi::apache' do
           { 'alias' => '/static', 'path' => '/tmp/horizon/static' }
         ],
         :wsgi_script_aliases => {
-          '/' => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi.py'
+          '/' => platforms_params[:django_wsgi]
         }
       )}
 
@@ -505,21 +505,30 @@ describe 'horizon::wsgi::apache' do
         when 'Debian'
           case facts[:os]['name']
           when 'Debian'
-            { :httpd_config_file => '/etc/apache2/sites-available/openstack-dashboard-alias-only.conf',
+            {
+              :httpd_config_file => '/etc/apache2/sites-available/openstack-dashboard-alias-only.conf',
+              :django_wsgi       => '/usr/share/openstack-dashboard/wsgi.py',
               :root_url          => '/horizon',
               :wsgi_user         => 'horizon',
-              :wsgi_group        => 'horizon' }
+              :wsgi_group        => 'horizon'
+            }
           when 'Ubuntu'
-            { :httpd_config_file => '/etc/apache2/conf-available/openstack-dashboard.conf',
+            {
+              :httpd_config_file => '/etc/apache2/conf-available/openstack-dashboard.conf',
+              :django_wsgi       => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi.py',
               :root_url          => '/horizon',
               :wsgi_user         => 'horizon',
-              :wsgi_group        => 'horizon' }
+              :wsgi_group        => 'horizon'
+            }
           end
         when 'RedHat'
-          { :httpd_config_file => '/etc/httpd/conf.d/openstack-dashboard.conf',
+          {
+            :httpd_config_file => '/etc/httpd/conf.d/openstack-dashboard.conf',
+            :django_wsgi       => '/usr/share/openstack-dashboard/openstack_dashboard/wsgi.py',
             :root_url          => '/dashboard',
             :wsgi_user         => 'apache',
-            :wsgi_group        => 'apache' }
+            :wsgi_group        => 'apache'
+          }
         end
       end
 
