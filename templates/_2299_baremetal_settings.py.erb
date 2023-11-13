@@ -1,0 +1,20 @@
+from django.conf import settings
+
+
+# Sample
+# settings.LOGGING['loggers'].update({
+#     'ironicclient': {
+#         'handlers': ['console'],
+#         'level': 'DEBUG',
+#         'propagate': False,
+#     }
+# })
+settings.LOGGING['loggers'].update({
+    'ironicclient': {
+        # 'handlers': ['console'],
+        'handlers': ['<%= @log_handlers.join("', '") %>'],
+        # level': 'DEBUG',
+        'level': '<%= @log_level %>',
+        'propagate': False,
+    }
+})
