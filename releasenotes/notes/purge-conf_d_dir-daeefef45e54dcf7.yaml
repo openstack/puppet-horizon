@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``horizon::purge_conf_d_dir`` parameter has been added.

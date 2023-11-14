@@ -67,6 +67,15 @@ describe 'horizon' do
         expect(content).not_to match(/^SESSION_ENGINE/)
       end
 
+      it { is_expected.to contain_file(platforms_params[:conf_d_dir]).with(
+        :ensure  => 'directory',
+        :mode    => '0755',
+        :purge   => false,
+        :recurse => false,
+        :owner   => platforms_params[:wsgi_user],
+        :group   => platforms_params[:wsgi_group],
+      ) }
+
       it 'creates a key file' do
         is_expected.to contain_file(platforms_params[:secret_key_file]).with(
           :mode      => '0600',
@@ -82,6 +91,7 @@ describe 'horizon' do
     context 'with overridden parameters' do
       before do
         params.merge!({
+          :purge_conf_d_dir                 => true,
           :cache_backend                    => 'django.core.cache.backends.memcached.MemcachedCache',
           :cache_timeout                    => 300,
           :cache_options                    => {'SOCKET_TIMEOUT' => 1,'SERVER_RETRIES' => 1,'DEAD_RETRY' => 1},
@@ -212,7 +222,14 @@ describe 'horizon' do
         ])
       end
 
-      it { is_expected.to contain_file(platforms_params[:conf_d_dir]).with_ensure('directory') }
+      it { is_expected.to contain_file(platforms_params[:conf_d_dir]).with(
+        :ensure  => 'directory',
+        :mode    => '0755',
+        :purge   => true,
+        :recurse => true,
+        :owner   => platforms_params[:wsgi_user],
+        :group   => platforms_params[:wsgi_group],
+      ) }
       it { is_expected.to_not contain_exec('refresh_horizon_django_compress') }
 
       it { is_expected.to contain_file(params[:file_upload_temp_dir]) }
