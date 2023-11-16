@@ -8,6 +8,13 @@
 #    (required) Secret key. This is used by Django to provide cryptographic
 #    signing, and should be set to a unique, unpredictable value.
 #
+#  [*package_ensure*]
+#    (optional) Package ensure state. Defaults to 'present'.
+#
+#  [*purge_conf_d_dir*]
+#    (optional) Purge files in the local_settings.d directory
+#    Defaults to false
+#
 #  [*servername*]
 #    (optional) FQDN used for the Server Name directives
 #    Defaults to facts['networking']['fqdn'].
@@ -23,9 +30,6 @@
 #    (optional) List of names which should be defined as ServerAlias directives
 #    in vhost.conf.
 #    Defaults to facts['networking']['fqdn'].
-#
-#  [*package_ensure*]
-#    (optional) Package ensure state. Defaults to 'present'.
 #
 #  [*cache_backend*]
 #   (optional) Horizon cache backend.
@@ -534,6 +538,7 @@
 class horizon(
   $secret_key,
   $package_ensure                                   = 'present',
+  Boolean $purge_conf_d_dir                         = false,
   $cache_backend                                    = 'django.core.cache.backends.locmem.LocMemCache',
   $cache_options                                    = undef,
   $cache_timeout                                    = undef,
@@ -723,6 +728,8 @@ class horizon(
   file { $::horizon::params::conf_d_dir:
     ensure  => 'directory',
     mode    => '0755',
+    purge   => $purge_conf_d_dir,
+    recurse => $purge_conf_d_dir,
     owner   => $::horizon::params::wsgi_user,
     group   => $::horizon::params::wsgi_group,
     require => Anchor['horizon::config::begin'],
