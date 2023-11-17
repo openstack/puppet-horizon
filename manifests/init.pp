@@ -672,6 +672,8 @@ class horizon(
 
   if $manage_memcache_package {
     if $cache_backend =~ /\.MemcachedCache$/ {
+      warning("Support for MemcachedCache backend has been deprecated. \
+Use PyMemcacheCache backend instead")
       ensure_packages('python-memcache', {
         name => $::horizon::params::memcache_package,
         tag  => ['openstack'],

@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    Support for the MemcachedCache backend has been deprecated. This backend
+    was deprecated in django 3.2 .
