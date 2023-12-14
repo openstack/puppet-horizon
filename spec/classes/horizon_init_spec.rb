@@ -56,6 +56,7 @@ describe 'horizon' do
           "            'handlers': ['file'],",
           'SESSION_TIMEOUT = 3600',
           'TOKEN_TIMEOUT_MARGIN = 0',
+          'COMPRESS_ENABLED = True',
           'COMPRESS_OFFLINE = True',
           "FILE_UPLOAD_TEMP_DIR = '/tmp'",
         ])
@@ -110,6 +111,7 @@ describe 'horizon' do
           :api_result_limit                 => 2000,
           :api_result_page_size             => 40,
           :dropdown_max_items               => 123,
+          :compress_enabled                 => false,
           :compress_offline                 => false,
           :hypervisor_options               => {'can_set_mount_point' => false, 'can_set_password' => true },
           :cinder_options                   => {'enable_backup' => true },
@@ -215,6 +217,7 @@ describe 'horizon' do
           "            'handlers': ['console', 'syslog'],",
           'SESSION_TIMEOUT = 1800',
           'TOKEN_TIMEOUT_MARGIN = 60',
+          'COMPRESS_ENABLED = False',
           'COMPRESS_OFFLINE = False',
           "FILE_UPLOAD_TEMP_DIR = '/var/spool/horizon'",
           'OVERVIEW_DAYS_RANGE = 1',

@@ -1044,6 +1044,11 @@ SESSION_TIMEOUT = <%= @session_timeout %>
 
 TOKEN_TIMEOUT_MARGIN = <%= @token_timeout_margin %>
 
+# This setting controls whether or not compression is enabled. Disabling
+# compression makes Horizon considerably slower, but makes it much easier
+# to debug JS and CSS changes
+COMPRESS_ENABLED = <%= @compress_enabled.to_s.capitalize %>
+
 # The Ubuntu package includes pre-compressed JS and compiled CSS to allow
 # offline compression by default.  To enable online compression, install
 # the python-lesscpy package and disable the following option.

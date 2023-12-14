@@ -171,6 +171,10 @@
 #    header which links to the value of this setting.
 #    Defaults to undef
 #
+#  [*compress_enabled*]
+#    (optional) Boolean to enable compression.
+#    Defaults to True
+#
 #  [*compress_offline*]
 #    (optional) Boolean to enable offline compress of assets.
 #    Defaults to True
@@ -588,6 +592,7 @@ class horizon(
   $ssl_verify_client                                = undef,
   $wsgi_processes                                   = $facts['os_workers'],
   $wsgi_threads                                     = '1',
+  Boolean $compress_enabled                         = true,
   Boolean $compress_offline                         = true,
   # TODO(tkajinam) Consider adding more strict validation about key-value
   Hash $hypervisor_options                          = {},
