@@ -23,23 +23,11 @@ describe 'horizon' do
             :tag    => ['openstack', 'horizon-package'],
           )
       }
-      it { is_expected.to contain_exec('refresh_horizon_django_cache').with({
-          :command     => '/usr/share/openstack-dashboard/manage.py collectstatic --noinput --clear',
-          :refreshonly => true,
-      })}
       it { is_expected.to contain_exec('refresh_horizon_django_compress').with({
-          :command     => '/usr/share/openstack-dashboard/manage.py compress --force',
-          :refreshonly => true,
+        :command     => '/usr/share/openstack-dashboard/manage.py compress --force',
+        :refreshonly => true,
       })}
       it {
-        if facts[:os]['family'] == 'RedHat'
-          is_expected.to contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]')
-          is_expected.to contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_compress]')
-        else
-          is_expected.to_not contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]')
-          is_expected.to contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_compress]')
-        end
-
         is_expected.to contain_concat(platforms_params[:config_file]).with(
           :mode      => '0640',
           :owner     => platforms_params[:wsgi_user],
@@ -219,8 +207,8 @@ describe 'horizon' do
       end
 
       it { is_expected.to contain_file(platforms_params[:conf_d_dir]).with_ensure('directory') }
-      it { is_expected.not_to contain_file(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_cache]') }
-      it { is_expected.not_to contain_file(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_compress]') }
+      it { is_expected.to_not contain_exec('refresh_horizon_django_cache') }
+      it { is_expected.to_not contain_exec('refresh_horizon_django_compress') }
 
       it { is_expected.to contain_file(params[:file_upload_temp_dir]) }
     end
@@ -237,9 +225,6 @@ describe 'horizon' do
           "        'LOCATION': [ '10.0.0.1:11211','10.0.0.2:11211', ],",
         ])
       end
-
-      it { is_expected.to contain_exec('refresh_horizon_django_cache') }
-      it { is_expected.to contain_exec('refresh_horizon_django_compress') }
     end
 
     context 'with overridden parameters, IPv6 cache_server_ip array and MemcachedCache' do
@@ -256,9 +241,6 @@ describe 'horizon' do
           "        'LOCATION': [ 'inet6:[fd12:3456:789a:1::1]:11211','inet6:[fd12:3456:789a:1::2]:11211', ],",
         ])
       end
-
-      it { is_expected.to contain_exec('refresh_horizon_django_cache') }
-      it { is_expected.to contain_exec('refresh_horizon_django_compress') }
     end
 
     context 'with overridden parameters, IPv6 cache_server_ip array and PyMemcacheCache' do
@@ -275,9 +257,6 @@ describe 'horizon' do
           "        'LOCATION': [ '[fd12:3456:789a:1::1]:11211','[fd12:3456:789a:1::2]:11211', ],",
         ])
       end
-
-      it { is_expected.to contain_exec('refresh_horizon_django_cache') }
-      it { is_expected.to contain_exec('refresh_horizon_django_compress') }
     end
 
     context 'with overridden parameters and cache_server_url (string)' do
@@ -292,9 +271,6 @@ describe 'horizon' do
           "        'LOCATION': 'redis://:password@10.0.0.1:6379/1',",
         ])
       end
-
-      it { is_expected.to contain_exec('refresh_horizon_django_cache') }
-      it { is_expected.to contain_exec('refresh_horizon_django_compress') }
     end
 
     context 'with overridden parameters and cache_server_url (array)' do
@@ -309,9 +285,6 @@ describe 'horizon' do
           "        'LOCATION': ['192.0.2.1:11211','192.0.2.2:11211'],",
         ])
       end
-
-      it { is_expected.to contain_exec('refresh_horizon_django_cache') }
-      it { is_expected.to contain_exec('refresh_horizon_django_compress') }
     end
 
     context 'installs python memcache library when cache_backend is set to memcache' do
@@ -741,6 +714,12 @@ describe 'horizon' do
         "WEBROOT = '/dashboard/'",
       ])
     end
+    it 'refreshes django cache' do
+      is_expected.to contain_exec('refresh_horizon_django_cache').with({
+        :command     => '/usr/share/openstack-dashboard/manage.py collectstatic --noinput --clear',
+        :refreshonly => true,
+      })
+    end
   end
 
   shared_examples_for 'horizon on Debian' do
@@ -748,6 +727,9 @@ describe 'horizon' do
       verify_concat_fragment_contents(catalogue, 'local_settings.py', [
         "WEBROOT = '/horizon/'",
       ])
+    end
+    it 'does not refreshe django cache' do
+      is_expected.to_not contain_exec('refresh_horizon_django_cache')
     end
   end
 

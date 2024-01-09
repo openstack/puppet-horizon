@@ -810,7 +810,6 @@ class horizon(
     owner     => $::horizon::params::wsgi_user,
     group     => $::horizon::params::wsgi_group,
     show_diff => false,
-    require   => Anchor['horizon::config::begin'],
     tag       => ['django-config'],
   }
 
@@ -828,22 +827,20 @@ class horizon(
     require => Anchor['horizon::config::begin'],
   }
 
-  exec { 'refresh_horizon_django_cache':
-    command     => "${::horizon::params::manage_py} collectstatic --noinput --clear",
-    refreshonly => true,
-    tag         => ['horizon-compress'],
-  }
-
-  exec { 'refresh_horizon_django_compress':
-    command     => "${::horizon::params::manage_py} compress --force",
-    refreshonly => true,
-    tag         => ['horizon-compress'],
-  }
-
   if $compress_offline {
-    Concat<| tag == 'django-config' |> ~> Exec['refresh_horizon_django_compress']
     if $facts['os']['family'] == 'RedHat' {
-      Concat<| tag == 'django-config' |> ~> Exec['refresh_horizon_django_cache'] -> Exec['refresh_horizon_django_compress']
+      exec { 'refresh_horizon_django_cache':
+        command     => "${::horizon::params::manage_py} collectstatic --noinput --clear",
+        refreshonly => true,
+        tag         => ['horizon-compress'],
+      }
+      Exec['refresh_horizon_django_cache'] -> Exec['refresh_horizon_django_compress']
+    }
+
+    exec { 'refresh_horizon_django_compress':
+      command     => "${::horizon::params::manage_py} compress --force",
+      refreshonly => true,
+      tag         => ['horizon-compress'],
     }
   }
 
