@@ -25,15 +25,13 @@ class horizon::deps {
   -> Package<| tag == 'horizon-package' |>
   ~> anchor { 'horizon::install::end': }
   -> anchor { 'horizon::config::begin': }
+  -> Concat<| tag == 'django-config' |>
   ~> anchor { 'horizon::config::end': }
-  -> anchor { 'horizon::compress::begin': }
-  -> Exec<| tag == 'horizon-compress' |>
+  ~> anchor { 'horizon::compress::begin': }
+  ~> Exec<| tag == 'horizon-compress' |>
   ~> anchor { 'horizon::compress::end': }
-  -> anchor { 'horizon::dashboard::begin': }
-  -> Package<| tag == 'horizon-dashboard-package' |>
-  ~> anchor { 'horizon::dashboard::end': }
-  -> anchor { 'horizon::service::begin': }
-  -> Service<| title == 'httpd' |>
+  ~> anchor { 'horizon::service::begin': }
+  ~> Service<| title == 'httpd' |>
   ~> anchor { 'horizon::service::end': }
 
   # policy config should occur in the config block
@@ -41,8 +39,10 @@ class horizon::deps {
   -> Openstacklib::Policy<| tag == 'horizon' |>
   -> Anchor['horizon::config::end']
 
+  # Regenerate django cache after package update
+  Anchor['horizon::install::end'] ~> Anchor['horizon::compress::begin']
+
   # Installation or config changes will always restart services.
   Anchor['horizon::install::end'] ~> Anchor['horizon::service::begin']
   Anchor['horizon::config::end'] ~> Anchor['horizon::service::begin']
-  Anchor['horizon::dashboard::end'] ~> Anchor['horizon::service::begin']
 }

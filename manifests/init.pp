@@ -700,7 +700,6 @@ class horizon(
     owner     => $::horizon::params::wsgi_user,
     group     => $::horizon::params::wsgi_group,
     show_diff => false,
-    require   => Anchor['horizon::config::begin'],
     tag       => ['django-config'],
   }
 
@@ -725,7 +724,6 @@ class horizon(
         refreshonly => true,
         tag         => ['horizon-compress'],
       }
-      Concat<| tag == 'django-config' |> ~> Exec['refresh_horizon_django_compress']
     }
   }
 

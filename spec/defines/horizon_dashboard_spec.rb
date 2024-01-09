@@ -26,7 +26,7 @@ describe 'horizon::dashboard' do
     context 'with default' do
       it { should contain_package(platform_params[:heat_dashboard_package_name]).with(
           :ensure => 'installed',
-          :tag    => ['horizon-dashboard-package']
+          :tag    => ['horizon-package']
       )}
     end
 
@@ -39,7 +39,7 @@ describe 'horizon::dashboard' do
 
       it { should contain_package(platform_params[:heat_dashboard_package_name]).with(
         :ensure => 'absent',
-        :tag    => ['horizon-dashboard-package']
+        :tag    => ['horizon-package']
       )}
     end
   end
@@ -48,7 +48,7 @@ describe 'horizon::dashboard' do
     context 'with default' do
       it { should contain_package('python3-heat-dashboard').with(
         :ensure => 'installed',
-        :tag    => ['horizon-dashboard-package']
+        :tag    => ['horizon-package']
       )}
     end
   end
@@ -57,7 +57,7 @@ describe 'horizon::dashboard' do
     context 'with default' do
       it { should contain_package('python3-heat-dashboard').with(
           :ensure => 'installed',
-          :tag    => ['horizon-dashboard-package']
+          :tag    => ['horizon-package']
       )}
     end
   end
