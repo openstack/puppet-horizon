@@ -214,8 +214,7 @@ class horizon::wsgi::apache (
     fail("Invalid redirect type '${redirect_type} provided.")
   }
 
-  Package['horizon'] -> Package['httpd']
-  Concat[$::horizon::params::config_file] ~> Service['httpd']
+  Anchor['horizon::install::end'] -> Package['httpd']
 
   $unix_user  = $::horizon::params::wsgi_user
   $unix_group = $::horizon::params::wsgi_group
