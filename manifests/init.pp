@@ -722,7 +722,6 @@ Use PyMemcacheCache backend instead")
     owner     => $::horizon::params::wsgi_user,
     group     => $::horizon::params::wsgi_group,
     show_diff => false,
-    require   => Anchor['horizon::config::begin'],
     tag       => ['django-config'],
   }
 
@@ -749,7 +748,6 @@ Use PyMemcacheCache backend instead")
         refreshonly => true,
         tag         => ['horizon-compress'],
       }
-      Concat<| tag == 'django-config' |> ~> Exec['refresh_horizon_django_compress']
     }
   }
 
