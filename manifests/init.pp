@@ -102,7 +102,7 @@
 #    (optional) Default Keystone role for new users. Defaults to 'member'.
 #
 #  [*django_debug*]
-#    (optional) Enable or disable Django debugging. Defaults to 'False'.
+#    (optional) Enable or disable Django debugging. Defaults to false.
 #
 #  [*site_branding*]
 #    (optional) Set the SITE_BRANDING config option that controls the
@@ -559,7 +559,7 @@ class horizon(
   $horizon_app_links                                = undef,
   $keystone_url                                     = 'http://127.0.0.1:5000',
   $keystone_default_role                            = 'member',
-  $django_debug                                     = 'False',
+  $django_debug                                     = false,
   $site_branding                                    = undef,
   $openstack_endpoint_type                          = undef,
   $secondary_endpoint_type                          = undef,
