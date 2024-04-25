@@ -364,6 +364,32 @@ describe 'horizon' do
       it { is_expected.not_to contain_package('python-pymemcache') }
     end
 
+    context 'installs python redis library when cache_backend is set to redis' do
+      before do
+        params.merge!({
+          :cache_backend => 'django.core.cache.backends.redis.RedisCache',
+        })
+      end
+
+      it {
+        is_expected.to contain_package('python-redis').with(
+          :tag    => ['openstack'],
+          :name   => platforms_params[:python_redis_package],
+        )
+      }
+    end
+
+    context 'does not install python redis when manage_memcache_package set to false' do
+      before do
+        params.merge!({
+          :cache_backend           => 'django.core.cache.backends.redis.RedisCache',
+          :manage_memcache_package => false
+        })
+      end
+
+      it { is_expected.not_to contain_package('python-redis') }
+    end
+
     context 'with custom wsgi options' do
       before do
         params.merge!( :wsgi_processes    => '30',
@@ -795,41 +821,44 @@ describe 'horizon' do
         case facts[:os]['family']
         when 'Debian'
           if facts[:os]['name'] == 'Debian'
-            { :config_file        => '/etc/openstack-dashboard/local_settings.py',
-              :conf_d_dir         => '/etc/openstack-dashboard/local_settings.d',
-              :secret_key_file    => '/etc/openstack-dashboard/.secret_key_store',
-              :package_name       => 'openstack-dashboard-apache',
-              :root_url           => '/horizon',
-              :root_path          => '/var/lib/openstack-dashboard',
-              :memcache_package   => 'python3-memcache',
-              :pymemcache_package => 'python3-pymemcache',
-              :wsgi_user          => 'horizon',
-              :wsgi_group         => 'horizon',
+            { :config_file          => '/etc/openstack-dashboard/local_settings.py',
+              :conf_d_dir           => '/etc/openstack-dashboard/local_settings.d',
+              :secret_key_file      => '/etc/openstack-dashboard/.secret_key_store',
+              :package_name         => 'openstack-dashboard-apache',
+              :root_url             => '/horizon',
+              :root_path            => '/var/lib/openstack-dashboard',
+              :memcache_package     => 'python3-memcache',
+              :pymemcache_package   => 'python3-pymemcache',
+              :python_redis_package => 'python3-redis',
+              :wsgi_user            => 'horizon',
+              :wsgi_group           => 'horizon',
             }
           else
-            { :config_file        => '/etc/openstack-dashboard/local_settings.py',
-              :conf_d_dir         => '/etc/openstack-dashboard/local_settings.d',
-              :secret_key_file    => '/etc/openstack-dashboard/.secret_key_store',
-              :package_name       => 'openstack-dashboard',
-              :root_url           => '/horizon',
-              :root_path          => '/var/lib/openstack-dashboard',
-              :memcache_package   => 'python3-memcache',
-              :pymemcache_package => 'python3-pymemcache',
-              :wsgi_user          => 'horizon',
-              :wsgi_group         => 'horizon',
+            { :config_file          => '/etc/openstack-dashboard/local_settings.py',
+              :conf_d_dir           => '/etc/openstack-dashboard/local_settings.d',
+              :secret_key_file      => '/etc/openstack-dashboard/.secret_key_store',
+              :package_name         => 'openstack-dashboard',
+              :root_url             => '/horizon',
+              :root_path            => '/var/lib/openstack-dashboard',
+              :memcache_package     => 'python3-memcache',
+              :pymemcache_package   => 'python3-pymemcache',
+              :python_redis_package => 'python3-redis',
+              :wsgi_user            => 'horizon',
+              :wsgi_group           => 'horizon',
             }
           end
         when 'RedHat'
-          { :config_file        => '/etc/openstack-dashboard/local_settings',
-            :conf_d_dir         => '/etc/openstack-dashboard/local_settings.d',
-            :secret_key_file    => '/etc/openstack-dashboard/.secret_key_store',
-            :package_name       => 'openstack-dashboard',
-            :root_url           => '/dashboard',
-            :root_path          => '/usr/share/openstack-dashboard',
-            :memcache_package   => 'python3-memcached',
-            :pymemcache_package => 'python3-pymemcache',
-            :wsgi_user          => 'apache',
-            :wsgi_group         => 'apache',
+          { :config_file          => '/etc/openstack-dashboard/local_settings',
+            :conf_d_dir           => '/etc/openstack-dashboard/local_settings.d',
+            :secret_key_file      => '/etc/openstack-dashboard/.secret_key_store',
+            :package_name         => 'openstack-dashboard',
+            :root_url             => '/dashboard',
+            :root_path            => '/usr/share/openstack-dashboard',
+            :memcache_package     => 'python3-memcached',
+            :pymemcache_package   => 'python3-pymemcache',
+            :python_redis_package => 'python3-redis',
+            :wsgi_user            => 'apache',
+            :wsgi_group           => 'apache',
           }
         end
       end

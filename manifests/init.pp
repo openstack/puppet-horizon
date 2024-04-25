@@ -700,6 +700,14 @@ Use PyMemcacheCache backend instead")
       Anchor['horizon::install::begin']
         -> Package<| name == $::horizon::params::pymemcache_package |>
         -> Anchor['horizon::install::end']
+    } elsif $cache_backend =~ /\.RedisCache$/ {
+      ensure_packages('python-redis', {
+        name => $::horizon::params::python_redis_package,
+        tag  => ['openstack'],
+      })
+      Anchor['horizon::install::begin']
+        -> Package<| name == $::horizon::params::python_redis_package |>
+        -> Anchor['horizon::install::end']
     }
   }
 
