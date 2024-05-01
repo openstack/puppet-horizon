@@ -128,6 +128,7 @@ describe 'horizon' do
           :keystone_default_domain          => 'domain.tld',
           :overview_days_range              => 1,
           :session_timeout                  => 1800,
+          :simultaneous_sessions            => 'allow',
           :token_timeout_margin             => 60,
           :timezone                         => 'Asia/Shanghai',
           :available_themes                 => [
@@ -216,6 +217,7 @@ describe 'horizon' do
           "            'level': 'DEBUG',",
           "            'handlers': ['console', 'syslog'],",
           'SESSION_TIMEOUT = 1800',
+          "SIMULTANEOUS_SESSIONS = 'allow'",
           'TOKEN_TIMEOUT_MARGIN = 60',
           'COMPRESS_ENABLED = False',
           'COMPRESS_OFFLINE = False',

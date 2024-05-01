@@ -345,12 +345,18 @@
 #    Defaults to undef
 #
 #  [*session_timeout*]
-#    (optional) The session timeout for horizon in seconds. After this many seconds of inactivity
-#    the user is logged out.
+#    (optional) The session timeout for horizon in seconds. After this many
+#    seconds of inactivity the user is logged out.
 #    Defaults to 3600.
 #
+#  [*simultaneous_sessions*]
+#    (optional) Controls whether a user can have multiple simultaneous
+#    sessions.
+#    Defaults to undef
+#
 #  [*token_timeout_margin*]
-#    (optional) A time margin in seconds to subtract from the real token's validity.
+#    (optional) A time margin in seconds to subtract from the real token's
+#    validity.
 #    Defaults to 0.
 #
 #  [*timezone*]
@@ -617,6 +623,7 @@ class horizon(
   $access_log_format                                = undef,
   $session_timeout                                  = 3600,
   $token_timeout_margin                             = 0,
+  $simultaneous_sessions                            = undef,
   $timezone                                         = 'UTC',
   Boolean $secure_cookies                           = false,
   $django_session_engine                            = undef,
