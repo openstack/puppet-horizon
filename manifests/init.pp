@@ -31,6 +31,10 @@
 #    in vhost.conf.
 #    Defaults to facts['networking']['fqdn'].
 #
+#  [*memoized_max_size_default*]
+#    (optional) Global default to help control memory usage when caching.
+#    Defaults to undef
+#
 #  [*cache_backend*]
 #   (optional) Horizon cache backend.
 #   Defaults: 'django.core.cache.backends.locmem.LocMemCache'
@@ -544,6 +548,7 @@ class horizon(
   $secret_key,
   $package_ensure                                   = 'present',
   Boolean $purge_conf_d_dir                         = false,
+  Optional[Integer[0]] $memoized_max_size_default   = undef,
   $cache_backend                                    = 'django.core.cache.backends.locmem.LocMemCache',
   $cache_options                                    = undef,
   $cache_timeout                                    = undef,

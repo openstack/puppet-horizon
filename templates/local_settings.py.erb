@@ -175,6 +175,13 @@ ENFORCE_PASSWORD_CHECK = True
 #    os.path.join(LOCAL_PATH, '.secret_key_store'))
 SECRET_KEY = secret_key.generate_or_read_from_file('<%= @secret_key_path %>')
 
+<% if !@memoized_max_size_default.nil? -%>
+# MEMOIZED_MAX_SIZE_DEFAULT allows setting a global default to help control
+# memory usage when caching. It should at least be 2 x the number of threads
+# with a little bit of extra buffer.
+#MEMOIZED_MAX_SIZE_DEFAULT = 25
+MEMOIZED_MAX_SIZE_DEFAULT = <%= @memoized_max_size_default.to_s %>
+<% end -%>
 # We recommend you use memcached for development; otherwise after every reload
 # of the django development server, you will have to login again. To use
 # memcached set CACHES to something like

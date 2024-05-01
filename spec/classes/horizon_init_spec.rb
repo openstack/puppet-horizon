@@ -93,6 +93,7 @@ describe 'horizon' do
       before do
         params.merge!({
           :purge_conf_d_dir                 => true,
+          :memoized_max_size_default        => 25,
           :cache_backend                    => 'django.core.cache.backends.memcached.MemcachedCache',
           :cache_timeout                    => 300,
           :cache_options                    => {'SOCKET_TIMEOUT' => 1,'SERVER_RETRIES' => 1,'DEAD_RETRY' => 1},
@@ -161,6 +162,7 @@ describe 'horizon' do
           "            'DEAD_RETRY': 1,",
           "            'SERVER_RETRIES': 1,",
           "            'SOCKET_TIMEOUT': 1,",
+          "MEMOIZED_MAX_SIZE_DEFAULT = 25",
           "        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',",
           "        'LOCATION': '10.0.0.1:11211',",
           "        'TIMEOUT': 300,",

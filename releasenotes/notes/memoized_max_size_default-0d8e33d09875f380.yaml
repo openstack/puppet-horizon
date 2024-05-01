@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``horizon::memoized_max_size_default`` parameter has been added.
