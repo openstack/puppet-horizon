@@ -1048,6 +1048,11 @@ SECURITY_GROUP_RULES = {
 }
 
 SESSION_TIMEOUT = <%= @session_timeout %>
+<% if ! @simultaneous_sessions.nil? -%>
+# Control whether a same user can have multiple action sessions.
+#SIMULTANEOUS_SESSIONS = 'allow'
+SIMULTANEOUS_SESSIONS = '<%= @simultaneous_sessions %>'
+<% end -%>
 
 TOKEN_TIMEOUT_MARGIN = <%= @token_timeout_margin %>
 

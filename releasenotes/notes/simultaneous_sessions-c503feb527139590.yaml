@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``horizon::simultaneous_sessions`` parameter has been added.
