@@ -15,7 +15,7 @@
         },
         {
             "name": "saz/memcached",
-            "version_requirement": ">=2.0.2 <9.0.0"
+            "version_requirement": ">=2.0.2 <10.0.0"
         },
         {
             "name": "openstack/openstacklib",
