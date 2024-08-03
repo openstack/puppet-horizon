@@ -1066,6 +1066,13 @@ COMPRESS_ENABLED = <%= @compress_enabled.to_s.capitalize %>
 # the python-lesscpy package and disable the following option.
 COMPRESS_OFFLINE = <%= @compress_offline.to_s.capitalize %>
 
+# Controls the absolute file path that linked static will be read from and
+# compressed static will be written to
+# COMPRESS_ROOT = STATIC_ROOT
+<% if ! @compress_root.nil? -%>
+COMPRESS_ROOT = '<%= @compress_root %>'
+<% end -%>
+
 # For Glance image upload, Horizon uses the file upload support from Django
 # so we add this option to change the directory where uploaded files are temporarily
 # stored until they are loaded into Glance.

@@ -183,6 +183,11 @@
 #    (optional) Boolean to enable offline compress of assets.
 #    Defaults to True
 #
+#  [*compress_root*]
+#    (optional) Absolute file path that linked static will be read from and
+#    compressed static will be written to
+#    Defaults to undef
+#
 #  [*hypervisor_options*]
 #    (optional) A hash of parameters to enable features specific to
 #    Hypervisors.
@@ -606,6 +611,7 @@ class horizon(
   $wsgi_threads                                     = '1',
   Boolean $compress_enabled                         = true,
   Boolean $compress_offline                         = true,
+  Optional[Stdlib::Absolutepath] $compress_root     = undef,
   # TODO(tkajinam) Consider adding more strict validation about key-value
   Hash $hypervisor_options                          = {},
   Hash $cinder_options                              = {},
