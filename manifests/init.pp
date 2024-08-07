@@ -544,6 +544,10 @@
 #    (optional) Enable the use of the system scope token on per-service basis.
 #    Defaults to undef
 #
+#  [*show_diff*]
+#    (optional) show diff changes in localsetting config file
+#    Defaults to false
+#
 # === Examples
 #
 #  class { 'horizon':
@@ -666,6 +670,7 @@ class horizon(
   $horizon_upload_mode                              = undef,
   $default_boot_source                              = undef,
   $system_scope_services                            = undef,
+  Boolean $show_diff                                = false,
 ) inherits horizon::params {
 
   include horizon::deps
@@ -752,7 +757,7 @@ Use PyMemcacheCache backend instead")
     mode      => '0640',
     owner     => $::horizon::params::wsgi_user,
     group     => $::horizon::params::wsgi_group,
-    show_diff => false,
+    show_diff => $show_diff,
     tag       => ['django-config'],
   }
 

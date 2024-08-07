@@ -143,8 +143,18 @@ describe 'horizon' do
           :password_retrieve                => true,
           :enable_secure_proxy_ssl_header   => true,
           :secure_proxy_addr_header         => 'HTTP_X_FORWARDED_FOR',
+          :show_diff                        => true,
         })
       end
+
+      it {
+        is_expected.to contain_concat(platforms_params[:config_file]).with(
+          :mode      => '0640',
+          :owner     => platforms_params[:wsgi_user],
+          :group     => platforms_params[:wsgi_group],
+          :show_diff => true,
+        )
+      }
 
       it 'generates local_settings.py' do
         verify_concat_fragment_contents(catalogue, 'local_settings.py', [
