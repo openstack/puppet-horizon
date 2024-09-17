@@ -565,7 +565,7 @@ class horizon(
   Boolean $purge_conf_d_dir                         = false,
   Optional[Integer[0]] $memoized_max_size_default   = undef,
   $cache_backend                                    = 'django.core.cache.backends.locmem.LocMemCache',
-  $cache_options                                    = undef,
+  Hash $cache_options                               = {},
   $cache_timeout                                    = undef,
   $cache_server_url                                 = undef,
   $cache_server_ip                                  = undef,

@@ -199,7 +199,7 @@ MEMOIZED_MAX_SIZE_DEFAULT = <%= @memoized_max_size_default.to_s %>
 #}
 CACHES = {
     'default': {
-    <%- if @cache_options.kind_of?(Hash) -%>
+    <%- if !@cache_options.empty? -%>
         'OPTIONS': {
         <%- @cache_options.sort.each do |opt_name,opt_val| -%>
             '<%= opt_name -%>': <%= opt_val -%>,
