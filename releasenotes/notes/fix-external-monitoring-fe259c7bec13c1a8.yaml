@@ -1,0 +1,10 @@
+---
+fixes:
+  - |
+    Fixed rendering of the ``horizon::horizon_app_links`` parameter into
+    the EXTERNAL_MONITORING option.
+
+upgrade:
+  - |
+    The ``horizon::horizon_app_links`` parameter accepts only an array of http
+    url strings.

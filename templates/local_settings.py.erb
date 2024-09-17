@@ -678,7 +678,7 @@ TIME_ZONE = "<%= @timezone %>"
 
 # If you have external monitoring links, eg:
 <% if @horizon_app_links -%>
-EXTERNAL_MONITORING = <%= @horizon_app_links %>
+EXTERNAL_MONITORING = ['<%= @horizon_app_links.join("', '") %>']
 <% end -%>
 
 # When launching an instance, the menu of available flavors is

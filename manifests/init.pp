@@ -576,7 +576,7 @@ class horizon(
   $cache_tls_keyfile                                = undef,
   $cache_tls_allowed_ciphers                        = undef,
   Boolean $manage_memcache_package                  = true,
-  $horizon_app_links                                = undef,
+  Array[Stdlib::HTTPUrl] $horizon_app_links         = [],
   Stdlib::HTTPUrl $keystone_url                     = 'http://127.0.0.1:5000',
   $keystone_default_role                            = 'member',
   $django_debug                                     = false,
