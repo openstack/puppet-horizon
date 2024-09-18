@@ -745,6 +745,23 @@ describe 'horizon' do
       end
     end
 
+    context 'with horizon_app_links' do
+      before do
+        params.merge!({
+          :horizon_app_links => [
+            'https://monitoring1.example.com',
+            'https://monitoring2.example.com'
+          ]
+        })
+      end
+
+      it 'configures EXTERNAL_MONITORING' do
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+          "EXTERNAL_MONITORING = ['https://monitoring1.example.com', 'https://monitoring2.example.com']",
+        ])
+      end
+    end
+
     context 'with help_url, bug_url and customization_module provided' do
       before do
         params.merge!({
