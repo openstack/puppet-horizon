@@ -25,11 +25,11 @@
 #   Defaults to false.
 #
 define horizon::policy::base(
-  String[1] $policy_file    = $name,
-  Hash $policies            = {},
-  $file_mode                = '0640',
-  Enum['yaml'] $file_format = 'yaml',
-  Boolean $purge_config     = false,
+  String[1] $policy_file           = $name,
+  Openstacklib::Policies $policies = {},
+  Stdlib::Filemode $file_mode      = '0640',
+  Enum['yaml'] $file_format        = 'yaml',
+  Boolean $purge_config            = false,
 ) {
   include horizon::deps
   include horizon::params

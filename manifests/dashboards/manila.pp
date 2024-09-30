@@ -37,9 +37,9 @@
 #    Defaults to undef
 #
 class horizon::dashboards::manila(
-  String[1] $policy_file   = 'manila_policy.yaml',
-  Hash $manila_options     = {},
-  Optional[Hash] $policies = undef,
+  String[1] $policy_file                     = 'manila_policy.yaml',
+  Hash $manila_options                       = {},
+  Optional[Openstacklib::Policies] $policies = undef,
 ) {
 
   include horizon::deps

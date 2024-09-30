@@ -39,15 +39,15 @@
 #
 class horizon::policy(
   # common parameters
-  $file_mode                = '0640',
-  Enum['yaml'] $file_format = 'yaml',
-  Boolean $purge_config     = false,
+  Stdlib::FileMode $file_mode               = '0640',
+  Enum['yaml'] $file_format                 = 'yaml',
+  Boolean $purge_config                     = false,
   # service specific parameters
-  Hash $cinder_policies     = {},
-  Hash $glance_policies     = {},
-  Hash $keystone_policies   = {},
-  Hash $neutron_policies    = {},
-  Hash $nova_policies       = {},
+  Openstacklib::Policies $cinder_policies   = {},
+  Openstacklib::Policies $glance_policies   = {},
+  Openstacklib::Policies $keystone_policies = {},
+  Openstacklib::Policies $neutron_policies  = {},
+  Openstacklib::Policies $nova_policies     = {},
 ) {
   include horizon::deps
 
