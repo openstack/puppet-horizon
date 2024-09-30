@@ -16,7 +16,7 @@
 #   Defaults to '0640'
 #
 # [*file_format*]
-#   (Optional) Format for file contents. Valid values
+#   (Optional) Format for file contents. Valid value is 'yaml'
 #   Defaults to 'yaml'.
 #
 # [*purge_config*]
@@ -25,11 +25,11 @@
 #   Defaults to false.
 #
 define horizon::policy::base(
-  String[1] $policy_file = $name,
-  Hash $policies         = {},
-  $file_mode             = '0640',
-  $file_format           = 'yaml',
-  $purge_config          = false,
+  String[1] $policy_file    = $name,
+  Hash $policies            = {},
+  $file_mode                = '0640',
+  Enum['yaml'] $file_format = 'yaml',
+  Boolean $purge_config     = false,
 ) {
   include horizon::deps
   include horizon::params
