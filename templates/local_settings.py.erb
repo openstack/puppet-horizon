@@ -239,7 +239,11 @@ tls_context.load_cert_chain('<%= @cache_tls_certfile %>', '<%= @cache_tls_keyfil
 tls_context.load_cert_chain('<%= @cache_tls_certfile %>')
 <% end -%>
 <% if @cache_allowed_ciphers -%>
+<% if @cache_allowed_ciphers.kind_of?(Array) -%>
+tls_context.set_ciphers('<%= @cache_tls_allowed_ciphers.join(":") %>')
+<% else -%>
 tls_context.set_ciphers('<%= @cache_tls_allowed_ciphers %>')
+<% end -%>
 <% end -%>
 
 CACHES['default'].setdefault('OPTIONS', {})['tls_context'] = tls_context
