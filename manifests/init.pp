@@ -257,6 +257,14 @@
 #    (optional) Number of thread to run in a Horizon process
 #    Defaults to '1'
 #
+#  [*custom_wsgi_process_options*]
+#    (optional) gives you the opportunity to add custom process options or to
+#    overwrite the default options for the WSGI main process.
+#    eg. to use a virtual python environment for the WSGI process
+#    you could set it to:
+#    { python-path => '/my/python/virtualenv' }
+#    Defaults to {}
+#
 #  [*vhost_extra_params*]
 #    (optional) extra parameter to pass to the apache::vhost class
 #    Defaults to undef
@@ -592,6 +600,7 @@ class horizon(
   $ssl_verify_client                                = undef,
   $wsgi_processes                                   = $facts['os_workers'],
   $wsgi_threads                                     = '1',
+  $custom_wsgi_process_options                      = {},
   Boolean $compress_enabled                         = true,
   Boolean $compress_offline                         = true,
   # TODO(tkajinam) Consider adding more strict validation about key-value
@@ -753,24 +762,25 @@ Use PyMemcacheCache backend instead")
 
   if $configure_apache {
     class { 'horizon::wsgi::apache':
-      bind_address      => $bind_address,
-      servername        => $servername,
-      server_aliases    => $server_aliases,
-      listen_ssl        => $listen_ssl,
-      http_port         => $http_port,
-      https_port        => $https_port,
-      ssl_redirect      => $ssl_redirect,
-      ssl_cert          => $ssl_cert,
-      ssl_key           => $ssl_key,
-      ssl_ca            => $ssl_ca,
-      ssl_verify_client => $ssl_verify_client,
-      wsgi_processes    => $wsgi_processes,
-      wsgi_threads      => $wsgi_threads,
-      extra_params      => $vhost_extra_params,
-      redirect_type     => $redirect_type,
-      root_url          => $root_url,
-      root_path         => $root_path,
-      access_log_format => $access_log_format,
+      bind_address                => $bind_address,
+      servername                  => $servername,
+      server_aliases              => $server_aliases,
+      listen_ssl                  => $listen_ssl,
+      http_port                   => $http_port,
+      https_port                  => $https_port,
+      ssl_redirect                => $ssl_redirect,
+      ssl_cert                    => $ssl_cert,
+      ssl_key                     => $ssl_key,
+      ssl_ca                      => $ssl_ca,
+      ssl_verify_client           => $ssl_verify_client,
+      wsgi_processes              => $wsgi_processes,
+      wsgi_threads                => $wsgi_threads,
+      custom_wsgi_process_options => $custom_wsgi_process_options,
+      extra_params                => $vhost_extra_params,
+      redirect_type               => $redirect_type,
+      root_url                    => $root_url,
+      root_path                   => $root_path,
+      access_log_format           => $access_log_format,
     }
   }
 

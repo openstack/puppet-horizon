@@ -1,0 +1,5 @@
+features:
+  - |
+    Added ``horizon::custom_wsgi_process_options`` parameter that is passed
+    down to the ``horizon::wsgi::apache`` class when ``configure_apache``
+    is set to true.
