@@ -95,7 +95,7 @@ describe 'horizon' do
         params.merge!({
           :purge_conf_d_dir                 => true,
           :memoized_max_size_default        => 25,
-          :cache_backend                    => 'django.core.cache.backends.memcached.MemcachedCache',
+          :cache_backend                    => 'django.core.cache.backends.memcached.PyMemcacheCache',
           :cache_timeout                    => 300,
           :cache_options                    => {'SOCKET_TIMEOUT' => 1,'SERVER_RETRIES' => 1,'DEAD_RETRY' => 1},
           :cache_server_ip                  => '10.0.0.1',
@@ -176,7 +176,7 @@ describe 'horizon' do
           "            'SERVER_RETRIES': 1,",
           "            'SOCKET_TIMEOUT': 1,",
           "MEMOIZED_MAX_SIZE_DEFAULT = 25",
-          "        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',",
+          "        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',",
           "        'LOCATION': '10.0.0.1:11211',",
           "        'TIMEOUT': 300,",
           'SESSION_ENGINE = "django.contrib.sessions.backends.cache"',
@@ -269,22 +269,6 @@ describe 'horizon' do
       end
     end
 
-    context 'with overridden parameters, IPv6 cache_server_ip array and MemcachedCache' do
-      before do
-        params.merge!({
-          :cache_backend   => 'django.core.cache.backends.memcached.MemcachedCache',
-          :cache_server_ip => ['fd12:3456:789a:1::1','fd12:3456:789a:1::2'],
-        })
-      end
-
-      it 'generates local_settings.py' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
-          "        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',",
-          "        'LOCATION': [ 'inet6:[fd12:3456:789a:1::1]:11211','inet6:[fd12:3456:789a:1::2]:11211', ],",
-        ])
-      end
-    end
-
     context 'with overridden parameters, IPv6 cache_server_ip array and PyMemcacheCache' do
       before do
         params.merge!({
@@ -327,32 +311,6 @@ describe 'horizon' do
           "        'LOCATION': ['192.0.2.1:11211','192.0.2.2:11211'],",
         ])
       end
-    end
-
-    context 'installs python memcache library when cache_backend is set to memcache' do
-      before do
-        params.merge!({
-          :cache_backend => 'django.core.cache.backends.memcached.MemcachedCache'
-        })
-      end
-
-      it {
-        is_expected.to contain_package('python-memcache').with(
-          :tag    => ['openstack'],
-          :name   => platforms_params[:memcache_package],
-        )
-      }
-    end
-
-    context 'does not install python memcache when manage_memcache_package set to false' do
-      before do
-        params.merge!({
-          :cache_backend           => 'django.core.cache.backends.memcached.MemcachedCache',
-          :manage_memcache_package => false
-        })
-      end
-
-      it { is_expected.not_to contain_package('python-memcache') }
     end
 
     context 'installs python memcache library when cache_backend is set to pymemcache' do
@@ -863,7 +821,6 @@ describe 'horizon' do
               :package_name         => 'openstack-dashboard-apache',
               :root_url             => '/horizon',
               :root_path            => '/var/lib/openstack-dashboard',
-              :memcache_package     => 'python3-memcache',
               :pymemcache_package   => 'python3-pymemcache',
               :python_redis_package => 'python3-redis',
               :wsgi_user            => 'horizon',
@@ -876,7 +833,6 @@ describe 'horizon' do
               :package_name         => 'openstack-dashboard',
               :root_url             => '/horizon',
               :root_path            => '/var/lib/openstack-dashboard',
-              :memcache_package     => 'python3-memcache',
               :pymemcache_package   => 'python3-pymemcache',
               :python_redis_package => 'python3-redis',
               :wsgi_user            => 'horizon',
@@ -890,7 +846,6 @@ describe 'horizon' do
             :package_name         => 'openstack-dashboard',
             :root_url             => '/dashboard',
             :root_path            => '/usr/share/openstack-dashboard',
-            :memcache_package     => 'python3-memcached',
             :pymemcache_package   => 'python3-pymemcache',
             :python_redis_package => 'python3-redis',
             :wsgi_user            => 'apache',

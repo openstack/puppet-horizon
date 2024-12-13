@@ -689,11 +689,7 @@ class horizon(
   }
 
   if $cache_server_ip {
-    if $cache_backend =~ /\.MemcachedCache$/ {
-      $cache_server_ip_real = inet6_prefix($cache_server_ip)
-    } else {
-      $cache_server_ip_real = normalize_ip_for_uri($cache_server_ip)
-    }
+    $cache_server_ip_real = normalize_ip_for_uri($cache_server_ip)
   }
 
   if $websso_choices_hide_keystone and !$websso_initial_choice {
@@ -714,16 +710,7 @@ class horizon(
 
   if $manage_memcache_package {
     if $cache_backend =~ /\.MemcachedCache$/ {
-      warning("Support for MemcachedCache backend has been deprecated. \
-Use PyMemcacheCache backend instead")
-      ensure_packages('python-memcache', {
-        name => $::horizon::params::memcache_package,
-        tag  => ['openstack'],
-      })
-      Anchor['horizon::install::begin']
-        -> Package<| name == $::horizon::params::memcache_package |>
-        -> Anchor['horizon::install::end']
-
+      fail('MemcachedCache backend is no longer supported')
     } elsif $cache_backend =~ /\.PyMemcacheCache$/ {
       ensure_packages('python-pymemcache', {
         name => $::horizon::params::pymemcache_package,

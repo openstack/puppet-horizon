@@ -1,0 +1,6 @@
+---
+upgrade:
+  - |
+    Support for MemcachedCache backend has been removed. The backend was
+    removed in django 4.1, and can no longer be used because now horizon
+    requires django 4.2 or later.
