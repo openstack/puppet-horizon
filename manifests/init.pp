@@ -635,7 +635,7 @@ class horizon(
   Stdlib::Absolutepath $file_upload_temp_dir         = '/tmp',
   Optional[Stdlib::Absolutepath] $policy_files_path  = undef,
   Optional[Hash[String, String]] $policy_files       = undef,
-  $redirect_type                                     = 'permanent',
+  Enum['temp', 'permanent'] $redirect_type           = 'permanent',
   Hash $api_versions                                 = {},
   Boolean $keystone_multidomain_support              = false,
   $keystone_default_domain                           = undef,

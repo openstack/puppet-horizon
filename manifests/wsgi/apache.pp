@@ -118,33 +118,33 @@
 #    Defaults to 'horizon_ssl_error.log'
 #
 class horizon::wsgi::apache (
-  $bind_address                = undef,
-  $servername                  = $facts['networking']['fqdn'],
-  $server_aliases              = $facts['networking']['fqdn'],
-  Boolean $listen_ssl          = false,
-  $http_port                   = 80,
-  $https_port                  = 443,
-  Boolean $ssl_redirect        = true,
-  $ssl_cert                    = undef,
-  $ssl_key                     = undef,
-  $ssl_ca                      = undef,
-  $ssl_verify_client           = undef,
-  $wsgi_processes              = $facts['os_workers'],
-  $wsgi_threads                = '1',
-  $custom_wsgi_process_options = {},
-  $priority                    = 15,
-  $vhost_conf_name             = 'horizon_vhost',
-  $vhost_ssl_conf_name         = 'horizon_ssl_vhost',
-  $extra_params                = {},
-  $ssl_extra_params            = undef,
-  $redirect_type               = 'permanent',
-  $root_url                    = $::horizon::params::root_url,
-  $root_path                   = "${::horizon::params::static_path}/openstack-dashboard",
-  $access_log_format           = undef,
-  $access_log_file             = 'horizon_access.log',
-  $error_log_file              = 'horizon_error.log',
-  $ssl_access_log_file         = 'horizon_ssl_access.log',
-  $ssl_error_log_file          = 'horizon_ssl_error.log',
+  $bind_address                            = undef,
+  $servername                              = $facts['networking']['fqdn'],
+  $server_aliases                          = $facts['networking']['fqdn'],
+  Boolean $listen_ssl                      = false,
+  $http_port                               = 80,
+  $https_port                              = 443,
+  Boolean $ssl_redirect                    = true,
+  $ssl_cert                                = undef,
+  $ssl_key                                 = undef,
+  $ssl_ca                                  = undef,
+  $ssl_verify_client                       = undef,
+  $wsgi_processes                          = $facts['os_workers'],
+  $wsgi_threads                            = '1',
+  $custom_wsgi_process_options             = {},
+  $priority                                = 15,
+  $vhost_conf_name                         = 'horizon_vhost',
+  $vhost_ssl_conf_name                     = 'horizon_ssl_vhost',
+  $extra_params                            = {},
+  $ssl_extra_params                        = undef,
+  Enum['temp', 'permanent'] $redirect_type = 'permanent',
+  $root_url                                = $::horizon::params::root_url,
+  $root_path                               = "${::horizon::params::static_path}/openstack-dashboard",
+  $access_log_format                       = undef,
+  $access_log_file                         = 'horizon_access.log',
+  $error_log_file                          = 'horizon_error.log',
+  $ssl_access_log_file                     = 'horizon_ssl_access.log',
+  $ssl_error_log_file                      = 'horizon_ssl_error.log',
 ) inherits horizon::params {
 
   include horizon::deps
@@ -208,10 +208,6 @@ class horizon::wsgi::apache (
         $redirect_url   = $root_url_real
       }
     }
-  }
-
-  if !($redirect_type in ['temp', 'permanent']) {
-    fail("Invalid redirect type '${redirect_type} provided.")
   }
 
   Anchor['horizon::install::end'] -> Package['httpd']
