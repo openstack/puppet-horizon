@@ -15,8 +15,8 @@ describe 'horizon class' do
         # need to disable offline compression due to
         # https://bugs.launchpad.net/ubuntu/+source/horizon/+bug/1424042
         compress_offline => false,
-        allowed_hosts    => [$::fqdn, 'localhost'],
-        server_aliases   => [$::fqdn, 'localhost'],
+        allowed_hosts    => [$facts['networking']['fqdn'], 'localhost'],
+        server_aliases   => [$facts['networking']['fqdn'], 'localhost'],
       }
 
       horizon::dashboard { 'heat': }
@@ -57,8 +57,8 @@ describe 'horizon class' do
         # need to disable offline compression due to
         # https://bugs.launchpad.net/ubuntu/+source/horizon/+bug/1424042
         compress_offline => false,
-        allowed_hosts    => [$::fqdn, 'localhost'],
-        server_aliases   => [$::fqdn, 'localhost'],
+        allowed_hosts    => [$facts['networking']['fqdn'], 'localhost'],
+        server_aliases   => [$facts['networking']['fqdn'], 'localhost'],
         root_url         => '',
       }
       EOS
