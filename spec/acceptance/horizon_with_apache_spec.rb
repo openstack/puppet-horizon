@@ -9,17 +9,9 @@ describe 'horizon class' do
       include openstack_integration
       include openstack_integration::repos
       include openstack_integration::apache
+      include openstack_integration::memcached
 
-      class { 'horizon':
-        secret_key       => 'big_secret',
-        # need to disable offline compression due to
-        # https://bugs.launchpad.net/ubuntu/+source/horizon/+bug/1424042
-        compress_offline => false,
-        allowed_hosts    => [$facts['networking']['fqdn'], 'localhost'],
-        server_aliases   => [$facts['networking']['fqdn'], 'localhost'],
-      }
-
-      horizon::dashboard { 'heat': }
+      include openstack_integration::horizon
       EOS
 
       # Run it twice and test for idempotency
@@ -30,13 +22,13 @@ describe 'horizon class' do
     # basic test for now, to make sure Apache serve /horizon dashboard
     if os[:family] == 'Debian'
       it 'executes curl and returns 200' do
-        command('curl --connect-timeout 5 -sL -w "%{http_code} %{url_effective}\n" http://localhost/horizon -o /dev/null', :acceptable_exit_codes => [0]) do |r|
+        command('curl --connect-timeout 5 -sL -w "%{http_code} %{url_effective}\n" http://127.0.0.1/horizon -o /dev/null', :acceptable_exit_codes => [0]) do |r|
           expect(r.stdout).to match(/^200/)
         end
       end
     elsif os[:family] == 'RedHat'
       it 'executes curl and returns 200' do
-        command('curl --connect-timeout 5 -sL -w "%{http_code} %{url_effective}\n" http://localhost/dashboard -o /dev/null', :acceptable_exit_codes => [0]) do |r|
+        command('curl --connect-timeout 5 -sL -w "%{http_code} %{url_effective}\n" http://127.0.0.1/dashboard -o /dev/null', :acceptable_exit_codes => [0]) do |r|
           expect(r.stdout).to match(/^200/)
         end
       end
@@ -51,15 +43,10 @@ describe 'horizon class' do
       include openstack_integration
       include openstack_integration::repos
       include openstack_integration::apache
+      include openstack_integration::memcached
 
-      class { 'horizon':
-        secret_key       => 'big_secret',
-        # need to disable offline compression due to
-        # https://bugs.launchpad.net/ubuntu/+source/horizon/+bug/1424042
-        compress_offline => false,
-        allowed_hosts    => [$facts['networking']['fqdn'], 'localhost'],
-        server_aliases   => [$facts['networking']['fqdn'], 'localhost'],
-        root_url         => '',
+      class { 'openstack_integration::horizon':
+        root_url => '',
       }
       EOS
 
@@ -70,7 +57,7 @@ describe 'horizon class' do
 
     # basic test for now, to make sure Apache serve /horizon dashboard
     it 'executes curl and returns 200' do
-      command('curl --connect-timeout 5 -sL -w "%{http_code} %{url_effective}\n" http://localhost -o /dev/null', :acceptable_exit_codes => [0]) do |r|
+      command('curl --connect-timeout 5 -sL -w "%{http_code} %{url_effective}\n" http://127.0.0.1 -o /dev/null', :acceptable_exit_codes => [0]) do |r|
         expect(r.stdout).to match(/^200/)
       end
     end
