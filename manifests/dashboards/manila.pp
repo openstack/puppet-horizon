@@ -72,7 +72,7 @@ class horizon::dashboards::manila(
     'enable_public_shares'                    => true,
     'enabled_share_protocols'                 => ['NFS', 'CIFS', 'GlusterFS', 'HDFS', 'CephFS', 'MapRFS'],
   }
-  $manila_options_real = merge($manila_defaults, $manila_options)
+  $manila_options_real = stdlib::merge($manila_defaults, $manila_options)
 
   $config_file = "${::horizon::params::conf_d_dir}/_90_manila_shares.py"
 

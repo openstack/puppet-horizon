@@ -712,7 +712,7 @@ class horizon(
     if $cache_backend =~ /\.MemcachedCache$/ {
       fail('MemcachedCache backend is no longer supported')
     } elsif $cache_backend =~ /\.PyMemcacheCache$/ {
-      ensure_packages('python-pymemcache', {
+      stdlib::ensure_packages('python-pymemcache', {
         name => $::horizon::params::pymemcache_package,
         tag  => ['openstack'],
       })
@@ -720,7 +720,7 @@ class horizon(
         -> Package<| name == $::horizon::params::pymemcache_package |>
         -> Anchor['horizon::install::end']
     } elsif $cache_backend =~ /\.RedisCache$/ {
-      ensure_packages('python-redis', {
+      stdlib::ensure_packages('python-redis', {
         name => $::horizon::params::python_redis_package,
         tag  => ['openstack'],
       })

@@ -238,7 +238,7 @@ class horizon::wsgi::apache (
     default => $root_url_real,
   }
 
-  $wsgi_daemon_process_options = merge(
+  $wsgi_daemon_process_options = stdlib::merge(
     {
       processes    => $wsgi_processes,
       threads      => $wsgi_threads,
@@ -285,7 +285,7 @@ class horizon::wsgi::apache (
     $redirectmatch_url_real = $root_url_real ? { '' => undef, '/' => undef, default => $redirect_url }
   }
 
-  ensure_resource('apache::vhost', $vhost_conf_name, merge(
+  ensure_resource('apache::vhost', $vhost_conf_name, stdlib::merge(
     $default_vhost_conf,
     $extra_params,
     {
@@ -299,7 +299,7 @@ class horizon::wsgi::apache (
 
 
   $ssl_extra_params_real = pick_default($ssl_extra_params, $extra_params)
-  ensure_resource('apache::vhost', $vhost_ssl_conf_name, merge(
+  ensure_resource('apache::vhost', $vhost_ssl_conf_name, stdlib::merge(
     $default_vhost_conf,
     $ssl_extra_params_real,
     {

@@ -63,7 +63,7 @@ class horizon::policy(
     'image'    => 'glance_policy.yaml',
     'network'  => 'neutron_policy.yaml',
   }
-  $policy_files_real = merge($policy_files_default, $policy_files)
+  $policy_files_real = stdlib::merge($policy_files_default, $policy_files)
 
   $policy_resources = {
     $policy_files_real['volume']   => { 'policies' => $cinder_policies },

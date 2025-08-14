@@ -54,7 +54,7 @@ The class allows more flexible customization of the ${dashboard} dashboard.")
     }
   }
 
-  ensure_packages($dashboard_package_name, {
+  stdlib::ensure_packages($dashboard_package_name, {
     'ensure'  => $ensure,
     'tag'     => ['horizon-package']
   })
