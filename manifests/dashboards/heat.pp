@@ -53,9 +53,9 @@ class horizon::dashboards::heat(
   if ! defined(Class[horizon]) {
     fail('The horizon class should be included before the horizon::dashboards::heat class')
   }
-  $log_handlers = $::horizon::log_handlers
-  $log_level    = $::horizon::log_level
-  $policy_files = $::horizon::policy_files
+  $log_handlers = $horizon::log_handlers
+  $log_level    = $horizon::log_level
+  $policy_files = $horizon::policy_files
 
   if $policy_files and $policy_files['orchestration'] {
     $policy_file_real = $policy_files['orchestration']
@@ -63,19 +63,19 @@ class horizon::dashboards::heat(
     $policy_file_real = $policy_file
   }
 
-  $config_file = "${::horizon::params::conf_d_dir}/_1699_orchestration_settings.py"
+  $config_file = "${horizon::params::conf_d_dir}/_1699_orchestration_settings.py"
 
   package { 'heat-dashboard':
-    ensure => $::horizon::package_ensure,
-    name   => $::horizon::params::heat_dashboard_package_name,
+    ensure => $horizon::package_ensure,
+    name   => $horizon::params::heat_dashboard_package_name,
     tag    => ['openstack', 'horizon-package'],
   }
 
   concat { $config_file:
     mode    => '0640',
-    owner   => $::horizon::params::wsgi_user,
-    group   => $::horizon::params::wsgi_group,
-    require => File[$::horizon::params::conf_d_dir],
+    owner   => $horizon::params::wsgi_user,
+    group   => $horizon::params::wsgi_group,
+    require => File[$horizon::params::conf_d_dir],
     tag     => ['django-config'],
   }
 
@@ -94,9 +94,9 @@ class horizon::dashboards::heat(
 
     horizon::policy::base { $policy_file_real:
       policies     => $policies,
-      file_mode    => $::horizon::policy::file_mode,
-      file_format  => $::horizon::policy::file_format,
-      purge_config => $::horizon::policy::purge_config,
+      file_mode    => $horizon::policy::file_mode,
+      file_format  => $horizon::policy::file_format,
+      purge_config => $horizon::policy::purge_config,
     }
   }
 }

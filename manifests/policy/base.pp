@@ -38,7 +38,7 @@ define horizon::policy::base(
     fail('The horizon class should be included in advance')
   }
 
-  $policy_files_path = $::horizon::policy_files_path_real
+  $policy_files_path = $horizon::policy_files_path_real
   if ! $policy_files_path {
     # In Ubuntu/Debian, the default policies files are located in source
     # directories, and the path should be updated to more appropriate path
@@ -48,8 +48,8 @@ define horizon::policy::base(
 
   openstacklib::policy { "${policy_files_path}/${policy_file}" :
     policies     => $policies,
-    file_user    => $::horizon::params::wsgi_user,
-    file_group   => $::horizon::params::wsgi_group,
+    file_user    => $horizon::params::wsgi_user,
+    file_group   => $horizon::params::wsgi_group,
     file_mode    => $file_mode,
     file_format  => $file_format,
     purge_config => $purge_config,

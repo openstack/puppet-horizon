@@ -95,7 +95,7 @@
 #
 #  [*root_path*]
 #    (optional) The path to the location of static assets.
-#    Defaults to "${::horizon::params::static_path}/openstack-dashboard"
+#    Defaults to "${horizon::params::static_path}/openstack-dashboard"
 #
 #  [*access_log_format*]
 #    (optional) The log format to use to the access log.
@@ -138,8 +138,8 @@ class horizon::wsgi::apache (
   $extra_params                            = {},
   $ssl_extra_params                        = undef,
   Enum['temp', 'permanent'] $redirect_type = 'permanent',
-  $root_url                                = $::horizon::params::root_url,
-  $root_path                               = "${::horizon::params::static_path}/openstack-dashboard",
+  $root_url                                = $horizon::params::root_url,
+  $root_path                               = "${horizon::params::static_path}/openstack-dashboard",
   $access_log_format                       = undef,
   $access_log_file                         = 'horizon_access.log',
   $error_log_file                          = 'horizon_error.log',
@@ -153,8 +153,8 @@ class horizon::wsgi::apache (
   # We already use apache::vhost to generate our own
   # configuration file, let's clean the configuration
   # embedded within the package
-  file { $::horizon::params::httpd_config_file:
-    ensure  => present,
+  file { $horizon::params::httpd_config_file:
+    ensure  => file,
     content => "#
 # This file has been cleaned by Puppet.
 #
@@ -199,7 +199,7 @@ class horizon::wsgi::apache (
     case $root_url_real {
       '': {
         $ensure_ssl_vhost = 'absent'
-        $redirect_match = "^${::horizon::params::root_url}\$"
+        $redirect_match = "^${horizon::params::root_url}\$"
         $redirect_url   = '/'
       }
       default: {
@@ -212,10 +212,10 @@ class horizon::wsgi::apache (
 
   Anchor['horizon::install::end'] -> Package['httpd']
 
-  $unix_user  = $::horizon::params::wsgi_user
-  $unix_group = $::horizon::params::wsgi_group
+  $unix_user  = $horizon::params::wsgi_user
+  $unix_group = $horizon::params::wsgi_group
 
-  file { $::horizon::params::logdir:
+  file { $horizon::params::logdir:
     ensure  => directory,
     owner   => $unix_user,
     group   => $unix_group,
@@ -224,13 +224,13 @@ class horizon::wsgi::apache (
     require => Anchor['horizon::config::begin'],
   }
 
-  file { "${::horizon::params::logdir}/horizon.log":
+  file { "${horizon::params::logdir}/horizon.log":
     ensure  => file,
     owner   => $unix_user,
     group   => $unix_group,
     before  => Service['httpd'],
     mode    => '0640',
-    require => File[$::horizon::params::logdir],
+    require => File[$horizon::params::logdir],
   }
 
   $script_url = $root_url_real ? {
@@ -267,10 +267,10 @@ class horizon::wsgi::apache (
     ssl_key                => $ssl_key,
     ssl_ca                 => $ssl_ca,
     ssl_verify_client      => $ssl_verify_client,
-    wsgi_script_aliases    => Hash([$script_url, $::horizon::params::django_wsgi]),
-    wsgi_import_script     => $::horizon::params::django_wsgi,
-    wsgi_process_group     => $::horizon::params::wsgi_group,
-    wsgi_application_group => $::horizon::params::wsgi_application_group,
+    wsgi_script_aliases    => Hash([$script_url, $horizon::params::django_wsgi]),
+    wsgi_import_script     => $horizon::params::django_wsgi,
+    wsgi_process_group     => $horizon::params::wsgi_group,
+    wsgi_application_group => $horizon::params::wsgi_application_group,
     redirectmatch_status   => $redirect_type,
     options                => ['-Indexes', '+FollowSymLinks','+MultiViews'],
   }
@@ -289,7 +289,7 @@ class horizon::wsgi::apache (
     $default_vhost_conf,
     $extra_params,
     {
-      wsgi_daemon_process => Hash([$::horizon::params::wsgi_group, $wsgi_daemon_process_options])
+      wsgi_daemon_process => Hash([$horizon::params::wsgi_group, $wsgi_daemon_process_options])
     },
     {
       redirectmatch_regexp => $redirectmatch_regexp_real,

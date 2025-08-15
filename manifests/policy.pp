@@ -55,7 +55,7 @@ class horizon::policy(
     fail('The horizon class should be included in advance')
   }
 
-  $policy_files = pick($::horizon::policy_files, {})
+  $policy_files = pick($horizon::policy_files, {})
   $policy_files_default = {
     'identity' => 'keystone_policy.yaml',
     'compute'  => 'nova_policy.yaml',
@@ -76,7 +76,7 @@ class horizon::policy(
   $policy_defaults = {
     'file_mode'    => $file_mode,
     'file_format'  => $file_format,
-    'purge_config' => $purge_config
+    'purge_config' => $purge_config,
   }
 
   create_resources('horizon::policy::base', $policy_resources, $policy_defaults)

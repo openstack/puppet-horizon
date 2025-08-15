@@ -28,22 +28,22 @@ class horizon::dashboards::ironic() {
     fail('The horizon class should be included before the horizon::dashboards::ironic class')
   }
 
-  $log_handlers = $::horizon::log_handlers
-  $log_level    = $::horizon::log_level
+  $log_handlers = $horizon::log_handlers
+  $log_level    = $horizon::log_level
 
-  $config_file = "${::horizon::params::conf_d_dir}/_2299_baremetal_settings.py"
+  $config_file = "${horizon::params::conf_d_dir}/_2299_baremetal_settings.py"
 
   package { 'ironic-dashboard':
-    ensure => $::horizon::package_ensure,
-    name   => $::horizon::params::ironic_dashboard_package_name,
+    ensure => $horizon::package_ensure,
+    name   => $horizon::params::ironic_dashboard_package_name,
     tag    => ['openstack', 'horizon-package'],
   }
 
   concat { $config_file:
     mode    => '0640',
-    owner   => $::horizon::params::wsgi_user,
-    group   => $::horizon::params::wsgi_group,
-    require => File[$::horizon::params::conf_d_dir],
+    owner   => $horizon::params::wsgi_user,
+    group   => $horizon::params::wsgi_group,
+    require => File[$horizon::params::conf_d_dir],
     tag     => ['django-config'],
   }
 

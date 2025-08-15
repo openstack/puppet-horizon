@@ -355,7 +355,7 @@
 #
 #  [*root_path*]
 #    (optional) The path to the location of static assets.
-#    Defaults to "${::horizon::params::static_path}/openstack-dashboard"
+#    Defaults to "${horizon::params::static_path}/openstack-dashboard"
 #
 #  [*access_log_format*]
 #    (optional) The log format for the access log.
@@ -642,8 +642,8 @@ class horizon(
   $keystone_domain_choices                           = undef,
   Hash[String, Hash[String, String]] $image_backend  = {},
   $overview_days_range                               = undef,
-  $root_url                                          = $::horizon::params::root_url,
-  Stdlib::Absolutepath $root_path                    = "${::horizon::params::static_path}/openstack-dashboard",
+  $root_url                                          = $horizon::params::root_url,
+  Stdlib::Absolutepath $root_path                    = "${horizon::params::static_path}/openstack-dashboard",
   $access_log_format                                 = undef,
   $session_timeout                                   = 3600,
   $token_timeout_margin                              = 0,
@@ -705,7 +705,7 @@ class horizon(
   if $policy_files_path != undef {
     $policy_files_path_real = $policy_files_path
   } else {
-    $policy_files_path_real = $::horizon::params::policy_dir
+    $policy_files_path_real = $horizon::params::policy_dir
   }
 
   if $manage_memcache_package {
@@ -713,19 +713,19 @@ class horizon(
       fail('MemcachedCache backend is no longer supported')
     } elsif $cache_backend =~ /\.PyMemcacheCache$/ {
       stdlib::ensure_packages('python-pymemcache', {
-        name => $::horizon::params::pymemcache_package,
+        name => $horizon::params::pymemcache_package,
         tag  => ['openstack'],
       })
       Anchor['horizon::install::begin']
-        -> Package<| name == $::horizon::params::pymemcache_package |>
+        -> Package<| name == $horizon::params::pymemcache_package |>
         -> Anchor['horizon::install::end']
     } elsif $cache_backend =~ /\.RedisCache$/ {
       stdlib::ensure_packages('python-redis', {
-        name => $::horizon::params::python_redis_package,
+        name => $horizon::params::python_redis_package,
         tag  => ['openstack'],
       })
       Anchor['horizon::install::begin']
-        -> Package<| name == $::horizon::params::python_redis_package |>
+        -> Package<| name == $horizon::params::python_redis_package |>
         -> Anchor['horizon::install::end']
     }
   }
@@ -734,49 +734,50 @@ class horizon(
 
   package { 'horizon':
     ensure => $package_ensure,
-    name   => $::horizon::params::package_name,
+    name   => $horizon::params::package_name,
     tag    => ['openstack', 'horizon-package'],
   }
 
-  $secret_key_path = "${::horizon::params::config_dir}/.secret_key_store"
+  $secret_key_path = "${horizon::params::config_dir}/.secret_key_store"
   file { $secret_key_path:
+    ensure    => file,
     mode      => '0600',
     content   => $secret_key,
-    owner     => $::horizon::params::wsgi_user,
-    group     => $::horizon::params::wsgi_group,
+    owner     => $horizon::params::wsgi_user,
+    group     => $horizon::params::wsgi_group,
     show_diff => false,
     require   => Anchor['horizon::config::begin'],
     notify    => Anchor['horizon::config::end'],
   }
 
-  concat { $::horizon::params::config_file:
+  concat { $horizon::params::config_file:
     mode      => '0640',
-    owner     => $::horizon::params::wsgi_user,
-    group     => $::horizon::params::wsgi_group,
+    owner     => $horizon::params::wsgi_user,
+    group     => $horizon::params::wsgi_group,
     show_diff => $show_diff,
     tag       => ['django-config'],
   }
 
   concat::fragment { 'local_settings.py':
-    target  => $::horizon::params::config_file,
+    target  => $horizon::params::config_file,
     content => template($local_settings_template),
     order   => '50',
   }
 
-  file { $::horizon::params::conf_d_dir:
-    ensure  => 'directory',
+  file { $horizon::params::conf_d_dir:
+    ensure  => directory,
     mode    => '0755',
     purge   => $purge_conf_d_dir,
     recurse => $purge_conf_d_dir,
-    owner   => $::horizon::params::wsgi_user,
-    group   => $::horizon::params::wsgi_group,
+    owner   => $horizon::params::wsgi_user,
+    group   => $horizon::params::wsgi_group,
     require => Anchor['horizon::config::begin'],
   }
 
   if $compress_offline {
     if $facts['os']['family'] == 'Debian' {
       exec { 'refresh_horizon_django_compress':
-        command     => "${::horizon::params::manage_py} compress --force",
+        command     => "${horizon::params::manage_py} compress --force",
         refreshonly => true,
         tag         => ['horizon-compress'],
       }
@@ -810,8 +811,8 @@ class horizon(
   if ! ($file_upload_temp_dir in ['/tmp','/var/tmp']) {
     file { $file_upload_temp_dir :
       ensure => directory,
-      owner  => $::horizon::params::wsgi_user,
-      group  => $::horizon::params::wsgi_group,
+      owner  => $horizon::params::wsgi_user,
+      group  => $horizon::params::wsgi_group,
       mode   => '0755',
     }
   }
