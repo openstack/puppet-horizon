@@ -1,4 +1,0 @@
----
-features:
-  - |
-    Add ``show_diff`` parameter to show diff on upgrade of parameters.
