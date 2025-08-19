@@ -37,7 +37,7 @@
 #   (Optional) Set of nova policies to configure.
 #   Defaults to {}
 #
-class horizon::policy(
+class horizon::policy (
   # common parameters
   Stdlib::FileMode $file_mode               = '0640',
   Enum['yaml'] $file_format                 = 'yaml',
@@ -51,7 +51,7 @@ class horizon::policy(
 ) {
   include horizon::deps
 
-  if !defined(Class[horizon]){
+  if !defined(Class[horizon]) {
     fail('The horizon class should be included in advance')
   }
 

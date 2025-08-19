@@ -24,7 +24,7 @@
 #   file.
 #   Defaults to false.
 #
-define horizon::policy::base(
+define horizon::policy::base (
   String[1] $policy_file           = $name,
   Openstacklib::Policies $policies = {},
   Stdlib::Filemode $file_mode      = '0640',
@@ -34,7 +34,7 @@ define horizon::policy::base(
   include horizon::deps
   include horizon::params
 
-  if !defined(Class[horizon]){
+  if !defined(Class[horizon]) {
     fail('The horizon class should be included in advance')
   }
 

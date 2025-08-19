@@ -567,7 +567,7 @@
 #    ]
 #  }
 #
-class horizon(
+class horizon (
   $secret_key,
   $package_ensure                                    = 'present',
   Boolean $purge_conf_d_dir                          = false,
@@ -681,7 +681,6 @@ class horizon(
   $system_scope_services                             = undef,
   Boolean $show_diff                                 = false,
 ) inherits horizon::params {
-
   include horizon::deps
 
   if $cache_server_url and $cache_server_ip {
@@ -816,5 +815,4 @@ class horizon(
       mode   => '0755',
     }
   }
-
 }

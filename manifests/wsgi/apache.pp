@@ -146,7 +146,6 @@ class horizon::wsgi::apache (
   $ssl_access_log_file                     = 'horizon_ssl_access.log',
   $ssl_error_log_file                      = 'horizon_ssl_error.log',
 ) inherits horizon::params {
-
   include horizon::deps
   include apache
 
@@ -297,7 +296,6 @@ class horizon::wsgi::apache (
     }
   ))
 
-
   $ssl_extra_params_real = pick_default($ssl_extra_params, $extra_params)
   ensure_resource('apache::vhost', $vhost_ssl_conf_name, stdlib::merge(
     $default_vhost_conf,
@@ -317,5 +315,4 @@ class horizon::wsgi::apache (
       redirectmatch_dest   => $root_url_real ? { '' => undef, '/' => undef, default => $root_url_real },
     }
   ))
-
 }

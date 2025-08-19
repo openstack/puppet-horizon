@@ -17,8 +17,7 @@
 #
 # === Parameters:
 #
-class horizon::dashboards::ironic() {
-
+class horizon::dashboards::ironic {
   include horizon::deps
   include horizon::params
 

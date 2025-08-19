@@ -36,12 +36,11 @@
 #    (optional) Set of policies to configure.
 #    Defaults to undef
 #
-class horizon::dashboards::manila(
+class horizon::dashboards::manila (
   String[1] $policy_file                     = 'manila_policy.yaml',
   Hash $manila_options                       = {},
   Optional[Openstacklib::Policies] $policies = undef,
 ) {
-
   include horizon::deps
   include horizon::params
 
@@ -99,7 +98,7 @@ class horizon::dashboards::manila(
   if $policies != undef {
     # The horizon::policy class should be included so that some common
     # parameters about policy management can be picked here
-    if !defined(Class[horizon::policy]){
+    if !defined(Class[horizon::policy]) {
       fail('The horizon::policy class should be include in advance to customize policies')
     }
 

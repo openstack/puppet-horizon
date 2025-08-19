@@ -25,11 +25,10 @@
 #    (optional) Set of policies to configure.
 #    Defaults to undef
 #
-class horizon::dashboards::octavia(
+class horizon::dashboards::octavia (
   String[1] $policy_file   = 'octavia_policy.yaml',
   Optional[Hash] $policies = undef,
 ) {
-
   include horizon::deps
   include horizon::params
 
@@ -74,7 +73,7 @@ class horizon::dashboards::octavia(
   if $policies != undef {
     # The horizon::policy class should be included so that some common
     # parameters about policy management can be picked here
-    if !defined(Class[horizon::policy]){
+    if !defined(Class[horizon::policy]) {
       fail('The horizon::policy class should be include in advance to customize policies')
     }
 

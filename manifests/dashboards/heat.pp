@@ -37,14 +37,13 @@
 #    (optional) Set of policies to configure.
 #    Defaults to undef
 #
-class horizon::dashboards::heat(
+class horizon::dashboards::heat (
   $enable_user_pass                          = true,
   String[1] $policy_file                     = 'heat_policy.yaml',
   $template_generator_api_timeout            = 60,
   $template_generator_api_parallel           = 2,
   Optional[Openstacklib::Policies] $policies = undef,
 ) {
-
   include horizon::deps
   include horizon::params
 
@@ -88,7 +87,7 @@ class horizon::dashboards::heat(
   if $policies != undef {
     # The horizon::policy class should be included so that some common
     # parameters about policy management can be picked here
-    if !defined(Class[horizon::policy]){
+    if !defined(Class[horizon::policy]) {
       fail('The horizon::policy class should be include in advance to customize policies')
     }
 

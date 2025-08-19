@@ -34,7 +34,6 @@
 define horizon::dashboard (
   $ensure = 'present',
 ) {
-
   $dashboard = downcase($name)
 
   if $dashboard in ['designate', 'ironic', 'heat', 'octavia', 'manila'] {

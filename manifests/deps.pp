@@ -20,7 +20,6 @@
 # Horizon anchors and dependency management
 #
 class horizon::deps {
-
   anchor { 'horizon::install::begin': }
   -> Package<| tag == 'horizon-package' |>
   ~> anchor { 'horizon::install::end': }
