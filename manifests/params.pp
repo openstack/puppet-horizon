@@ -15,7 +15,6 @@ class horizon::params {
       $config_file                      = '/etc/openstack-dashboard/local_settings'
       $policy_dir                       = '/etc/openstack-dashboard'
       $httpd_config_file                = '/etc/httpd/conf.d/openstack-dashboard.conf'
-      $httpd_listen_config_file         = '/etc/httpd/conf/httpd.conf'
       $root_url                         = '/dashboard'
       $static_path                      = '/usr/share'
       $django_wsgi                      = '/usr/share/openstack-dashboard/openstack_dashboard/wsgi.py'
@@ -34,7 +33,6 @@ class horizon::params {
       $conf_d_dir                       = '/etc/openstack-dashboard/local_settings.d'
       $config_file                      = '/etc/openstack-dashboard/local_settings.py'
       $policy_dir                       = undef
-      $httpd_listen_config_file         = '/etc/apache2/ports.conf'
       $root_url                         = '/horizon'
       $static_path                      = '/var/lib'
       $wsgi_user                        = 'horizon'
