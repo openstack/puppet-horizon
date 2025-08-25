@@ -776,7 +776,7 @@ class horizon (
   if $compress_offline {
     if $facts['os']['family'] == 'Debian' {
       exec { 'refresh_horizon_django_compress':
-        command     => "${horizon::params::manage_py} compress --force",
+        command     => [$horizon::params::manage_py, 'compress', '--force'],
         refreshonly => true,
         tag         => ['horizon-compress'],
       }
