@@ -790,7 +790,7 @@ describe 'horizon' do
   shared_examples_for 'horizon on Debian' do
     it 'refreshes horizon django cache' do
       is_expected.to contain_exec('refresh_horizon_django_compress').with({
-        :command     => '/usr/share/openstack-dashboard/manage.py compress --force',
+        :command     => ['/usr/share/openstack-dashboard/manage.py', 'compress', '--force'],
         :refreshonly => true,
       })
       is_expected.to contain_concat(platforms_params[:config_file]).that_notifies('Exec[refresh_horizon_django_compress]')
