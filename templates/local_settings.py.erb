@@ -911,7 +911,8 @@ LOGGING = {
         # is VERY noisy and it is output even for valid cases,
         # so set the default log level of django.template to INFO.
         'django.template': {
-            'handlers': ['console'],
+            # 'handlers': ['console'],
+            'handlers': ['<%= @log_handlers.join("', '") %>'],
             'level': '<%= @django_template_log_level %>',
             'propagate': False,
         },
