@@ -662,7 +662,7 @@ class horizon (
   Boolean $disable_password_reveal                     = false,
   Boolean $enforce_password_check                      = false,
   Boolean $enable_secure_proxy_ssl_header              = false,
-  $secure_proxy_addr_header                            = undef,
+  Optional[String[1]] $secure_proxy_addr_header        = undef,
   Boolean $disallow_iframe_embed                       = true,
   Boolean $websso_enabled                              = false,
   $websso_initial_choice                               = undef,
