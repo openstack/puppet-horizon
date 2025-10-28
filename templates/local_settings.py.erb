@@ -312,7 +312,7 @@ WEBSSO_INITIAL_CHOICE = "<%= @websso_initial_choice %>"
 #    ("acme_oidc", "ACME - OpenID Connect"),
 #    ("acme_saml2", "ACME - SAML2")
 #)
-<% if @websso_choices.kind_of?(Array) -%>
+<% if !(@websso_choices.nil?) -%>
 WEBSSO_CHOICES = (
 <% if not @websso_choices_hide_keystone -%>
     ("credentials", _("Keystone Credentials")),
