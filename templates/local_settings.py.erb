@@ -380,7 +380,7 @@ OPENSTACK_SSL_NO_VERIFY = True
 <% end -%>
 
 # The CA certificate to use to verify SSL connections
-<% if @openstack_ssl_cacert == '' -%>
+<% if @openstack_ssl_cacert.nil? -%>
 #OPENSTACK_SSL_CACERT = '/path/to/cacert.pem'
 <% else -%>
 OPENSTACK_SSL_CACERT = '<%= @openstack_ssl_cacert %>'
