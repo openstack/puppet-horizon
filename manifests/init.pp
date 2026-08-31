@@ -409,6 +409,10 @@
 #    (optional) List of authentication plugins to be used.
 #    Defaults to []
 #
+#  [*authentication_urls*]
+#    (optional) A list of modules from which to collate authentication URLs from.
+#    Defaults to []
+#
 #  [*password_autocomplete*]
 #    (optional) Whether to instruct the client browser to autofill the login form password
 #    Valid values are 'on' and 'off'
@@ -655,6 +659,7 @@ class horizon(
   Horizon::AvailableThemes $available_themes        = undef,
   Optional[String[1]] $default_theme                = undef,
   Array[String[1]] $authentication_plugins          = [],
+  Array[String[1]] $authentication_urls             = [],
   Enum['on', 'off'] $password_autocomplete          = 'off',
   $create_image_defaults                            = undef,
   Boolean $password_retrieve                        = false,

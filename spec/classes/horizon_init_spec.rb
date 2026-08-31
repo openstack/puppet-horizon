@@ -748,6 +748,35 @@ describe 'horizon' do
       end
     end
 
+    context 'without authentication_urls' do
+      it 'has default commented section' do
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+          '#AUTHENTICATION_URLS = [',
+          "#    'openstack_auth.urls',",
+          '#]',
+          ])
+      end
+    end
+
+    context 'with authentication_urls' do
+      before do
+        params.merge!({
+          :authentication_urls => [
+            'openstack_auth.urls',
+            'custom_auth.urls',
+          ],
+        })
+      end
+      it 'configures authentication urls' do
+        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+          'AUTHENTICATION_URLS = [',
+          "    'openstack_auth.urls',",
+          "    'custom_auth.urls',",
+          ']',
+          ])
+      end
+    end
+
     context 'with horizon_app_links' do
       before do
         params.merge!({

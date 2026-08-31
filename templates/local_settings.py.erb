@@ -717,9 +717,17 @@ AUTHENTICATION_PLUGINS = [
 # Modules that provide /auth routes that can be used to handle different types
 # of user authentication. Add auth plugins that require extra route handling to
 # this list.
+<% if !(@authentication_urls.empty?) -%>
+AUTHENTICATION_URLS = [
+<% @authentication_urls.each do |r| -%>
+    '<%= r -%>',
+<% end -%>
+]
+<% else -%>
 #AUTHENTICATION_URLS = [
 #    'openstack_auth.urls',
 #]
+<% end -%>
 
 # The Horizon Policy Enforcement engine uses these values to load per service
 # policy rule files. The content of these files should match the files the
