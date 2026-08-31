@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Added parameter ``authentication_urls`` to the ``horizon`` class that can
+    be used to configure the ``AUTHENTICATION_URLS`` configuration option for
+    OpenStack Horizon.
