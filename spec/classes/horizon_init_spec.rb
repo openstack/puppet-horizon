@@ -17,21 +17,12 @@ describe 'horizon' do
   shared_examples_for 'horizon' do
 
     context 'with default parameters' do
-      it {
-          is_expected.to contain_package('horizon').with(
-            :ensure => 'present',
-            :tag    => ['openstack', 'horizon-package'],
-          )
-      }
-
-      it {
-        is_expected.to contain_concat(platforms_params[:config_file]).with(
-          :mode      => '0640',
-          :owner     => platforms_params[:wsgi_user],
-          :group     => platforms_params[:wsgi_group],
-          :show_diff => false,
+      it 'installs horizon package' do
+        is_expected.to contain_package('horizon').with(
+          :ensure => 'present',
+          :tag    => ['openstack', 'horizon-package'],
         )
-      }
+      end
 
       it 'configures apache' do
         is_expected.to contain_class('horizon::wsgi::apache').with({
@@ -46,7 +37,13 @@ describe 'horizon' do
       end
 
       it 'generates local_settings.py' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+        is_expected.to contain_concat(platforms_params[:config_file]).with(
+          :mode      => '0640',
+          :owner     => platforms_params[:wsgi_user],
+          :group     => platforms_params[:wsgi_group],
+          :show_diff => false,
+        )
+        verify_concat_fragment_contents_lines(catalogue, 'local_settings.py', [
           'DEBUG = False',
           "ALLOWED_HOSTS = ['foo.example.com', ]",
           'HORIZON_CONFIG["password_autocomplete"] = "off"',
@@ -54,14 +51,22 @@ describe 'horizon' do
           'OPENSTACK_KEYSTONE_URL = "http://127.0.0.1:5000"',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "member"',
           'TIME_ZONE = "UTC"',
-          "            'handlers': ['file'],",
           'SESSION_TIMEOUT = 3600',
           'TOKEN_TIMEOUT_MARGIN = 0',
           'COMPRESS_ENABLED = True',
           'COMPRESS_OFFLINE = True',
           "FILE_UPLOAD_TEMP_DIR = '/tmp'",
         ])
-
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+    'loggers': {
+        'horizon': {
+            # 'handlers': ['console'],
+            'handlers': ['file'],
+            # 'level': 'DEBUG',
+            'level': 'INFO',
+            'propagate': False,
+        },
+eos
         # From internals of verify_contents, get the contents to check for absence of a line
         content = catalogue.resource('concat::fragment', 'local_settings.py').send(:parameters)[:content]
 
@@ -97,7 +102,11 @@ describe 'horizon' do
           :memoized_max_size_default        => 25,
           :cache_backend                    => 'django.core.cache.backends.memcached.PyMemcacheCache',
           :cache_timeout                    => 300,
-          :cache_options                    => {'SOCKET_TIMEOUT' => 1,'SERVER_RETRIES' => 1,'DEAD_RETRY' => 1},
+          :cache_options                    => {
+            'SOCKET_TIMEOUT' => 1,
+            'SERVER_RETRIES' => 1,
+            'DEAD_RETRY'     => 1
+          },
           :cache_server_ip                  => '10.0.0.1',
           :django_session_engine            => 'django.contrib.sessions.backends.cache',
           :keystone_default_role            => 'SwiftOperator',
@@ -116,12 +125,35 @@ describe 'horizon' do
           :compress_enabled                 => false,
           :compress_offline                 => false,
           :compress_root                    => '/tmp',
-          :hypervisor_options               => {'can_set_mount_point' => false, 'can_set_password' => true },
+          :hypervisor_options               => {
+            'can_set_mount_point' => false,
+            'can_set_password'    => true
+          },
           :cinder_options                   => {'enable_backup' => true },
-          :keystone_options                 => {'name' => 'native', 'can_edit_user' => true, 'can_edit_group' => true, 'can_edit_project' => true, 'can_edit_domain' => false, 'can_edit_role' => false},
-          :neutron_options                  => {'enable_quotas' => false, 'enable_security_group' => false, 'enable_distributed_router' => false, 'enable_ha_router' => false,
-                                                'supported_provider_types' => ['flat', 'vxlan'], 'supported_vnic_types' => ['*'], 'default_ipv4_subnet_pool_label' => 'None', },
-          :instance_options                 => {'disable_image' => true, 'disable_instance_snapshot' => true, 'disable_volume' => true, 'disable_volume_snapshot' => true, 'create_volume' => false },
+          :keystone_options                 => {
+            'name'             => 'native',
+            'can_edit_user'    => true,
+            'can_edit_group'   => true,
+            'can_edit_project' => true,
+            'can_edit_domain'  => false,
+            'can_edit_role'    => false
+          },
+          :neutron_options                  => {
+            'enable_quotas'                  => false,
+            'enable_security_group'          => false,
+            'enable_distributed_router'      => false,
+            'enable_ha_router'               => false,
+            'supported_provider_types'       => ['flat', 'vxlan'],
+            'supported_vnic_types'           => ['*'],
+            'default_ipv4_subnet_pool_label' => 'None',
+          },
+          :instance_options                 => {
+            'disable_image'             => true,
+            'disable_instance_snapshot' => true,
+            'disable_volume'            => true,
+            'disable_volume_snapshot'   => true,
+            'create_volume'             => false
+          },
           :file_upload_temp_dir             => '/var/spool/horizon',
           :wsgi_processes                   => '30',
           :wsgi_threads                     => '5',
@@ -148,17 +180,14 @@ describe 'horizon' do
         })
       end
 
-      it {
+      it 'generates local_settings.py' do
         is_expected.to contain_concat(platforms_params[:config_file]).with(
           :mode      => '0640',
           :owner     => platforms_params[:wsgi_user],
           :group     => platforms_params[:wsgi_group],
           :show_diff => true,
         )
-      }
-
-      it 'generates local_settings.py' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+        verify_concat_fragment_contents_lines(catalogue, 'local_settings.py', [
           'DEBUG = True',
           "SITE_BRANDING = 'mysite'",
           "ALLOWED_HOSTS = ['foo.example.com', ]",
@@ -167,55 +196,15 @@ describe 'horizon' do
           'CSRF_COOKIE_SECURE = True',
           'SESSION_COOKIE_SECURE = True',
           'SESSION_COOKIE_HTTPONLY = True',
-          "    'identity': 3,",
           "OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True",
           "OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = 'domain.tld'",
           'HORIZON_CONFIG["password_autocomplete"] = "on"',
-          "        'OPTIONS': {",
-          "            'DEAD_RETRY': 1,",
-          "            'SERVER_RETRIES': 1,",
-          "            'SOCKET_TIMEOUT': 1,",
           "MEMOIZED_MAX_SIZE_DEFAULT = 25",
-          "        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',",
-          "        'LOCATION': '10.0.0.1:11211',",
-          "        'TIMEOUT': 300,",
           'SESSION_ENGINE = "django.contrib.sessions.backends.cache"',
           'OPENSTACK_KEYSTONE_URL = "https://keystone.example.com:4682"',
           'OPENSTACK_KEYSTONE_DEFAULT_ROLE = "SwiftOperator"',
           'OPENSTACK_SSL_NO_VERIFY = True',
-          'from openstack_dashboard.settings import OPENSTACK_KEYSTONE_BACKEND',
-          'OPENSTACK_KEYSTONE_BACKEND.update({',
-          "    'name': 'native',",
-          "    'can_edit_user': True,",
-          "    'can_edit_group': True,",
-          "    'can_edit_project': True,",
-          "    'can_edit_domain': False,",
-          "    'can_edit_role': False,",
-          'from openstack_dashboard.settings import OPENSTACK_HYPERVISOR_FEATURES',
-          'OPENSTACK_HYPERVISOR_FEATURES.update({',
-          "    'can_set_mount_point': False,",
-          "    'can_set_password': True,",
-          'from openstack_dashboard.settings import OPENSTACK_CINDER_FEATURES',
-          'OPENSTACK_CINDER_FEATURES.update({',
-          "    'enable_backup': True,",
-          'from openstack_dashboard.settings import OPENSTACK_NEUTRON_NETWORK',
-          'OPENSTACK_NEUTRON_NETWORK.update({',
-          "    'default_ipv4_subnet_pool_label': None,",
-          "    'enable_quotas': False,",
-          "    'enable_security_group': False,",
-          "    'enable_distributed_router': False,",
-          "    'enable_ha_router': False,",
-          "    'supported_provider_types': ['flat', 'vxlan'],",
-          "    'supported_vnic_types': ['*'],",
           'OPENSTACK_ENABLE_PASSWORD_RETRIEVE = True',
-          'from openstack_dashboard.settings import CREATE_IMAGE_DEFAULTS',
-          'CREATE_IMAGE_DEFAULTS.update({',
-          "    'image_visibility': 'private',",
-          "    'create_volume': False,",
-          "    'disable_image': True,",
-          "    'disable_instance_snapshot': True,",
-          "    'disable_volume': True,",
-          "    'disable_volume_snapshot': True,",
           'OPENSTACK_ENDPOINT_TYPE = "internalURL"',
           'SECONDARY_ENDPOINT_TYPE = "ANY-VALUE"',
           'OPENSTACK_KEYSTONE_ENDPOINT_TYPE = "public"',
@@ -223,13 +212,7 @@ describe 'horizon' do
           'API_RESULT_PAGE_SIZE = 40',
           'DROPDOWN_MAX_ITEMS = 123',
           'TIME_ZONE = "Asia/Shanghai"',
-          'AVAILABLE_THEMES = [',
-          "    ('default', 'Default', 'themes/default'),",
-          "    ('material', 'Material', 'themes/material'),",
-          ']',
           "DEFAULT_THEME = 'default'",
-          "            'level': 'DEBUG',",
-          "            'handlers': ['console', 'syslog'],",
           'SESSION_TIMEOUT = 1800',
           "SIMULTANEOUS_SESSIONS = 'allow'",
           'TOKEN_TIMEOUT_MARGIN = 60',
@@ -240,6 +223,104 @@ describe 'horizon' do
           'OVERVIEW_DAYS_RANGE = 1',
           'DISALLOW_IFRAME_EMBED = True',
         ])
+
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+from openstack_dashboard.settings import OPENSTACK_API_VERSIONS
+OPENSTACK_API_VERSIONS.update({
+    'identity': 3,
+}
+eos
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+CACHES = {
+    'default': {
+        'OPTIONS': {
+            'DEAD_RETRY': 1,
+            'SERVER_RETRIES': 1,
+            'SOCKET_TIMEOUT': 1,
+        },
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+        'LOCATION': '10.0.0.1:11211',
+        'TIMEOUT': 300,
+    }
+}
+eos
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+from openstack_dashboard.settings import OPENSTACK_KEYSTONE_BACKEND
+OPENSTACK_KEYSTONE_BACKEND.update({
+    'can_edit_domain': False,
+    'can_edit_group': True,
+    'can_edit_project': True,
+    'can_edit_role': False,
+    'can_edit_user': True,
+    'name': 'native',
+})
+eos
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+from openstack_dashboard.settings import OPENSTACK_HYPERVISOR_FEATURES
+OPENSTACK_HYPERVISOR_FEATURES.update({
+    'can_set_mount_point': False,
+    'can_set_password': True,
+})
+eos
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+from openstack_dashboard.settings import OPENSTACK_CINDER_FEATURES
+OPENSTACK_CINDER_FEATURES.update({
+    'enable_backup': True,
+})
+eos
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+from openstack_dashboard.settings import OPENSTACK_NEUTRON_NETWORK
+OPENSTACK_NEUTRON_NETWORK.update({
+    'default_ipv4_subnet_pool_label': None,
+    'enable_distributed_router': False,
+    'enable_ha_router': False,
+    'enable_quotas': False,
+    'enable_security_group': False,
+    'supported_provider_types': ['flat', 'vxlan'],
+    'supported_vnic_types': ['*'],
+})
+eos
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+from openstack_dashboard.settings import LAUNCH_INSTANCE_DEFAULTS
+LAUNCH_INSTANCE_DEFAULTS.update({
+    'create_volume': False,
+    'disable_image': True,
+    'disable_instance_snapshot': True,
+    'disable_volume': True,
+    'disable_volume_snapshot': True,
+})
+eos
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+from openstack_dashboard.settings import CREATE_IMAGE_DEFAULTS
+CREATE_IMAGE_DEFAULTS.update({
+    'image_visibility': 'private',
+})
+eos
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+AVAILABLE_THEMES = [
+    ('default', 'Default', 'themes/default'),
+    ('material', 'Material', 'themes/material'),
+]
+eos
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+        'syslog': {
+            'level': 'DEBUG',
+            'facility': 'local1',
+            'class': 'logging.handlers.SysLogHandler',
+            'address': '/dev/log',
+            'formatter': 'normal',
+        }
+eos
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+    'loggers': {
+        'horizon': {
+            # 'handlers': ['console'],
+            'handlers': ['console', 'syslog'],
+            # 'level': 'DEBUG',
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+eos
       end
 
       it { is_expected.to contain_file(platforms_params[:conf_d_dir]).with(
@@ -258,14 +339,20 @@ describe 'horizon' do
     context 'with overridden parameters and cache_server_ip array' do
       before do
         params.merge!({
+          :cache_backend   => 'django.core.cache.backends.memcached.PyMemcacheCache',
           :cache_server_ip => ['10.0.0.1','10.0.0.2'],
         })
       end
 
       it 'generates local_settings.py' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
-          "        'LOCATION': [ '10.0.0.1:11211','10.0.0.2:11211', ],",
-        ])
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+        'LOCATION': [ '10.0.0.1:11211','10.0.0.2:11211', ],
+    }
+}
+eos
       end
     end
 
@@ -278,38 +365,54 @@ describe 'horizon' do
       end
 
       it 'generates local_settings.py' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
-          "        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',",
-          "        'LOCATION': [ '[fd12:3456:789a:1::1]:11211','[fd12:3456:789a:1::2]:11211', ],",
-        ])
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+        'LOCATION': [ '[fd12:3456:789a:1::1]:11211','[fd12:3456:789a:1::2]:11211', ],
+    }
+}
+eos
       end
     end
 
     context 'with overridden parameters and cache_server_url (string)' do
       before do
         params.merge!({
+          :cache_backend    => 'django.core.cache.backends.redis.RedisCache',
           :cache_server_url => 'redis://:password@10.0.0.1:6379/1',
         })
       end
 
       it 'generates local_settings.py' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
-          "        'LOCATION': 'redis://:password@10.0.0.1:6379/1',",
-        ])
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://:password@10.0.0.1:6379/1',
+    }
+}
+eos
       end
     end
 
     context 'with overridden parameters and cache_server_url (array)' do
       before do
         params.merge!({
+          :cache_backend    => 'django.core.cache.backends.memcached.PyMemcacheCache',
           :cache_server_url => ['192.0.2.1:11211', '192.0.2.2:11211'],
         })
       end
 
       it 'generates local_settings.py' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
-          "        'LOCATION': ['192.0.2.1:11211','192.0.2.2:11211'],",
-        ])
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+        'LOCATION': ['192.0.2.1:11211','192.0.2.2:11211'],
+    }
+}
+eos
       end
     end
 
@@ -440,7 +543,7 @@ describe 'horizon' do
     context 'with default root_path' do
       it 'configures apache' do
         is_expected.to contain_class('horizon::wsgi::apache').with({
-          :root_path    => "#{platforms_params[:root_path]}",
+          :root_path => platforms_params[:root_path],
         })
       end
     end
@@ -480,12 +583,12 @@ describe 'horizon' do
       end
 
       it 'AVAILABLE_REGIONS is configured' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
-          "AVAILABLE_REGIONS = [",
-          "    ('http://region-1.example.com:5000', 'Region-1'),",
-          "    ('http://region-2.example.com:5000', 'Region-2'),",
-          "]"
-        ])
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+AVAILABLE_REGIONS = [
+    ('http://region-1.example.com:5000', 'Region-1'),
+    ('http://region-2.example.com:5000', 'Region-2'),
+]
+eos
       end
     end
 
@@ -502,14 +605,16 @@ describe 'horizon' do
       end
 
       it 'POLICY_FILES_PATH and POLICY_FILES are configured' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+        verify_concat_fragment_contents_lines(catalogue, 'local_settings.py', [
           "POLICY_FILES_PATH = '/opt/openstack-dashboard'",
-          "POLICY_FILES = {",
-          "    'compute': 'nova_policy.json',",
-          "    'identity': 'keystone_policy.json',",
-          "    'network': 'neutron_policy.json',",
-          "} # POLICY_FILES"
         ])
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+POLICY_FILES = {
+    'compute': 'nova_policy.json',
+    'identity': 'keystone_policy.json',
+    'network': 'neutron_policy.json',
+} # POLICY_FILES
+eos
       end
     end
 
@@ -523,7 +628,7 @@ describe 'horizon' do
       end
 
       it 'uses the custom local_settings.py template' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+        verify_concat_fragment_contents_lines(catalogue, 'local_settings.py', [
           '# Custom local_settings.py',
           'DEBUG = True',
           'HORIZON_CONFIG["help_url"] = "https://docs.openstack.org"',
@@ -567,27 +672,27 @@ describe 'horizon' do
       end
 
       it 'configures OPENSTACK_IMAGE_BACKEND' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
-          "OPENSTACK_IMAGE_BACKEND = {",
-          "    'image_formats': [",
-          "        ('', _('Select image format')),",
-          "        ('aki', _('AKI - Amazon Kernel Image')),",
-          "        ('ami', _('AMI - Amazon Machine Image')),",
-          "        ('ari', _('ARI - Amazon Ramdisk Image')),",
-          "        ('iso', _('ISO - Optical Disk Image')),",
-          "        ('qcow2', _('QCOW2 - QEMU Emulator')),",
-          "        ('raw', _('Raw')),",
-          "        ('vdi', _('VDI')),",
-          "        ('vhi', _('VHI')),",
-          "        ('vmdk', _('VMDK')),",
-          "    ], # image_formats",
-          "    'architectures': [",
-          "        ('', _('Select architecture')),",
-          "        ('x86_64', _('x86-64')),",
-          "        ('aarch64', _('ARMv8')),",
-          "    ], # architectures",
-          "} # OPENSTACK_IMAGE_BACKEND",
-        ])
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+OPENSTACK_IMAGE_BACKEND = {
+    'image_formats': [
+        ('', _('Select image format')),
+        ('aki', _('AKI - Amazon Kernel Image')),
+        ('ami', _('AMI - Amazon Machine Image')),
+        ('ari', _('ARI - Amazon Ramdisk Image')),
+        ('iso', _('ISO - Optical Disk Image')),
+        ('qcow2', _('QCOW2 - QEMU Emulator')),
+        ('raw', _('Raw')),
+        ('vdi', _('VDI')),
+        ('vhi', _('VHI')),
+        ('vmdk', _('VMDK')),
+    ], # image_formats
+    'architectures': [
+        ('', _('Select architecture')),
+        ('x86_64', _('x86-64')),
+        ('aarch64', _('ARMv8')),
+    ], # architectures
+} # OPENSTACK_IMAGE_BACKEND
+eos
       end
     end
 
@@ -599,7 +704,7 @@ describe 'horizon' do
       end
 
       it 'disable_password_reveal is configured' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+        verify_concat_fragment_contents_lines(catalogue, 'local_settings.py', [
           'HORIZON_CONFIG["disable_password_reveal"] = True',
         ])
       end
@@ -613,7 +718,7 @@ describe 'horizon' do
       end
 
       it 'enforce_password_check is configured' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+        verify_concat_fragment_contents_lines(catalogue, 'local_settings.py', [
           'ENFORCE_PASSWORD_CHECK = True',
         ])
       end
@@ -622,14 +727,14 @@ describe 'horizon' do
     context 'with disallow iframe embed disabled' do
       before do
         params.merge!({
-                        :disallow_iframe_embed => false
-                      })
+          :disallow_iframe_embed => false
+        })
       end
 
       it 'disallow_iframe_embed is configured' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
-                                          'DISALLOW_IFRAME_EMBED = False',
-                                        ])
+        verify_concat_fragment_contents_lines(catalogue, 'local_settings.py', [
+          'DISALLOW_IFRAME_EMBED = False',
+        ])
       end
     end
 
@@ -649,19 +754,23 @@ describe 'horizon' do
           })
       end
       it 'configures websso options' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+        verify_concat_fragment_contents_lines(catalogue, 'local_settings.py', [
           'WEBSSO_ENABLED = True',
           'WEBSSO_INITIAL_CHOICE = "acme"',
-          'WEBSSO_CHOICES = (',
-          '    ("credentials", _("Keystone Credentials")),',
-          '    ("oidc", _("OpenID Connect")),',
-          '    ("saml2", _("Security Assertion Markup Language")),',
-          ')',
-          'WEBSSO_IDP_MAPPING = {',
-          '    "acme_oidc": ("acme", "oidc"),',
-          '    "acme_saml2": ("acme", "saml2"),',
-          '}',
-          ])
+        ])
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+WEBSSO_CHOICES = (
+    ("credentials", _("Keystone Credentials")),
+    ("oidc", _("OpenID Connect")),
+    ("saml2", _("Security Assertion Markup Language")),
+)
+eos
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+WEBSSO_IDP_MAPPING = {
+    "acme_oidc": ("acme", "oidc"),
+    "acme_saml2": ("acme", "saml2"),
+}
+eos
       end
     end
 
@@ -675,7 +784,7 @@ describe 'horizon' do
         })
       end
       it 'configures websso redirect options' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+        verify_concat_fragment_contents_lines(catalogue, 'local_settings.py', [
           'WEBSSO_DEFAULT_REDIRECT = True',
           'WEBSSO_DEFAULT_REDIRECT_PROTOCOL = "oidc"',
           'WEBSSO_DEFAULT_REDIRECT_REGION = "http://127.0.0.1:5000"',
@@ -696,23 +805,26 @@ describe 'horizon' do
         })
       end
       it 'configures totp options' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+        verify_concat_fragment_contents_lines(catalogue, 'local_settings.py', [
           'OPENSTACK_KEYSTONE_MFA_TOTP_ENABLED = True',
-          'AUTHENTICATION_PLUGINS = [',
-          "    'openstack_auth.plugin.totp.TotpPlugin',",
-          "    'openstack_auth.plugin.password.PasswordPlugin',",
-          "    'openstack_auth.plugin.token.TokenPlugin',",
-          ])
+        ])
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+AUTHENTICATION_PLUGINS = [
+    'openstack_auth.plugin.totp.TotpPlugin',
+    'openstack_auth.plugin.password.PasswordPlugin',
+    'openstack_auth.plugin.token.TokenPlugin',
+]
+eos
       end
     end
 
     context 'without authentication_urls' do
       it 'has default commented section' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
-          '#AUTHENTICATION_URLS = [',
-          "#    'openstack_auth.urls',",
-          '#]',
-          ])
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+#AUTHENTICATION_URLS = [
+#    'openstack_auth.urls',
+#]
+eos
       end
     end
 
@@ -726,12 +838,12 @@ describe 'horizon' do
         })
       end
       it 'configures authentication urls' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
-          'AUTHENTICATION_URLS = [',
-          "    'openstack_auth.urls',",
-          "    'custom_auth.urls',",
-          ']',
-          ])
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+AUTHENTICATION_URLS = [
+    'openstack_auth.urls',
+    'custom_auth.urls',
+]
+eos
       end
     end
 
@@ -746,7 +858,7 @@ describe 'horizon' do
       end
 
       it 'configures EXTERNAL_MONITORING' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+        verify_concat_fragment_contents_lines(catalogue, 'local_settings.py', [
           "EXTERNAL_MONITORING = ['https://monitoring1.example.com', 'https://monitoring2.example.com']",
         ])
       end
@@ -762,7 +874,7 @@ describe 'horizon' do
       end
 
       it 'configures all options' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+        verify_concat_fragment_contents_lines(catalogue, 'local_settings.py', [
           'HORIZON_CONFIG["help_url"] = "https://docs.openstack.org"',
           'HORIZON_CONFIG["bug_url"] = "https://bugs.launchpad.net"',
           'HORIZON_CONFIG["customization_module"] = "my_project.overrides"',
@@ -777,7 +889,7 @@ describe 'horizon' do
         })
       end
       it 'sets HORIZON_IMAGES_UPLOAD_MODE in local_settings.py' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+        verify_concat_fragment_contents_lines(catalogue, 'local_settings.py', [
           'HORIZON_IMAGES_UPLOAD_MODE = "direct"',
         ])
       end
@@ -793,13 +905,15 @@ describe 'horizon' do
         })
       end
       it 'sets OPENSTACK_KEYSTONE_DOMAIN_DROPDOWN in local_settings.py' do
-        verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+        verify_concat_fragment_contents_lines(catalogue, 'local_settings.py', [
           'OPENSTACK_KEYSTONE_DOMAIN_DROPDOWN = True',
-          'OPENSTACK_KEYSTONE_DOMAIN_CHOICES = (',
-          "    ('default', 'The default domain'),",
-          "    ('LDAP', 'The LDAP Catalog'),",
-          ')',
         ])
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+OPENSTACK_KEYSTONE_DOMAIN_CHOICES = (
+    ('default', 'The default domain'),
+    ('LDAP', 'The LDAP Catalog'),
+)
+eos
       end
     end
   end
@@ -810,7 +924,7 @@ describe 'horizon' do
     end
 
     it 'sets WEBROOT in local_settings.py' do
-      verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+      verify_concat_fragment_contents_lines(catalogue, 'local_settings.py', [
         "WEBROOT = '/dashboard'",
       ])
     end
@@ -826,7 +940,7 @@ describe 'horizon' do
     end
 
     it 'sets WEBROOT in local_settings.py' do
-      verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+      verify_concat_fragment_contents_lines(catalogue, 'local_settings.py', [
         "WEBROOT = '/horizon'",
       ])
     end

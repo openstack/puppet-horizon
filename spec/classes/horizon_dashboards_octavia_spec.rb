@@ -26,11 +26,11 @@ eos
       end
 
       it 'generates _1499_load_balancer_settings.py' do
-        verify_concat_fragment_contents(catalogue, '_1499_load_balancer_settings.py', [
-          "settings.POLICY_FILES.update({",
-          "    'load-balancer': 'octavia_policy.yaml',",
-          "})"
-        ])
+        verify_concat_fragment_contents_block(catalogue, '_1499_load_balancer_settings.py', <<-eos.chomp)
+settings.POLICY_FILES.update({
+    'load-balancer': 'octavia_policy.yaml',
+})
+eos
       end
     end
 

@@ -11,11 +11,16 @@ RSpec.configure do |c|
   c.module_path = File.join(fixture_path, 'modules')
 end
 
-def verify_concat_fragment_contents(subject, title, expected_lines)
+def verify_concat_fragment_contents_lines(subject, title, expected_lines)
   content = subject.resource('concat::fragment', title).send(:parameters)[:content]
   expected_lines.each do |expected_line|
     expect([expected_line] & content.split("\n")).to eq([expected_line])
   end
+end
+
+def verify_concat_fragment_contents_block(subject, title, expected_block)
+  content = subject.resource('concat::fragment', title).send(:parameters)[:content]
+  expect(content).to include(expected_block)
 end
 
 at_exit { RSpec::Puppet::Coverage.report! }

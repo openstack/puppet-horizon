@@ -41,13 +41,13 @@ eos
         })
       end
       it 'generates _3200_rating_settings.py' do
-        verify_concat_fragment_contents(catalogue, '_3200_rating_settings.py', [
+        verify_concat_fragment_contents_lines(catalogue, '_3200_rating_settings.py', [
           "OPENSTACK_CLOUDKITTY_RATE_PREFIX = 'prefix'",
         ])
-        verify_concat_fragment_contents(catalogue, '_3200_rating_settings.py', [
+        verify_concat_fragment_contents_lines(catalogue, '_3200_rating_settings.py', [
           "OPENSTACK_CLOUDKITTY_RATE_POSTFIX = 'postfix'",
         ])
-        verify_concat_fragment_contents(catalogue, '_3200_rating_settings.py', [
+        verify_concat_fragment_contents_lines(catalogue, '_3200_rating_settings.py', [
           "CLOUDKITTY_QUOTATION_SERVICE = 'instance'",
         ])
       end

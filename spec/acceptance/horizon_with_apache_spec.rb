@@ -5,14 +5,14 @@ describe 'horizon class' do
   context 'default parameters' do
 
     it 'should work with no errors' do
-      pp= <<-EOS
+      pp= <<-eos
       include openstack_integration
       include openstack_integration::repos
       include openstack_integration::apache
       include openstack_integration::memcached
 
       include openstack_integration::horizon
-      EOS
+      eos
 
       # Run it twice and test for idempotency
       apply_manifest(pp, :catch_failures => true)
@@ -39,7 +39,7 @@ describe 'horizon class' do
   context 'parameters with modified root' do
 
     it 'should work with no errors' do
-      pp= <<-EOS
+      pp= <<-eos
       include openstack_integration
       include openstack_integration::repos
       include openstack_integration::apache
@@ -48,7 +48,7 @@ describe 'horizon class' do
       class { 'openstack_integration::horizon':
         root_url => '',
       }
-      EOS
+      eos
 
       # Run it twice and test for idempotency
       apply_manifest(pp, :catch_failures => true)

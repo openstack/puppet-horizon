@@ -25,20 +25,20 @@ eos
       end
 
       it 'generates _1699_orchestration_settings.py' do
-        verify_concat_fragment_contents(catalogue, '_1699_orchestration_settings.py', [
-          "settings.POLICY_FILES.update({",
-          "    'orchestration': 'heat_policy.yaml',",
-          "})"
-        ])
-        verify_concat_fragment_contents(catalogue, '_1699_orchestration_settings.py', [
-          "OPENSTACK_HEAT_STACK = {",
-          "    'enable_user_pass': True,",
-          "}",
-        ])
-        verify_concat_fragment_contents(catalogue, '_1699_orchestration_settings.py', [
+        verify_concat_fragment_contents_block(catalogue, '_1699_orchestration_settings.py', <<-eos.chomp)
+settings.POLICY_FILES.update({
+    'orchestration': 'heat_policy.yaml',
+})
+eos
+        verify_concat_fragment_contents_block(catalogue, '_1699_orchestration_settings.py', <<-eos.chomp)
+OPENSTACK_HEAT_STACK = {
+    'enable_user_pass': True,
+}
+eos
+        verify_concat_fragment_contents_lines(catalogue, '_1699_orchestration_settings.py', [
           "HEAT_TEMPLATE_GENERATOR_API_TIMEOUT = 60"
         ])
-        verify_concat_fragment_contents(catalogue, '_1699_orchestration_settings.py', [
+        verify_concat_fragment_contents_lines(catalogue, '_1699_orchestration_settings.py', [
           "HEAT_TEMPLATE_GENERATOR_API_PARALLEL = 2"
         ])
       end
@@ -56,11 +56,11 @@ eos
         params.merge!({ :enable_user_pass => false })
       end
       it 'generates _1699_orchestration_settings.py' do
-        verify_concat_fragment_contents(catalogue, '_1699_orchestration_settings.py', [
-          "OPENSTACK_HEAT_STACK = {",
-          "    'enable_user_pass': False,",
-          "}",
-        ])
+        verify_concat_fragment_contents_block(catalogue, '_1699_orchestration_settings.py', <<-eos.chomp)
+OPENSTACK_HEAT_STACK = {
+    'enable_user_pass': False,
+}
+eos
       end
     end
 
@@ -79,10 +79,10 @@ eos
         })
       end
       it 'generates _1699_orchestration_settings.py' do
-        verify_concat_fragment_contents(catalogue, '_1699_orchestration_settings.py', [
+        verify_concat_fragment_contents_lines(catalogue, '_1699_orchestration_settings.py', [
           "HEAT_TEMPLATE_GENERATOR_API_TIMEOUT = 120"
         ])
-        verify_concat_fragment_contents(catalogue, '_1699_orchestration_settings.py', [
+        verify_concat_fragment_contents_lines(catalogue, '_1699_orchestration_settings.py', [
           "HEAT_TEMPLATE_GENERATOR_API_PARALLEL = 4"
         ])
       end

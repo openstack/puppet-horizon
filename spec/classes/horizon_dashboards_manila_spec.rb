@@ -26,20 +26,22 @@ eos
       end
 
       it 'generates _90_manila_shares.py' do
-        verify_concat_fragment_contents(catalogue, '_90_manila_shares.py', [
-          "settings.POLICY_FILES.update({",
-          "    'share': 'manila_policy.yaml',",
-          "})"
-        ])
-        verify_concat_fragment_contents(catalogue, '_90_manila_shares.py', [
-          "    'enable_share_groups': True,",
-          "    'enable_replication': True,",
-          "    'enable_migration': True,",
-          "    'enable_public_share_type_creation': True,",
-          "    'enable_public_share_group_type_creation': True,",
-          "    'enable_public_shares': True,",
-          "    'enabled_share_protocols': ['NFS', 'CIFS', 'GlusterFS', 'HDFS', 'CephFS', 'MapRFS'],",
-        ])
+        verify_concat_fragment_contents_block(catalogue, '_90_manila_shares.py', <<-eos.chomp)
+settings.POLICY_FILES.update({
+    'share': 'manila_policy.yaml',
+})
+eos
+        verify_concat_fragment_contents_block(catalogue, '_90_manila_shares.py', <<-eos.chomp)
+OPENSTACK_MANILA_FEATURES = {
+    'enable_migration': True,
+    'enable_public_share_group_type_creation': True,
+    'enable_public_share_type_creation': True,
+    'enable_public_shares': True,
+    'enable_replication': True,
+    'enable_share_groups': True,
+    'enabled_share_protocols': ['NFS', 'CIFS', 'GlusterFS', 'HDFS', 'CephFS', 'MapRFS'],
+}
+eos
       end
     end
 

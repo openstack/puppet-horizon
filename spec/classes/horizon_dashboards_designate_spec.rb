@@ -26,11 +26,11 @@ eos
       end
 
       it 'generates _1799_dns_settings.py' do
-        verify_concat_fragment_contents(catalogue, '_1799_dns_settings.py', [
-          "settings.POLICY_FILES.update({",
-          "    'dns': 'designate_policy.yaml',",
-          "})"
-        ])
+        verify_concat_fragment_contents_block(catalogue, '_1799_dns_settings.py', <<-eos.chomp)
+settings.POLICY_FILES.update({
+    'dns': 'designate_policy.yaml',
+})
+eos
       end
     end
 
