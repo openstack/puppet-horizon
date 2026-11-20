@@ -694,7 +694,13 @@ class horizon (
   }
 
   if $cache_server_ip {
-    $cache_server_ip_real = normalize_ip_for_uri($cache_server_ip)
+    $cache_location = any2array(normalize_ip_for_uri($cache_server_ip)).map |$ip| {
+      "${ip}:${cache_server_port}"
+    }
+  } elsif $cache_server_url {
+    $cache_location = any2array($cache_server_url)
+  } else {
+    $cache_location = undef
   }
 
   if $websso_choices_hide_keystone and !$websso_initial_choice {

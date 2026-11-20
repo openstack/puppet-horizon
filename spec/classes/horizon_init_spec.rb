@@ -45,7 +45,7 @@ describe 'horizon' do
         )
         verify_concat_fragment_contents_lines(catalogue, 'local_settings.py', [
           'DEBUG = False',
-          "ALLOWED_HOSTS = ['foo.example.com', ]",
+          "ALLOWED_HOSTS = ['foo.example.com']",
           'HORIZON_CONFIG["password_autocomplete"] = "off"',
           "SECRET_KEY = secret_key.generate_or_read_from_file('#{platforms_params[:secret_key_file]}')",
           'OPENSTACK_KEYSTONE_URL = "http://127.0.0.1:5000"',
@@ -176,6 +176,7 @@ eos
           :password_retrieve                => true,
           :enable_secure_proxy_ssl_header   => true,
           :secure_proxy_addr_header         => 'HTTP_X_FORWARDED_FOR',
+          :system_scope_services            => ['identity', 'baremetal'],
           :show_diff                        => true,
         })
       end
@@ -190,7 +191,7 @@ eos
         verify_concat_fragment_contents_lines(catalogue, 'local_settings.py', [
           'DEBUG = True',
           "SITE_BRANDING = 'mysite'",
-          "ALLOWED_HOSTS = ['foo.example.com', ]",
+          "ALLOWED_HOSTS = ['foo.example.com']",
           "SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')",
           "SECURE_PROXY_ADDR_HEADER = 'HTTP_X_FORWARDED_FOR'",
           'CSRF_COOKIE_SECURE = True',
@@ -222,6 +223,7 @@ eos
           "FILE_UPLOAD_TEMP_DIR = '/var/spool/horizon'",
           'OVERVIEW_DAYS_RANGE = 1',
           'DISALLOW_IFRAME_EMBED = True',
+          "SYSTEM_SCOPE_SERVICES = ['identity', 'baremetal']",
         ])
 
         verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
@@ -349,7 +351,7 @@ eos
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
-        'LOCATION': [ '10.0.0.1:11211','10.0.0.2:11211', ],
+        'LOCATION': ['10.0.0.1:11211', '10.0.0.2:11211'],
     }
 }
 eos
@@ -369,7 +371,7 @@ eos
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
-        'LOCATION': [ '[fd12:3456:789a:1::1]:11211','[fd12:3456:789a:1::2]:11211', ],
+        'LOCATION': ['[fd12:3456:789a:1::1]:11211', '[fd12:3456:789a:1::2]:11211'],
     }
 }
 eos
@@ -409,10 +411,91 @@ eos
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
-        'LOCATION': ['192.0.2.1:11211','192.0.2.2:11211'],
+        'LOCATION': ['192.0.2.1:11211', '192.0.2.2:11211'],
     }
 }
 eos
+      end
+    end
+
+    context 'with tls cache enabled' do
+      before do
+        params.merge!({
+          :cache_backend     => 'django.core.cache.backends.memcached.PyMemcacheCache',
+          :cache_server_ip   => ['10.0.0.1','10.0.0.2'],
+          :cache_tls_enabled => true,
+        })
+      end
+
+      it 'generates local_settings.py' do
+        verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+import ssl
+
+tls_context = ssl.create_default_context()
+
+CACHES['default'].setdefault('OPTIONS', {})['tls_context'] = tls_context
+eos
+      end
+
+      context 'with files' do
+        before do
+          params.merge!({
+            :cache_tls_cafile   => '/path/to/cafile',
+            :cache_tls_certfile => '/path/to/certfile',
+            :cache_tls_keyfile  => '/path/to/keyfile',
+          })
+        end
+
+        it 'generates local_settings.py' do
+          verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+import ssl
+
+tls_context = ssl.create_default_context(cafile='/path/to/cafile')
+tls_context.load_cert_chain('/path/to/certfile', '/path/to/keyfile')
+
+CACHES['default'].setdefault('OPTIONS', {})['tls_context'] = tls_context
+eos
+        end
+      end
+
+      context 'with only cert file' do
+        before do
+          params.merge!({
+            :cache_tls_certfile => '/path/to/certfile',
+          })
+        end
+
+        it 'generates local_settings.py' do
+          verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+import ssl
+
+tls_context = ssl.create_default_context()
+tls_context.load_cert_chain('/path/to/certfile')
+
+CACHES['default'].setdefault('OPTIONS', {})['tls_context'] = tls_context
+eos
+        end
+      end
+
+      context 'with allowed_ciphers' do
+        before do
+          params.merge!({
+            :cache_tls_allowed_ciphers => [
+              'TLS_AES_128_GCM_SHA25', 'TLS_AES_256_GCM_SHA384',
+            ],
+          })
+        end
+
+        it 'generates local_settings.py' do
+          verify_concat_fragment_contents_block(catalogue, 'local_settings.py', <<-eos.chomp)
+import ssl
+
+tls_context = ssl.create_default_context()
+tls_context.set_ciphers('TLS_AES_128_GCM_SHA25:TLS_AES_256_GCM_SHA384')
+
+CACHES['default'].setdefault('OPTIONS', {})['tls_context'] = tls_context
+eos
+        end
       end
     end
 
