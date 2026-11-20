@@ -334,7 +334,7 @@ WEBSSO_CHOICES = (
 #    "acme_oidc": ("acme", "oidc"),
 #    "acme_saml2": ("acme", "saml2")
 #}
-<% if @websso_idp_mapping.kind_of?(Hash) -%>
+<% if !@websso_idp_mapping.nil? -%>
 WEBSSO_IDP_MAPPING = {
 <% @websso_idp_mapping.each do |key,r| -%>
     "<%= key -%>": ("<%= r[0] -%>", "<%= r[1] -%>"),

@@ -673,7 +673,7 @@ class horizon (
   Optional[String[1]] $websso_initial_choice           = undef,
   Horizon::WebSsoChoices $websso_choices               = undef,
   Boolean $websso_choices_hide_keystone                = false,
-  $websso_idp_mapping                                  = undef,
+  Horizon::WebSsoIdpMapping $websso_idp_mapping        = undef,
   Boolean $websso_default_redirect                     = false,
   $websso_default_redirect_protocol                    = undef,
   $websso_default_redirect_region                      = undef,
