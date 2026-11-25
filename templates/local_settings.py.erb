@@ -18,11 +18,7 @@ WEBROOT = '<%= @root_url %>'
 # For more information see:
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 #ALLOWED_HOSTS = ['horizon.example.com', ]
-<% if @allowed_hosts.kind_of?(Array) -%>
-ALLOWED_HOSTS = ['<%= @allowed_hosts.join("', '") %>', ]
-<% else -%>
-ALLOWED_HOSTS = ['<%= @allowed_hosts %>', ]
-<% end -%>
+ALLOWED_HOSTS = ['<%= Array(@allowed_hosts).join("', '") %>']
 
 # Set SSL proxy settings:
 # Pass this header from the proxy after terminating the SSL,
@@ -187,7 +183,7 @@ MEMOIZED_MAX_SIZE_DEFAULT = <%= @memoized_max_size_default.to_s %>
 # memcached set CACHES to something like
 #CACHES = {
 #    'default': {
-#        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+#        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
 #        'LOCATION': '127.0.0.1:11211',
 #    }
 #}
@@ -207,18 +203,11 @@ CACHES = {
         },
     <%- end -%>
         'BACKEND': '<%= @cache_backend %>',
-    <%- if @cache_server_ip and !(@cache_server_ip.empty?) -%>
-        <%- if @cache_server_ip_real.kind_of?(Array) -%>
-        'LOCATION': [ <% @cache_server_ip_real.each do |ip| -%>'<%= ip -%>:<%= @cache_server_port -%>',<% end -%> ],
-        <%- else -%>
-        'LOCATION': '<%= @cache_server_ip_real %>:<%= @cache_server_port %>',
-        <%- end -%>
-    <%- end -%>
-    <%- if @cache_server_url -%>
-        <%- if @cache_server_url.kind_of?(Array) -%>
-        'LOCATION': ['<%= @cache_server_url.join("','") %>'],
-        <%- else -%>
-        'LOCATION': '<%= @cache_server_url %>',
+    <%- if !@cache_location.nil? -%>
+        <%- if @cache_location.length > 1 -%>
+        'LOCATION': ['<%= @cache_location.join("', '") %>'],
+        <%- elsif @cache_location.length == 1 -%>
+        'LOCATION': '<%= @cache_location[0] %>',
         <%- end -%>
     <%- end -%>
     <%- if @cache_timeout -%>
@@ -232,18 +221,15 @@ CACHES = {
 import ssl
 
 tls_context = ssl.create_default_context(<% if @cache_tls_cafile %>cafile='<%= @cache_tls_cafile %>'<% end %>)
-<% if @cache_tls_certfile and @cache_tls_keyfile -%>
+<% if @cache_tls_certfile -%>
+<% if @cache_tls_keyfile -%>
 tls_context.load_cert_chain('<%= @cache_tls_certfile %>', '<%= @cache_tls_keyfile %>')
-<% end -%>
-<% if @cache_tls_certfile and not @cache_tls_keyfile -%>
+<% else -%>
 tls_context.load_cert_chain('<%= @cache_tls_certfile %>')
 <% end -%>
-<% if @cache_tls_allowed_ciphers -%>
-<% if @cache_tls_allowed_ciphers.kind_of?(Array) -%>
-tls_context.set_ciphers('<%= @cache_tls_allowed_ciphers.join(":") %>')
-<% else -%>
-tls_context.set_ciphers('<%= @cache_tls_allowed_ciphers %>')
 <% end -%>
+<% if @cache_tls_allowed_ciphers -%>
+tls_context.set_ciphers('<%= Array(@cache_tls_allowed_ciphers).join(":") %>')
 <% end -%>
 
 CACHES['default'].setdefault('OPTIONS', {})['tls_context'] = tls_context
@@ -1132,9 +1118,5 @@ DEFAULT_BOOT_SOURCE = "<%= @default_boot_source %>"
 # settings enables the use of the system scope token on per-service basis.
 #SYSTEM_SCOPE_SERVICES = []
 <% if ! @system_scope_services.nil? -%>
-<% if @system_scope_services.kind_of?(Array) -%>
-SYSTEM_SCOPE_SERVICES = ['<%= @system_scope_services.join("', '") %>']
-<%- else -%>
-SYSTEM_SCOPE_SERVICES = ['<%= @system_scope_services %>']
-<%- end -%>
+SYSTEM_SCOPE_SERVICES = ['<%= Array(@system_scope_services).join("', '") %>']
 <%- end -%>
